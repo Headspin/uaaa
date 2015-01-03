@@ -46,7 +46,7 @@
   <ItemGroup>
     <Compile Include="Components\ChangeManager.cs" />
     <Compile Include="Components\Collections\Items.cs" />
-    <Compile Include="Components\PropertyHandler.cs" />
+    <Compile Include="Components\PropertyTriggers.cs" />
     <Compile Include="Descriptor.cs" />
     <Compile Include="Interfaces\IModel.cs" />
     <Compile Include="Interfaces\INotifyObjectChanged.cs" />
@@ -54,7 +54,6 @@
     <Compile Include="Components\PropertySetter.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Components\Trigger.cs" />
     <Compile Include="ViewModel.cs" />
   </ItemGroup>
   <ItemGroup />

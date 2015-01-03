@@ -10,10 +10,14 @@ namespace Uaaa {
     /// <summary>
     /// ViewModel base class that support property change notifications.
     /// </summary>
-    public class ViewModel<TModel> : IViewModel, IModel, INotifyPropertyChanged where TModel : Model {
+    public class ViewModel<TModel> : IViewModel, IModel, INotifyPropertyChanged, IDisposable where TModel : Model {
         #region -=Properties/Fields=-
         protected readonly PropertySetter Property = null;
-        private TModel _model = default(TModel);
+        /// <summary>
+        /// Model property triggers.
+        /// </summary>
+        protected readonly PropertyTriggers<TModel> Triggers = new PropertyTriggers<TModel>();
+        private TModel _model = null;
         public virtual TModel Model {
             get { return _model; }
             set {
@@ -39,7 +43,9 @@ namespace Uaaa {
         /// <summary>
         /// Triggers optional actions after model value changed.
         /// </summary>
-        protected virtual void OnModelChanged() { }
+        protected virtual void OnModelChanged() {
+            this.Triggers.Model = _model;
+        }
         #endregion
         #region -=IModel members=-
         public event PropertyChangedEventHandler PropertyChanged;
@@ -60,6 +66,20 @@ namespace Uaaa {
             this.Model = model as TModel;
         }
         #endregion
+        #region -=IDisposable members=-
+        private bool _isDisposed = false;
+        public void Dispose() {
+            Dispose(true);
+        }
+        protected virtual void Dispose(bool disposing) {
+            if (!_isDisposed) {
+                if (disposing) {
+                    this.Triggers.Dispose();
+                }
+                _isDisposed = true;
+            }
+        }
+        #endregion
         #region -=Static members=-
         /// <summary>
         /// Returns model.
@@ -70,5 +90,7 @@ namespace Uaaa {
             return viewModel.Model;
         }
         #endregion
+
+
     }
 }
