@@ -48,7 +48,7 @@ namespace Uaaa {
         }
         /// <summary>
         /// Initializes object instance data and resets change tracking to its initial state.
-        /// Use this method when implementin initializers.
+        /// Use this method when implementing initializers.
         /// </summary>
         /// <param name="initializeObject"></param>
         protected void InitializeCore(Action initializeObject) {
