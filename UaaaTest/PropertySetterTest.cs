@@ -174,59 +174,59 @@ namespace UaaaTest {
         [TestMethod]
         public void PropertySetter_ChangeTrackingOff() {
             PropertySetter setter = new MyModel().GetPropertySetter();
-            Assert.IsFalse(setter.IsChangeTracking, "Invalid IsChangeTracking value");
+            Assert.IsFalse(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsFalse(setter.IsChanged, "Invalid IsChanged value");
             int store = 0;
             bool result = setter.SetValue<int>(ref store, 1, "property1");
-            Assert.IsFalse(setter.IsChangeTracking, "Invalid IsChangeTracking value");
+            Assert.IsFalse(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsFalse(setter.IsChanged, "Invalid IsChanged value");
         }
 
         [TestMethod]
         public void PropertySetter_ChangeTrackingOneValue() {
             PropertySetter setter = new MyModel().GetPropertySetter();
-            Assert.IsFalse(setter.IsChangeTracking, "Invalid IsChangeTracking value");
+            Assert.IsFalse(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsFalse(setter.IsChanged, "Invalid IsChanged value");
             int store = 0;
             setter.InitValue<int>(ref store, 1, "property1");
-            Assert.IsTrue(setter.IsChangeTracking, "Invalid IsChangeTracking value");
+            Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsFalse(setter.IsChanged, "Invalid IsChanged value");
 
             setter.SetValue<int>(ref store, 2, "property1");
-            Assert.IsTrue(setter.IsChangeTracking, "Invalid IsChangeTracking value");
+            Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsTrue(setter.IsChanged, "Invalid IsChanged value");
 
             setter.SetValue<int>(ref store, 1, "property1");
-            Assert.IsTrue(setter.IsChangeTracking, "Invalid IsChangeTracking value");
+            Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsFalse(setter.IsChanged, "Invalid IsChanged value");
         }
 
         [TestMethod]
         public void PropertySetter_ChangeTrackingTwoValues() {
             PropertySetter setter = new MyModel().GetPropertySetter();
-            Assert.IsFalse(setter.IsChangeTracking, "Invalid IsChangeTracking value");
+            Assert.IsFalse(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsFalse(setter.IsChanged, "Invalid IsChanged value");
             int store1 = 0;
             int store2 = 0;
             setter.InitValue<int>(ref store1, 1, "property1");
             setter.InitValue<int>(ref store2, 10, "property2");
-            Assert.IsTrue(setter.IsChangeTracking, "Invalid IsChangeTracking value");
+            Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsFalse(setter.IsChanged, "Invalid IsChanged value");
 
             setter.SetValue<int>(ref store1, 2, "property1");
-            Assert.IsTrue(setter.IsChangeTracking, "Invalid IsChangeTracking value");
+            Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsTrue(setter.IsChanged, "Invalid IsChanged value");
 
             setter.SetValue<int>(ref store2, 20, "property2");
-            Assert.IsTrue(setter.IsChangeTracking, "Invalid IsChangeTracking value");
+            Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsTrue(setter.IsChanged, "Invalid IsChanged value");
 
             setter.SetValue<int>(ref store1, 1, "property1");
-            Assert.IsTrue(setter.IsChangeTracking, "Invalid IsChangeTracking value");
+            Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsTrue(setter.IsChanged, "Invalid IsChanged value");
 
             setter.SetValue<int>(ref store2, 10, "property2");
-            Assert.IsTrue(setter.IsChangeTracking, "Invalid IsChangeTracking value");
+            Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsFalse(setter.IsChanged, "Invalid IsChanged value");
         }
 
@@ -234,39 +234,39 @@ namespace UaaaTest {
         [TestMethod]
         public void PropertySetter_ChangeTrackingAcceptChanges() {
             PropertySetter setter = new MyModel().GetPropertySetter();
-            Assert.IsFalse(setter.IsChangeTracking, "Invalid IsChangeTracking value");
+            Assert.IsFalse(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsFalse(setter.IsChanged, "Invalid IsChanged value");
             int store1 = 0;
             int store2 = 0;
             setter.InitValue<int>(ref store1, 1, "property1");
             setter.InitValue<int>(ref store2, 10, "property2");
-            Assert.IsTrue(setter.IsChangeTracking, "Invalid IsChangeTracking value");
+            Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsFalse(setter.IsChanged, "Invalid IsChanged value");
 
             setter.SetValue<int>(ref store1, 2, "property1");
-            Assert.IsTrue(setter.IsChangeTracking, "Invalid IsChangeTracking value");
+            Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsTrue(setter.IsChanged, "Invalid IsChanged value");
 
             setter.SetValue<int>(ref store2, 20, "property2");
-            Assert.IsTrue(setter.IsChangeTracking, "Invalid IsChangeTracking value");
+            Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsTrue(setter.IsChanged, "Invalid IsChanged value");
 
             setter.AcceptChanges();
-            Assert.IsTrue(setter.IsChangeTracking, "Invalid IsChangeTracking value");
+            Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsFalse(setter.IsChanged, "Invalid IsChanged value");
 
             setter.SetValue<int>(ref store1, 1, "property1");
-            Assert.IsTrue(setter.IsChangeTracking, "Invalid IsChangeTracking value");
+            Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsTrue(setter.IsChanged, "Invalid IsChanged value");
 
             setter.SetValue<int>(ref store2, 10, "property2");
-            Assert.IsTrue(setter.IsChangeTracking, "Invalid IsChangeTracking value");
+            Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsTrue(setter.IsChanged, "Invalid IsChanged value");
 
             setter.SetValue<int>(ref store1, 2, "property1");
             setter.SetValue<int>(ref store2, 20, "property2");
 
-            Assert.IsTrue(setter.IsChangeTracking, "Invalid IsChangeTracking value");
+            Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsFalse(setter.IsChanged, "Invalid IsChanged value");
         }
     }

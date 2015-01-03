@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,13 +12,13 @@ namespace Uaaa {
     public sealed class PropertySetter : INotifyObjectChanged {
         #region -=Properties/Fields=-
         private readonly IModel _model;
-        private bool _isChangeTracking = false;
+        private bool _isTrackingChanges = false;
         private Dictionary<string, object> _initialValues = null;
         private Dictionary<string, object> _changedValues = null;
         /// <summary>
         /// TRUE when change tracking is enabled by setting inital value of at least one property.
         /// </summary>
-        public bool IsChangeTracking { get { return _isChangeTracking; } }
+        public bool IsTrackingChanges { get { return _isTrackingChanges; } }
         #endregion
         #region -=Constructors=-
         /// <summary>
@@ -29,7 +30,6 @@ namespace Uaaa {
         }
         #endregion
         #region -=Public methods=-
-        //NOTE: Should use [CallerMemberName] for propertyName in future WP8.1+ profiles.
         /// <summary>
         /// Sets new property value and stores it to a backing store variable.
         /// </summary>
@@ -40,14 +40,14 @@ namespace Uaaa {
         /// <param name="comparer">Comparer used to compare current and new property value.</param>
         /// <param name="allowChange">Return true if property is allowed to change, false otherwise.</param>
         /// <returns>TRUE if property value changed.</returns>
-        public bool SetValue<T>(ref T store, T value, string propertyName = null, IEqualityComparer<T> comparer = null, Func<bool> allowChange = null) {
+        public bool SetValue<T>(ref T store, T value, [CallerMemberName] string propertyName = null, IEqualityComparer<T> comparer = null, Func<bool> allowChange = null) {
             IEqualityComparer<T> selectedComparer = comparer ?? EqualityComparer<T>.Default;
             if (selectedComparer.Equals(store, value)) return false;
             if (allowChange != null && !allowChange()) return false;
             store = value;
             if ((!string.IsNullOrEmpty(propertyName))) {
                 _model.RaisePropertyChanged(propertyName);
-                if (_isChangeTracking && _initialValues.ContainsKey(propertyName)) {
+                if (_isTrackingChanges && _initialValues.ContainsKey(propertyName)) {
                     #region -=Handle change tracking notifications=-
                     bool isInitialValue = selectedComparer.Equals((T)_initialValues[propertyName], value);
                     if (isInitialValue && _changedValues.ContainsKey(propertyName)) {
@@ -76,10 +76,10 @@ namespace Uaaa {
         /// <param name="propertyName"></param>
         public void InitValue<T>(ref T store, T value, string propertyName) {
             if (string.IsNullOrEmpty(propertyName)) return;
-            if (!_isChangeTracking) {
+            if (!_isTrackingChanges) {
                 _initialValues = new Dictionary<string, object>();
                 _changedValues = new Dictionary<string, object>();
-                _isChangeTracking = true;
+                _isTrackingChanges = true;
             }
             if (!_initialValues.ContainsKey(propertyName))
                 _initialValues.Add(propertyName, value);
@@ -91,7 +91,7 @@ namespace Uaaa {
         /// Accept changes by seting changed property values to initial property values.
         /// </summary>
         public void AcceptChanges() {
-            if (!_isChangeTracking) return;
+            if (!_isTrackingChanges) return;
             foreach (KeyValuePair<string, object> pair in _changedValues) {
                 if (!_initialValues.ContainsKey(pair.Key)) continue;
                 _initialValues[pair.Key] = pair.Value;
