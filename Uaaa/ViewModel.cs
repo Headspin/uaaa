@@ -17,7 +17,7 @@ namespace Uaaa {
         public virtual TModel Model {
             get { return _model; }
             set {
-                if (Property.SetValue<TModel>(ref _model, value, allowChange: () => !this.IsReadonly || _model == default(TModel)))
+                if (Property.Set<TModel>(ref _model, value, canChange: () => !this.IsReadonly || _model == default(TModel)))
                     OnModelChanged();
             }
         }

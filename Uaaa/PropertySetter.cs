@@ -38,12 +38,12 @@ namespace Uaaa {
         /// <param name="value">New property value.</param>
         /// <param name="propertyName">Name of property being changed.</param>
         /// <param name="comparer">Comparer used to compare current and new property value.</param>
-        /// <param name="allowChange">Return true if property is allowed to change, false otherwise.</param>
+        /// <param name="canChange">Return true if property is allowed to change, false otherwise.</param>
         /// <returns>TRUE if property value changed.</returns>
-        public bool SetValue<T>(ref T store, T value, [CallerMemberName] string propertyName = null, IEqualityComparer<T> comparer = null, Func<bool> allowChange = null) {
+        public bool Set<T>(ref T store, T value, [CallerMemberName] string propertyName = null, IEqualityComparer<T> comparer = null, Func<bool> canChange = null) {
             IEqualityComparer<T> selectedComparer = comparer ?? EqualityComparer<T>.Default;
             if (selectedComparer.Equals(store, value)) return false;
-            if (allowChange != null && !allowChange()) return false;
+            if (canChange != null && !canChange()) return false;
             store = value;
             if ((!string.IsNullOrEmpty(propertyName))) {
                 _model.RaisePropertyChanged(propertyName);
@@ -74,7 +74,7 @@ namespace Uaaa {
         /// <param name="store"></param>
         /// <param name="value"></param>
         /// <param name="propertyName"></param>
-        public void InitValue<T>(ref T store, T value, string propertyName) {
+        public void Init<T>(ref T store, T value, string propertyName) {
             if (string.IsNullOrEmpty(propertyName)) return;
             if (!_isTrackingChanges) {
                 _initialValues = new Dictionary<string, object>();

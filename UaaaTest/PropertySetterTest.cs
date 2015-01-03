@@ -34,13 +34,13 @@ namespace UaaaTest {
         public void PropertySetter_Int() {
             PropertySetter setter = new MyModel().GetPropertySetter();
             int store = 0;
-            bool result = setter.SetValue<int>(ref store, 0);
+            bool result = setter.Set<int>(ref store, 0);
             Assert.IsFalse(result, "Invalid SetValue result.");
 
-            result = setter.SetValue<int>(ref store, 1);
+            result = setter.Set<int>(ref store, 1);
             Assert.IsTrue(result, "Invalid SetValue result.");
 
-            result = setter.SetValue<int>(ref store, 1);
+            result = setter.Set<int>(ref store, 1);
             Assert.IsFalse(result, "Invalid SetValue result.");
         }
 
@@ -48,29 +48,29 @@ namespace UaaaTest {
         public void PropertySetter_IntNullable() {
             PropertySetter setter = new MyModel().GetPropertySetter();
             int? store = null;
-            bool result = setter.SetValue<int?>(ref store, 0);
+            bool result = setter.Set<int?>(ref store, 0);
             Assert.IsTrue(result, "Invalid SetValue result.");
 
-            result = setter.SetValue<int?>(ref store, 1);
+            result = setter.Set<int?>(ref store, 1);
             Assert.IsTrue(result, "Invalid SetValue result.");
 
-            result = setter.SetValue<int?>(ref store, 1);
+            result = setter.Set<int?>(ref store, 1);
             Assert.IsFalse(result, "Invalid SetValue result.");
 
-            result = setter.SetValue<int?>(ref store, null);
+            result = setter.Set<int?>(ref store, null);
             Assert.IsTrue(result, "Invalid SetValue result.");
         }
         [TestMethod]
         public void PropertySetter_DateTime() {
             PropertySetter setter = new MyModel().GetPropertySetter();
             DateTime store = new DateTime(2014, 1, 1);
-            bool result = setter.SetValue<DateTime>(ref store, new DateTime(2014, 1, 1));
+            bool result = setter.Set<DateTime>(ref store, new DateTime(2014, 1, 1));
             Assert.IsFalse(result, "Invalid SetValue result.");
 
-            result = setter.SetValue<DateTime>(ref store, new DateTime(2014, 2, 1));
+            result = setter.Set<DateTime>(ref store, new DateTime(2014, 2, 1));
             Assert.IsTrue(result, "Invalid SetValue result.");
 
-            result = setter.SetValue<DateTime>(ref store, new DateTime(2014, 2, 1));
+            result = setter.Set<DateTime>(ref store, new DateTime(2014, 2, 1));
             Assert.IsFalse(result, "Invalid SetValue result.");
         }
 
@@ -78,19 +78,19 @@ namespace UaaaTest {
         public void PropertySetter_DateTimeNullable() {
             PropertySetter setter = new MyModel().GetPropertySetter();
             DateTime? store = new DateTime(2014, 1, 1);
-            bool result = setter.SetValue<DateTime?>(ref store, null);
+            bool result = setter.Set<DateTime?>(ref store, null);
             Assert.IsTrue(result, "Invalid SetValue result.");
 
-            result = setter.SetValue<DateTime?>(ref store, null);
+            result = setter.Set<DateTime?>(ref store, null);
             Assert.IsFalse(result, "Invalid SetValue result.");
 
-            result = setter.SetValue<DateTime?>(ref store, new Nullable<DateTime>(new DateTime(2014, 2, 1)));
+            result = setter.Set<DateTime?>(ref store, new Nullable<DateTime>(new DateTime(2014, 2, 1)));
             Assert.IsTrue(result, "Invalid SetValue result.");
 
-            result = setter.SetValue<DateTime?>(ref store, new Nullable<DateTime>(new DateTime(2014, 2, 1)));
+            result = setter.Set<DateTime?>(ref store, new Nullable<DateTime>(new DateTime(2014, 2, 1)));
             Assert.IsFalse(result, "Invalid SetValue result.");
 
-            result = setter.SetValue<DateTime?>(ref store, null);
+            result = setter.Set<DateTime?>(ref store, null);
             Assert.IsTrue(result, "Invalid SetValue result.");
         }
 
@@ -98,32 +98,32 @@ namespace UaaaTest {
         public void PropertySetter_Enum() {
             PropertySetter setter = new MyModel().GetPropertySetter();
             TestEnum store = TestEnum.Value0;
-            bool result = setter.SetValue<TestEnum>(ref store, TestEnum.Value0);
+            bool result = setter.Set<TestEnum>(ref store, TestEnum.Value0);
             Assert.IsFalse(result, "Invalid SetValue result.");
 
-            result = setter.SetValue<TestEnum>(ref store, TestEnum.Value1);
+            result = setter.Set<TestEnum>(ref store, TestEnum.Value1);
             Assert.IsTrue(result, "Invalid SetValue result.");
 
-            result = setter.SetValue<TestEnum>(ref store, TestEnum.Value1);
+            result = setter.Set<TestEnum>(ref store, TestEnum.Value1);
             Assert.IsFalse(result, "Invalid SetValue result.");
 
-            result = setter.SetValue<TestEnum>(ref store, TestEnum.Value0);
+            result = setter.Set<TestEnum>(ref store, TestEnum.Value0);
             Assert.IsTrue(result, "Invalid SetValue result.");
         }
         [TestMethod]
         public void PropertySetter_EnumNullable() {
             PropertySetter setter = new MyModel().GetPropertySetter();
             TestEnum? store = null;
-            bool result = setter.SetValue<TestEnum?>(ref store, null);
+            bool result = setter.Set<TestEnum?>(ref store, null);
             Assert.IsFalse(result, "Invalid SetValue result.");
 
-            result = setter.SetValue<TestEnum?>(ref store, TestEnum.Value1);
+            result = setter.Set<TestEnum?>(ref store, TestEnum.Value1);
             Assert.IsTrue(result, "Invalid SetValue result.");
 
-            result = setter.SetValue<TestEnum?>(ref store, TestEnum.Value1);
+            result = setter.Set<TestEnum?>(ref store, TestEnum.Value1);
             Assert.IsFalse(result, "Invalid SetValue result.");
 
-            result = setter.SetValue<TestEnum?>(ref store, null);
+            result = setter.Set<TestEnum?>(ref store, null);
             Assert.IsTrue(result, "Invalid SetValue result.");
         }
 
@@ -131,13 +131,13 @@ namespace UaaaTest {
         public void PropertySetter_String() {
             PropertySetter setter = new MyModel().GetPropertySetter();
             string store = "Value1";
-            bool result = setter.SetValue<string>(ref store, "Value1");
+            bool result = setter.Set<string>(ref store, "Value1");
             Assert.IsFalse(result, "Invalid SetValue result.");
 
-            result = setter.SetValue<string>(ref store, "value1");
+            result = setter.Set<string>(ref store, "value1");
             Assert.IsTrue(result, "Invalid SetValue result.");
 
-            result = setter.SetValue<string>(ref store, "value2");
+            result = setter.Set<string>(ref store, "value2");
             Assert.IsTrue(result, "Invalid SetValue result.");
         }
 
@@ -145,13 +145,13 @@ namespace UaaaTest {
         public void PropertySetter_StringWithComparer() {
             PropertySetter setter = new MyModel().GetPropertySetter();
             string store = "Value1";
-            bool result = setter.SetValue<string>(ref store, "Value1");
+            bool result = setter.Set<string>(ref store, "Value1");
             Assert.IsFalse(result, "Invalid SetValue result.");
 
-            result = setter.SetValue<string>(ref store, "value1", comparer: StringComparer.OrdinalIgnoreCase);
+            result = setter.Set<string>(ref store, "value1", comparer: StringComparer.OrdinalIgnoreCase);
             Assert.IsFalse(result, "Invalid SetValue result.");
 
-            result = setter.SetValue<string>(ref store, "value2", comparer: StringComparer.OrdinalIgnoreCase);
+            result = setter.Set<string>(ref store, "value2", comparer: StringComparer.OrdinalIgnoreCase);
             Assert.IsTrue(result, "Invalid SetValue result.");
         }
 
@@ -159,16 +159,16 @@ namespace UaaaTest {
         public void PropertySetter_CustomType() {
             PropertySetter setter = new MyModel().GetPropertySetter();
             Item store = null;
-            bool result = setter.SetValue<Item>(ref store, new Item() { Value = 1 });
+            bool result = setter.Set<Item>(ref store, new Item() { Value = 1 });
             Assert.IsTrue(result, "Invalid SetValue result.");
 
-            result = setter.SetValue<Item>(ref store, new Item() { Value = 1 });
+            result = setter.Set<Item>(ref store, new Item() { Value = 1 });
             Assert.IsFalse(result, "Invalid SetValue result.");
 
-            result = setter.SetValue<Item>(ref store, new Item() { Value = 2 });
+            result = setter.Set<Item>(ref store, new Item() { Value = 2 });
             Assert.IsTrue(result, "Invalid SetValue result.");
 
-            result = setter.SetValue<Item>(ref store, null);
+            result = setter.Set<Item>(ref store, null);
             Assert.IsTrue(result, "Invalid SetValue result.");
         }
         [TestMethod]
@@ -177,7 +177,7 @@ namespace UaaaTest {
             Assert.IsFalse(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsFalse(setter.IsChanged, "Invalid IsChanged value");
             int store = 0;
-            bool result = setter.SetValue<int>(ref store, 1, "property1");
+            bool result = setter.Set<int>(ref store, 1, "property1");
             Assert.IsFalse(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsFalse(setter.IsChanged, "Invalid IsChanged value");
         }
@@ -188,15 +188,15 @@ namespace UaaaTest {
             Assert.IsFalse(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsFalse(setter.IsChanged, "Invalid IsChanged value");
             int store = 0;
-            setter.InitValue<int>(ref store, 1, "property1");
+            setter.Init<int>(ref store, 1, "property1");
             Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsFalse(setter.IsChanged, "Invalid IsChanged value");
 
-            setter.SetValue<int>(ref store, 2, "property1");
+            setter.Set<int>(ref store, 2, "property1");
             Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsTrue(setter.IsChanged, "Invalid IsChanged value");
 
-            setter.SetValue<int>(ref store, 1, "property1");
+            setter.Set<int>(ref store, 1, "property1");
             Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsFalse(setter.IsChanged, "Invalid IsChanged value");
         }
@@ -208,24 +208,24 @@ namespace UaaaTest {
             Assert.IsFalse(setter.IsChanged, "Invalid IsChanged value");
             int store1 = 0;
             int store2 = 0;
-            setter.InitValue<int>(ref store1, 1, "property1");
-            setter.InitValue<int>(ref store2, 10, "property2");
+            setter.Init<int>(ref store1, 1, "property1");
+            setter.Init<int>(ref store2, 10, "property2");
             Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsFalse(setter.IsChanged, "Invalid IsChanged value");
 
-            setter.SetValue<int>(ref store1, 2, "property1");
+            setter.Set<int>(ref store1, 2, "property1");
             Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsTrue(setter.IsChanged, "Invalid IsChanged value");
 
-            setter.SetValue<int>(ref store2, 20, "property2");
+            setter.Set<int>(ref store2, 20, "property2");
             Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsTrue(setter.IsChanged, "Invalid IsChanged value");
 
-            setter.SetValue<int>(ref store1, 1, "property1");
+            setter.Set<int>(ref store1, 1, "property1");
             Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsTrue(setter.IsChanged, "Invalid IsChanged value");
 
-            setter.SetValue<int>(ref store2, 10, "property2");
+            setter.Set<int>(ref store2, 10, "property2");
             Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsFalse(setter.IsChanged, "Invalid IsChanged value");
         }
@@ -238,16 +238,16 @@ namespace UaaaTest {
             Assert.IsFalse(setter.IsChanged, "Invalid IsChanged value");
             int store1 = 0;
             int store2 = 0;
-            setter.InitValue<int>(ref store1, 1, "property1");
-            setter.InitValue<int>(ref store2, 10, "property2");
+            setter.Init<int>(ref store1, 1, "property1");
+            setter.Init<int>(ref store2, 10, "property2");
             Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsFalse(setter.IsChanged, "Invalid IsChanged value");
 
-            setter.SetValue<int>(ref store1, 2, "property1");
+            setter.Set<int>(ref store1, 2, "property1");
             Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsTrue(setter.IsChanged, "Invalid IsChanged value");
 
-            setter.SetValue<int>(ref store2, 20, "property2");
+            setter.Set<int>(ref store2, 20, "property2");
             Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsTrue(setter.IsChanged, "Invalid IsChanged value");
 
@@ -255,16 +255,16 @@ namespace UaaaTest {
             Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsFalse(setter.IsChanged, "Invalid IsChanged value");
 
-            setter.SetValue<int>(ref store1, 1, "property1");
+            setter.Set<int>(ref store1, 1, "property1");
             Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsTrue(setter.IsChanged, "Invalid IsChanged value");
 
-            setter.SetValue<int>(ref store2, 10, "property2");
+            setter.Set<int>(ref store2, 10, "property2");
             Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsTrue(setter.IsChanged, "Invalid IsChanged value");
 
-            setter.SetValue<int>(ref store1, 2, "property1");
-            setter.SetValue<int>(ref store2, 20, "property2");
+            setter.Set<int>(ref store1, 2, "property1");
+            setter.Set<int>(ref store2, 20, "property2");
 
             Assert.IsTrue(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsFalse(setter.IsChanged, "Invalid IsChanged value");

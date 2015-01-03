@@ -28,7 +28,7 @@ namespace UaaaTest {
             private int _value = 0;
             public int Value {
                 get { return _value; }
-                set { Property.SetValue<int>(ref _value, value, "Value"); }
+                set { Property.Set<int>(ref _value, value, "Value"); }
             }
             public Model1 SubModel { get; private set; }
             public Model1() : this(false) { }
@@ -44,7 +44,7 @@ namespace UaaaTest {
             }
             protected override void SetInitialValues() {
                 base.SetInitialValues();
-                Property.InitValue<int>(ref _value, _value, "Value");
+                Property.Init<int>(ref _value, _value, "Value");
             }
         }
 
