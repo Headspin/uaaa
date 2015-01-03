@@ -114,10 +114,10 @@ namespace Uaaa {
             private set {
                 if (_isChanged == value) return;
                 _isChanged = value;
-                OnObjectChanged();
+                RaiseObjectChanged();
             }
         }
-        private void OnObjectChanged() {
+        private void RaiseObjectChanged() {
             if (this.ObjectChanged != null)
                 this.ObjectChanged(this, new EventArgs());
         }
