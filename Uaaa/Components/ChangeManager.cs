@@ -10,13 +10,8 @@ namespace Uaaa {
     /// </summary>
     public class ChangeManager : INotifyObjectChanged {
         #region -=Properties/Fields=-
-        /// <summary>
-        /// NOTE: Since hashset is not available in WP7 profile dictionary is used instead. Values are just booleans that do not mean anything.
-        ///       HashSet should be used if it becomes available in future portable framework profiles.
-        /// </summary>
-        private readonly Dictionary<INotifyObjectChanged, bool> _trackedObjects = new Dictionary<INotifyObjectChanged, bool>();
-        private readonly Dictionary<INotifyObjectChanged, bool> _changedObjects = new Dictionary<INotifyObjectChanged, bool>();
-
+        private readonly HashSet<INotifyObjectChanged> _trackedObjects = new HashSet<INotifyObjectChanged>();
+        private readonly HashSet<INotifyObjectChanged> _changedObjects = new HashSet<INotifyObjectChanged>();
         #endregion
         #region -=Constructors=-
         /// <summary>
@@ -30,20 +25,35 @@ namespace Uaaa {
         /// </summary>
         /// <param name="trackedObject"></param>
         public void Track(INotifyObjectChanged trackedObject) {
-            if (_trackedObjects.ContainsKey(trackedObject)) return;
-            _trackedObjects.Add(trackedObject, false);
+            if (trackedObject == null) return;
+            if (_trackedObjects.Contains(trackedObject)) return;
+            _trackedObjects.Add(trackedObject);
             trackedObject.ObjectChanged += TrackedObject_ObjectChanged;
             if (trackedObject.IsChanged) {
-                _changedObjects.Add(trackedObject, true);
+                _changedObjects.Add(trackedObject);
                 this.IsChanged = true;
             }
+        }
+        /// <summary>
+        /// Removes object from change manager instance.
+        /// </summary>
+        /// <param name="trackedObject"></param>
+        public void Remove(INotifyObjectChanged trackedObject) {
+            if (trackedObject == null) return;
+            if (!_trackedObjects.Contains(trackedObject)) return;
+            _trackedObjects.Remove(trackedObject);
+            if (_changedObjects.Contains(trackedObject)) {
+                _changedObjects.Remove(trackedObject);
+                this.IsChanged = _changedObjects.Count > 0;
+            }
+            
         }
         /// <summary>
         /// Resets change manager be clearing all tracking data.
         /// </summary>
         public void Reset() {
-            foreach (KeyValuePair<INotifyObjectChanged, bool> pair in _trackedObjects)
-                pair.Key.ObjectChanged -= TrackedObject_ObjectChanged;
+            foreach (INotifyObjectChanged trackedObject in _trackedObjects)
+                trackedObject.ObjectChanged -= TrackedObject_ObjectChanged;
             _trackedObjects.Clear();
             _changedObjects.Clear();
             this.IsChanged = false;
@@ -53,10 +63,10 @@ namespace Uaaa {
         private void TrackedObject_ObjectChanged(object sender, EventArgs args) {
             INotifyObjectChanged trackedObject = sender as INotifyObjectChanged;
             if (trackedObject == null) return;
-            if (trackedObject.IsChanged && !_changedObjects.ContainsKey(trackedObject)) {
-                _changedObjects.Add(trackedObject, true);
+            if (trackedObject.IsChanged && !_changedObjects.Contains(trackedObject)) {
+                _changedObjects.Add(trackedObject);
                 this.IsChanged = true;
-            } else if (!trackedObject.IsChanged && _changedObjects.ContainsKey(trackedObject)) {
+            } else if (!trackedObject.IsChanged && _changedObjects.Contains(trackedObject)) {
                 _changedObjects.Remove(trackedObject);
                 this.IsChanged = _changedObjects.Count > 0;
             }
