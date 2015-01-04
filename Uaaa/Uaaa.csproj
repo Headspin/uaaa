@@ -47,7 +47,7 @@
     <Compile Include="Components\ChangeManager.cs" />
     <Compile Include="Components\Collections\Items.cs" />
     <Compile Include="Components\PropertyTriggers.cs" />
-    <Compile Include="Descriptor.cs" />
+    <Compile Include="Components\Descriptor.cs" />
     <Compile Include="Interfaces\IModel.cs" />
     <Compile Include="Interfaces\INotifyObjectChanged.cs" />
     <Compile Include="Interfaces\IViewModel.cs" />
