@@ -41,7 +41,11 @@ namespace Uaaa {
             }
             SetInitialValues();
         }
-
+        #region -=Public methods=-
+        public void AcceptChanges() {
+            this.Property.AcceptChanges();
+        }
+        #endregion
         #region -=Protected methods=-
         /// <summary>
         /// Create change manager if object change notification is required.
