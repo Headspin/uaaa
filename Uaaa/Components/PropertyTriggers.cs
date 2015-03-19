@@ -13,7 +13,7 @@ namespace Uaaa {
     /// Handles TModel property changes and invokes appropriate triggers for given property.
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    public sealed class PropertyTriggers<TModel> : IDisposable where TModel : INotifyPropertyChanged {
+    public sealed class PropertyTriggers<TModel> : IDisposable where TModel : class, INotifyPropertyChanged {
         #region -=Support types=-
         /// <summary>
         /// Defines condition and action that should be executed if condition is met.
@@ -50,15 +50,18 @@ namespace Uaaa {
             }
         }
         #endregion
-        private INotifyPropertyChanged _model = null;
-        public INotifyPropertyChanged Model {
+        private TModel _model = null;
+        public TModel Model {
             get { return _model; }
             set {
-                if (_model != null)
+                bool modelSwitched = _model != null;
+                if (_model != null) 
                     _model.PropertyChanged -= Model_PropertyChanged;
                 _model = value;
-                if (_model != null)
+                if (_model != null) 
                     _model.PropertyChanged += Model_PropertyChanged;
+                if (modelSwitched)
+                    TriggerAll(_model);
             }
         }
         private ConcurrentDictionary<string, Items<Trigger>> _triggersByProperty = new ConcurrentDictionary<string, Items<Trigger>>();
@@ -84,6 +87,16 @@ namespace Uaaa {
                 }
             } catch (Exception ex) {
                 Debug.WriteLine(ex.Message);
+            }
+        }
+        /// <summary>
+        /// Invokes all registered triggers.
+        /// </summary>
+        /// <param name="model"></param>
+        private void TriggerAll(TModel model) {
+            foreach (Items<Trigger> triggers in _triggersByProperty.Values) {
+                foreach (Trigger trigger in triggers)
+                    trigger.Invoke(model);
             }
         }
 

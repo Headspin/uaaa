@@ -8,6 +8,22 @@ using System.Threading.Tasks;
 
 namespace Uaaa {
     /// <summary>
+    /// Defines common ViewModel interface.
+    /// </summary>
+    interface IViewModel {
+        /// <summary>
+        /// Returns model value.
+        /// </summary>
+        /// <returns></returns>
+        object GetModel();
+        /// <summary>
+        /// Sets model value.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        void SetModel(object model);
+    }
+    /// <summary>
     /// ViewModel base class that support property change notifications.
     /// </summary>
     public class ViewModel<TModel> : IViewModel, IModel, INotifyPropertyChanged, IDisposable where TModel : Model {
@@ -54,8 +70,9 @@ namespace Uaaa {
         }
         protected void RaisePropertyChanged([CallerMemberName] string propertyName = null) {
             if (string.IsNullOrEmpty(propertyName)) return;
-            if (PropertyChanged != null)
-                PropertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            PropertyChangedEventHandler handler = this.PropertyChanged;
+            if (handler != null)
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
         #endregion
         #region -=IViewModel members=-

@@ -54,6 +54,7 @@
     <Compile Include="ChangeManagerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertySetterTest.cs" />
+    <Compile Include="ViewModelTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Uaaa\Uaaa.csproj">

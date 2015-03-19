@@ -8,6 +8,16 @@ using System.Threading.Tasks;
 
 namespace Uaaa {
     /// <summary>
+    /// Defines common Model intefrace
+    /// </summary>
+    public interface IModel : INotifyPropertyChanged {
+        /// <summary>
+        /// Raises PropertyChanged event for provided property name.
+        /// </summary>
+        /// <param name="propertyName"></param>
+        void RaisePropertyChanged(string propertyName);
+    }
+    /// <summary>
     /// Model base class that supports property change notification and change tracking.
     /// </summary>
     public abstract class Model : IModel, INotifyPropertyChanged, INotifyObjectChanged {
@@ -77,8 +87,9 @@ namespace Uaaa {
         /// </summary>
         /// <param name="propertyName"></param> 
         protected void RaisePropertyChanged([CallerMemberName] string propertyName = null) {
-            if (this.PropertyChanged != null && !string.IsNullOrEmpty(propertyName))
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChangedEventHandler handler = this.PropertyChanged;
+            if (handler != null && !string.IsNullOrEmpty(propertyName))
+                handler(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
         #region -=INotifyObjectChanged members=-
@@ -100,8 +111,9 @@ namespace Uaaa {
         /// Raises ObjectChanged event.
         /// </summary>
         protected virtual void OnObjectChanged() {
-            if (this.ObjectChanged != null)
-                this.ObjectChanged(this, new EventArgs());
+            EventHandler handler = this.ObjectChanged;
+            if (handler != null)
+                handler(this, new EventArgs());
         }
         #endregion
     }

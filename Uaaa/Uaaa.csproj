@@ -48,9 +48,7 @@
     <Compile Include="Components\Collections\Items.cs" />
     <Compile Include="Components\PropertyTriggers.cs" />
     <Compile Include="Components\Descriptor.cs" />
-    <Compile Include="Interfaces\IModel.cs" />
     <Compile Include="Interfaces\INotifyObjectChanged.cs" />
-    <Compile Include="Interfaces\IViewModel.cs" />
     <Compile Include="Components\PropertySetter.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
