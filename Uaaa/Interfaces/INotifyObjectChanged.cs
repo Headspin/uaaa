@@ -17,5 +17,9 @@ namespace Uaaa {
         /// True if object state is changed, false otherwise.
         /// </summary>
         bool IsChanged { get; }
+        /// <summary>
+        /// Accepts changed data so that object enters not changed state (IsChanged = false).
+        /// </summary>
+        void AcceptChanges();
     }
 }

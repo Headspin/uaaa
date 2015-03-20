@@ -7,7 +7,6 @@ namespace UaaaTest {
     public class ChangeManagerTest {
 
         internal class MyClass1 : INotifyObjectChanged {
-
             public event EventHandler ObjectChanged;
             private bool _isChanged = false;
             public bool IsChanged {
@@ -17,6 +16,9 @@ namespace UaaaTest {
                     _isChanged = value;
                     OnObjectChanged();
                 }
+            }
+            public void AcceptChanges() {
+                this.IsChanged = false;
             }
             private void OnObjectChanged() {
                 if (this.ObjectChanged != null)
@@ -120,6 +122,17 @@ namespace UaaaTest {
             Assert.IsTrue(model.IsChanged, "Invalid IsChanged value.");
             model.SubModel.Value = 0;
             Assert.IsFalse(model.IsChanged, "Invalid IsChanged value.");
+        }
+        [TestMethod]
+        public void ChangeManager_AcceptChangesOnHierarchy() {
+            Model1 model = new Model1();
+            Assert.IsFalse(model.IsChanged, "Invalid IsChanged value.");
+            model.SubModel.Value = 10;
+            Assert.IsTrue(model.IsChanged, "Invalid IsChanged value.");
+            model.AcceptChanges();
+            Assert.IsFalse(model.IsChanged, "Invalid IsChanged value.");
+            Assert.IsFalse(model.SubModel.IsChanged, "Invalid IsChanged value.");
+            
         }
 
     }

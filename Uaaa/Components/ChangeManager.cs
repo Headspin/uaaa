@@ -89,6 +89,13 @@ namespace Uaaa {
                 OnObjectChanged();
             }
         }
+        /// <summary>
+        /// Accepts changes on all tracked objects.
+        /// </summary>
+        public void AcceptChanges() {
+            foreach (INotifyObjectChanged item in _trackedObjects) 
+                item.AcceptChanges();
+        }
 
         private void OnObjectChanged() {
             if (this.ObjectChanged != null)

@@ -42,8 +42,9 @@ namespace Uaaa {
             SetInitialValues();
         }
         #region -=Public methods=-
-        public void AcceptChanges() {
-            this.Property.AcceptChanges();
+        public virtual void AcceptChanges() {
+            if (this.ChangeManager != null)
+                this.ChangeManager.AcceptChanges();
         }
         #endregion
         #region -=Protected methods=-

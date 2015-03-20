@@ -6,6 +6,16 @@ namespace UaaaTest {
     [TestClass]
     public class ItemsTest {
 
+        /// <summary>
+        /// Simple item that does not support change tracking (only property changed notifications).
+        /// </summary>
+        public class SimpleItem : Model {
+            private int _value1 = 0;
+            public int Value1 { get { return _value1; } set { Property.Set<int>(ref _value1, value); } }
+        }
+        /// <summary>
+        /// Item that supports change tracking functionality.
+        /// </summary>
         public class Item : Model {
             private int _value1 = 0;
             private int _value2 = 0;
@@ -106,6 +116,47 @@ namespace UaaaTest {
             items.Remove(item3);
             Assert.IsFalse(items.IsChanged, "Items collection should not be changed.");
 
+        }
+
+        [TestMethod]
+        public void Items_AcceptChangesAfterAddingItems() {
+            SimpleItem item1 = new SimpleItem();
+            SimpleItem item2 = new SimpleItem();
+
+            Items<SimpleItem> items = new Items<SimpleItem>();
+            Assert.IsFalse(items.IsChanged, "Items collection should not be changed.");
+
+            items.Add(item1);
+            items.Add(item2);
+            Assert.IsTrue(items.IsChanged, "Items collection should be changed.");
+
+            items.AcceptChanges();
+            Assert.IsFalse(items.IsChanged, "Items collection should not be changed.");
+
+            items.Remove(item2);
+            Assert.IsTrue(items.IsChanged, "Items collection should be changed.");
+
+            items.AcceptChanges();
+            Assert.IsFalse(items.IsChanged, "Items collection should not be changed.");
+
+        }
+
+        [TestMethod]
+        public void Items_AcceptChangesAfterRemovingItems() {
+            SimpleItem item1 = new SimpleItem();
+            SimpleItem item2 = new SimpleItem();
+
+            Items<SimpleItem> items = new Items<SimpleItem>() { item1, item2 };
+            items.AcceptChanges();
+            Assert.IsFalse(items.IsChanged, "Items collection should not be changed.");
+            items.Remove(item1);
+            Assert.IsTrue(items.IsChanged, "Items collection should be changed.");
+
+            items.Remove(item2);
+            Assert.IsTrue(items.IsChanged, "Items collection should be changed.");
+
+            items.AcceptChanges();
+            Assert.IsFalse(items.IsChanged, "Items collection should not be changed.");
         }
     }
 }

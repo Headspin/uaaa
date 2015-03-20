@@ -39,6 +39,12 @@ namespace Uaaa {
                 _items.Clear();
                 this.Count = 0;
             }
+            /// <summary>
+            /// Accepts chages by reseting the counter.
+            /// </summary>
+            public override void AcceptChanges() {
+                this.Reset();
+            }
             #endregion
             #region -=Base class methods=-
             protected override ChangeManager CreateChangeManager() { return new ChangeManager(); }
@@ -76,25 +82,6 @@ namespace Uaaa {
         public IEnumerable<TItem> GetRemovedItems() {
             foreach (TItem item in _removedItems.GetAll())
                 yield return item;
-        }
-        /// <summary>
-        /// Accepts all changes made to the collection.
-        /// Property IsChanged gets value False after method is finished.
-        /// </summary>
-        public void AcceptChanges() {
-            _addedItems.Reset();
-            _removedItems.Reset();
-            if (this.Count > 0) {
-                if (this[0] is Model) {
-                    // reset changemanagers and track all objects again.
-                    foreach (object item in this) {
-                        Model model = (Model)item;
-                        model.AcceptChanges();
-                        this.ChangeManager.Track(model as INotifyObjectChanged);
-                    }
-                }
-            }
-            
         }
         #endregion
         #region -=Base class methods=-
@@ -139,6 +126,13 @@ namespace Uaaa {
         #region -=INotifyObjectChanged members=-
         public event EventHandler ObjectChanged;
         public bool IsChanged { get { return this.ChangeManager.IsChanged; } }
+        /// <summary>
+        /// Accepts all changes made to the collection.
+        /// Property IsChanged gets value False after method is finished.
+        /// </summary>
+        public void AcceptChanges() {
+            this.ChangeManager.AcceptChanges();
+        }
         #endregion
         #region -=IModel members=-
         void IModel.RaisePropertyChanged(string propertyName) {
