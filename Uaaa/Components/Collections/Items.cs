@@ -15,23 +15,23 @@ namespace Uaaa {
         /// Counts marked items. Object is changed when count > 0;
         /// </summary>
         /// <typeparam name="TItem"></typeparam>
-        private sealed class ItemsCounter<TItem> : Model {
-            private readonly HashSet<TItem> _items = new HashSet<TItem>();
+        private sealed class ItemsCounter<TModel> : Model {
+            private readonly HashSet<TModel> _items = new HashSet<TModel>();
             private int _count = 0;
             public int Count { get { return _count; } private set { Property.Set<int>(ref _count, value); } }
             #region -=Public methods=-
-            public IEnumerable<TItem> GetAll() {
-                foreach (TItem item in _items)
+            public IEnumerable<TModel> GetAll() {
+                foreach (TModel item in _items)
                     yield return item;
             }
-            public bool Contains(TItem item) {
+            public bool Contains(TModel item) {
                 return _items.Contains(item);
             }
-            public void Add(TItem item) {
+            public void Add(TModel item) {
                 _items.Add(item);
                 this.Count = _items.Count();
             }
-            public void Remove(TItem item) {
+            public void Remove(TModel item) {
                 _items.Remove(item);
                 this.Count = _items.Count();
             }
@@ -82,7 +82,18 @@ namespace Uaaa {
         /// Property IsChanged gets value False after method is finished.
         /// </summary>
         public void AcceptChanges() {
-            this.ChangeManager.Reset();
+            _addedItems.Reset();
+            _removedItems.Reset();
+            if (this.Count > 0) {
+                if (this[0] is Model) {
+                    // reset changemanagers and track all objects again.
+                    foreach (object item in this) {
+                        Model model = (Model)item;
+                        model.AcceptChanges();
+                        this.ChangeManager.Track(model as INotifyObjectChanged);
+                    }
+                }
+            }
             
         }
         #endregion
@@ -124,22 +135,6 @@ namespace Uaaa {
             if (this.ObjectChanged != null)
                 this.ObjectChanged(this, new EventArgs());
             ((IModel)this).RaisePropertyChanged("IsChanged");
-        }
-        private void ChangeManager_AfterReset(object sender, EventArgs args) {
-            _addedItems.Reset();
-            _removedItems.Reset();
-            this.ChangeManager.Track(_addedItems);
-            this.ChangeManager.Track(_removedItems);
-            if (this.Count > 0) {
-                if (this[0] is IChangeManagerObject) {
-                    // reset changemanagers and track all objects again.
-                    foreach (object item in this) {
-                        IChangeManagerObject model = ((IChangeManagerObject)item);
-                        model.AcceptChanges();
-                        this.ChangeManager.Track(model as INotifyObjectChanged);
-                    }
-                }
-            }
         }
         #region -=INotifyObjectChanged members=-
         public event EventHandler ObjectChanged;
