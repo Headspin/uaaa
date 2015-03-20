@@ -46,6 +46,8 @@
   <ItemGroup>
     <Compile Include="Components\ChangeManager.cs" />
     <Compile Include="Components\Collections\Items.cs" />
+    <Compile Include="Components\PropertyValidator.cs" />
+    <Compile Include="Components\DataErrorInfo.cs" />
     <Compile Include="Components\PropertyTriggers.cs" />
     <Compile Include="Components\Descriptor.cs" />
     <Compile Include="Interfaces\INotifyObjectChanged.cs" />
