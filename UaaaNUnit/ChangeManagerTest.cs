@@ -1,9 +1,9 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Uaaa;
+using NUnit.Framework;
 
-namespace UaaaTest {
-    [TestClass]
+namespace UaaaNUnit {
+	[TestFixture ()]
     public class ChangeManagerTest {
 
         internal class MyClass1 : INotifyObjectChanged {
@@ -50,7 +50,7 @@ namespace UaaaTest {
             }
         }
 
-        [TestMethod]
+		[Test()]
         public void ChangeManager_OneObjectTracked() {
             ChangeManager manager = new ChangeManager();
             Assert.IsFalse(manager.IsChanged, "Invalid IsChanged value.");
@@ -64,7 +64,7 @@ namespace UaaaTest {
             Assert.IsFalse(manager.IsChanged, "Invalid IsChanged value.");
         }
 
-        [TestMethod]
+		[Test()]
         public void ChangeManager_TwoObjectTracked() {
             ChangeManager manager = new ChangeManager();
             Assert.IsFalse(manager.IsChanged, "Invalid IsChanged value.");
@@ -83,7 +83,7 @@ namespace UaaaTest {
             myclass2.IsChanged = false;
             Assert.IsFalse(manager.IsChanged, "Invalid IsChanged value.");
         }
-        [TestMethod]
+		[Test()]
         public void ChangeManager_TwoChangedObjectsTracked() {
             ChangeManager manager = new ChangeManager();
             Assert.IsFalse(manager.IsChanged, "Invalid IsChanged value.");
@@ -98,7 +98,7 @@ namespace UaaaTest {
             Assert.IsFalse(manager.IsChanged, "Invalid IsChanged value.");
         }
 
-        [TestMethod]
+		[Test()]
         public void ChangeManager_Reset() {
             ChangeManager manager = new ChangeManager();
             Assert.IsFalse(manager.IsChanged, "Invalid IsChanged value.");
@@ -114,7 +114,7 @@ namespace UaaaTest {
             Assert.IsFalse(manager.IsChanged, "Invalid IsChanged value.");
         }
 
-        [TestMethod]
+		[Test()]
         public void ChangeManager_TestHierarchy() {
             Model1 model = new Model1();
             Assert.IsFalse(model.IsChanged, "Invalid IsChanged value.");
@@ -123,7 +123,7 @@ namespace UaaaTest {
             model.SubModel.Value = 0;
             Assert.IsFalse(model.IsChanged, "Invalid IsChanged value.");
         }
-        [TestMethod]
+		[Test()]
         public void ChangeManager_AcceptChangesOnHierarchy() {
             Model1 model = new Model1();
             Assert.IsFalse(model.IsChanged, "Invalid IsChanged value.");

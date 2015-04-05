@@ -1,9 +1,9 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Uaaa;
 
-namespace UaaaTest {
-    [TestClass]
+namespace UaaaNUnit {
+	[TestFixture()]
     public class PropertySetterTest {
         public sealed class MyModel : Model {
             public PropertySetter GetPropertySetter() {
@@ -30,7 +30,7 @@ namespace UaaaTest {
             Value2 = 2
         }
 
-        [TestMethod]
+		[Test()]
         public void PropertySetter_Int() {
             PropertySetter setter = new MyModel().GetPropertySetter();
             int store = 0;
@@ -44,7 +44,7 @@ namespace UaaaTest {
             Assert.IsFalse(result, "Invalid SetValue result.");
         }
 
-        [TestMethod]
+		[Test()]
         public void PropertySetter_IntNullable() {
             PropertySetter setter = new MyModel().GetPropertySetter();
             int? store = null;
@@ -60,7 +60,7 @@ namespace UaaaTest {
             result = setter.Set<int?>(ref store, null);
             Assert.IsTrue(result, "Invalid SetValue result.");
         }
-        [TestMethod]
+		[Test()]
         public void PropertySetter_DateTime() {
             PropertySetter setter = new MyModel().GetPropertySetter();
             DateTime store = new DateTime(2014, 1, 1);
@@ -74,7 +74,7 @@ namespace UaaaTest {
             Assert.IsFalse(result, "Invalid SetValue result.");
         }
 
-        [TestMethod]
+		[Test()]
         public void PropertySetter_DateTimeNullable() {
             PropertySetter setter = new MyModel().GetPropertySetter();
             DateTime? store = new DateTime(2014, 1, 1);
@@ -94,7 +94,7 @@ namespace UaaaTest {
             Assert.IsTrue(result, "Invalid SetValue result.");
         }
 
-        [TestMethod]
+		[Test()]
         public void PropertySetter_Enum() {
             PropertySetter setter = new MyModel().GetPropertySetter();
             TestEnum store = TestEnum.Value0;
@@ -110,7 +110,7 @@ namespace UaaaTest {
             result = setter.Set<TestEnum>(ref store, TestEnum.Value0);
             Assert.IsTrue(result, "Invalid SetValue result.");
         }
-        [TestMethod]
+		[Test()]
         public void PropertySetter_EnumNullable() {
             PropertySetter setter = new MyModel().GetPropertySetter();
             TestEnum? store = null;
@@ -127,7 +127,7 @@ namespace UaaaTest {
             Assert.IsTrue(result, "Invalid SetValue result.");
         }
 
-        [TestMethod]
+		[Test()]
         public void PropertySetter_String() {
             PropertySetter setter = new MyModel().GetPropertySetter();
             string store = "Value1";
@@ -141,7 +141,7 @@ namespace UaaaTest {
             Assert.IsTrue(result, "Invalid SetValue result.");
         }
 
-        [TestMethod]
+		[Test()]
         public void PropertySetter_StringWithComparer() {
             PropertySetter setter = new MyModel().GetPropertySetter();
             string store = "Value1";
@@ -155,7 +155,7 @@ namespace UaaaTest {
             Assert.IsTrue(result, "Invalid SetValue result.");
         }
 
-        [TestMethod]
+		[Test()]
         public void PropertySetter_CustomType() {
             PropertySetter setter = new MyModel().GetPropertySetter();
             Item store = null;
@@ -171,18 +171,19 @@ namespace UaaaTest {
             result = setter.Set<Item>(ref store, null);
             Assert.IsTrue(result, "Invalid SetValue result.");
         }
-        [TestMethod]
+		[Test()]
         public void PropertySetter_ChangeTrackingOff() {
             PropertySetter setter = new MyModel().GetPropertySetter();
             Assert.IsFalse(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsFalse(setter.IsChanged, "Invalid IsChanged value");
             int store = 0;
             bool result = setter.Set<int>(ref store, 1, "property1");
+			Assert.IsTrue (result, "Invalid property setter return value.");
             Assert.IsFalse(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
             Assert.IsFalse(setter.IsChanged, "Invalid IsChanged value");
         }
 
-        [TestMethod]
+		[Test()]
         public void PropertySetter_ChangeTrackingOneValue() {
             PropertySetter setter = new MyModel().GetPropertySetter();
             Assert.IsFalse(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
@@ -201,7 +202,7 @@ namespace UaaaTest {
             Assert.IsFalse(setter.IsChanged, "Invalid IsChanged value");
         }
 
-        [TestMethod]
+		[Test()]
         public void PropertySetter_ChangeTrackingTwoValues() {
             PropertySetter setter = new MyModel().GetPropertySetter();
             Assert.IsFalse(setter.IsTrackingChanges, "Invalid IsChangeTracking value");
@@ -231,7 +232,7 @@ namespace UaaaTest {
         }
 
 
-        [TestMethod]
+		[Test()]
         public void PropertySetter_ChangeTrackingAcceptChanges() {
             PropertySetter setter = new MyModel().GetPropertySetter();
             Assert.IsFalse(setter.IsTrackingChanges, "Invalid IsChangeTracking value");

@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Uaaa;
+﻿using Uaaa;
+using NUnit.Framework;
 
-namespace UaaaTest {
-    [TestClass]
+namespace UaaaNUnit {
+	[TestFixture()]
     public class ViewModelTest {
 
         public class Input : Model {
@@ -41,7 +40,7 @@ namespace UaaaTest {
         }
 
 
-        [TestMethod]
+		[Test()]
         public void ViewModelPropertyTriggers_SingleModel() {
             Input input = new Input();
             Calc calc = new Calc() { Model = input };
@@ -65,7 +64,7 @@ namespace UaaaTest {
             Assert.AreEqual(200, calc.Product, "Invalid calc property value.");
         }
 
-        [TestMethod]
+		[Test()]
         public void ViewModelPropertyTriggers_SwitchedModel() {
             Input input1 = new Input() { Value1 = 10, Value2 = 20 };
             Input input2 = new Input() { Value1 = 100, Value2 = 200 };

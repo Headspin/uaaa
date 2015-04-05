@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Uaaa;
+﻿using Uaaa;
+using NUnit.Framework;
 
-namespace UaaaTest {
-    [TestClass]
+namespace UaaaNUnit {
+	[TestFixture()]
     public class ItemsTest {
 
         /// <summary>
@@ -34,7 +33,7 @@ namespace UaaaTest {
             }
         }
 
-        [TestMethod]
+		[Test()]
         public void Items_Changing() {
             Item item1 = new Item();
             Item item2 = new Item();
@@ -54,7 +53,7 @@ namespace UaaaTest {
             Assert.IsFalse(items.IsChanged, "Items collection should not be changed.");
         }
 
-        [TestMethod]
+		[Test()]
         public void Items_AddingRemovingNonChangedItems() {
             Item item1 = new Item();
             Item item2 = new Item();
@@ -75,7 +74,7 @@ namespace UaaaTest {
             Assert.IsFalse(items.IsChanged, "Items collection should not be changed.");
         }
 
-        [TestMethod]
+		[Test()]
         public void Items_RemovingAddingNonChangedItems() {
             Item item1 = new Item();
             Item item2 = new Item();
@@ -98,7 +97,7 @@ namespace UaaaTest {
             Assert.IsFalse(items.IsChanged, "Items collection should be changed.");
         }
 
-        [TestMethod]
+		[Test()]
         public void Items_AddingRemovingChangedItem() {
             Item item1 = new Item();
             Item item2 = new Item();
@@ -118,7 +117,7 @@ namespace UaaaTest {
 
         }
 
-        [TestMethod]
+		[Test()]
         public void Items_AcceptChangesAfterAddingItems() {
             SimpleItem item1 = new SimpleItem();
             SimpleItem item2 = new SimpleItem();
@@ -141,7 +140,7 @@ namespace UaaaTest {
 
         }
 
-        [TestMethod]
+		[Test()]
         public void Items_AcceptChangesAfterRemovingItems() {
             SimpleItem item1 = new SimpleItem();
             SimpleItem item2 = new SimpleItem();
