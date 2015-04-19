@@ -33,12 +33,9 @@ namespace Uaaa {
         /// <summary>
         /// Creates new model instance.
         /// </summary>
-        public Model() {
+        protected Model() {
             this.Property = new PropertySetter(this);
-            this.ChangeManager = CreateChangeManager();
-            if (this.ChangeManager != null) {
-                this.ChangeManager.ObjectChanged += ChangeManager_ObjectChanged;
-            }
+            this.ChangeManager = InitChangeManager();
             SetInitialValues();
         }
         #region -=Public methods=-
@@ -55,12 +52,8 @@ namespace Uaaa {
         protected virtual ChangeManager CreateChangeManager() { return null; }
         /// <summary>
         /// Sets instance initial values for change tracking.
-        /// Also initializes change manager.
         /// </summary>
-        protected virtual void SetInitialValues() {
-            if (this.ChangeManager != null)
-                this.ChangeManager.Track(this.Property);
-        }
+        protected virtual void OnSetInitialValues() { }
         /// <summary>
         /// Initializes object instance data and resets change tracking to its initial state.
         /// Use this method when implementing initializers.
@@ -75,6 +68,17 @@ namespace Uaaa {
         }
         #endregion
         #region -=Private methods=-
+		private ChangeManager InitChangeManager(){
+			ChangeManager manager = CreateChangeManager ();
+			if (manager != null)
+				manager.ObjectChanged += ChangeManager_ObjectChanged;
+			return manager;
+		}
+		private void SetInitialValues(){
+			if (this.ChangeManager != null)
+				this.ChangeManager.Track (this.Property);
+			OnSetInitialValues ();
+		}
         private void ChangeManager_ObjectChanged(object sender, EventArgs args) {
             OnObjectChanged();
         }

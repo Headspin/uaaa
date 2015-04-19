@@ -52,7 +52,7 @@ namespace Uaaa {
         }
         public ViewModel(TModel model)
             : this() {
-            this.Model = model;
+			SetModel (model);
         }
         #endregion
         #region -=Protected methods=-
@@ -63,6 +63,11 @@ namespace Uaaa {
             this.Triggers.Model = _model;
         }
         #endregion
+		#region -=Private methods=-
+		private void SetModel(TModel model){
+			this.Model = model;
+		}
+		#endregion
         #region -=IModel members=-
         public event PropertyChangedEventHandler PropertyChanged;
         void IModel.RaisePropertyChanged(string propertyName) {

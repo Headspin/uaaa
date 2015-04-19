@@ -10,32 +10,33 @@ namespace Uaaa {
     /// <summary>
     /// Implements INotifyDataErrorInfo and handles data validation via added PropertyValidators.
     /// </summary>
-    public class DataErrorInfo : INotifyDataErrorInfo {
-        private Dictionary<string, Items<PropertyValidator>> _rulesByPropertyName = new Dictionary<string, Items<PropertyValidator>>();
-        private Dictionary<string, Items<PropertyValidator>> _currentErrors = new Dictionary<string, Items<PropertyValidator>>();
-        public DataErrorInfo() { }
+    public class BusinessRulesChecker : INotifyDataErrorInfo {
+		private Dictionary<string, Items<BusinessRule>> _rulesByPropertyName = new Dictionary<string, Items<BusinessRule>>();
+		private Dictionary<string, Items<BusinessRule>> _currentErrors = new Dictionary<string, Items<BusinessRule>>();
+        public BusinessRulesChecker() { }
         #region -=Public methods=-
         /// <summary>
         /// Adds validator to the manager.
         /// </summary>
-        /// <param name="validator"></param>
-        public void Add(PropertyValidator validator) {
-            AddToIndex(validator);
+        /// <param name="rule"></param>
+		/// <param name = "propertyName"></param>
+		public void Add(BusinessRule rule, string propertyName = "") {
+            AddToIndex(rule, propertyName);
         }
         /// <summary>
         /// Removes validator from manager.
         /// </summary>
-        /// <param name="validator"></param>
-        public void Remove(PropertyValidator validator) {
-            RemoveFromIndex(validator);
+        /// <param name="rule"></param>
+		public void Remove(BusinessRule rule) {
+            RemoveFromIndex(rule);
         }
         public bool IsValid(object model, string propertyName = "") {
             bool isValid = true;
             if (string.IsNullOrEmpty(propertyName)) {
                 #region -=Check all rules=-
-                foreach (KeyValuePair<string, Items<PropertyValidator>> pair in _rulesByPropertyName) {
-                    Items<PropertyValidator> errors = new Items<PropertyValidator>();
-                    foreach (PropertyValidator rule in GetErrors(model, pair.Value)) {
+				foreach (KeyValuePair<string, Items<BusinessRule>> pair in _rulesByPropertyName) {
+					Items<BusinessRule> errors = new Items<BusinessRule>();
+					foreach (BusinessRule rule in GetErrors(model, pair.Value)) {
                         errors.Add(rule);
                         isValid = false;
                         this.HasErrors = true;
@@ -53,8 +54,8 @@ namespace Uaaa {
                 #endregion
             } else if (_rulesByPropertyName.ContainsKey(propertyName)) {
                 #region -=Check property specific rules=-
-                Items<PropertyValidator> errors = new Items<PropertyValidator>();
-                foreach (PropertyValidator rule in GetErrors(model, _rulesByPropertyName[propertyName])) {
+				Items<BusinessRule> errors = new Items<BusinessRule>();
+				foreach (BusinessRule rule in GetErrors(model, _rulesByPropertyName[propertyName])) {
                     errors.Add(rule);
                     isValid = false;
                 }
@@ -71,21 +72,21 @@ namespace Uaaa {
         }
         #endregion
         #region -=Private methods=-
-        private void AddToIndex(PropertyValidator item) {
-            if (!_rulesByPropertyName.ContainsKey(item.PropertyName))
-                _rulesByPropertyName.Add(item.PropertyName, new Items<PropertyValidator>() { item });
-            else
-                _rulesByPropertyName[item.PropertyName].Add(item);
+		private void AddToIndex(BusinessRule item, string propertyName = "") {
+			if (!_rulesByPropertyName.ContainsKey(propertyName))
+				_rulesByPropertyName.Add(propertyName, new Items<BusinessRule>() { item });
+            else 
+				_rulesByPropertyName[propertyName].Add(item);
         }
-        private void RemoveFromIndex(PropertyValidator item) {
-            if (_rulesByPropertyName.ContainsKey(item.PropertyName)) {
-                _rulesByPropertyName[item.PropertyName].Remove(item);
-                if (_rulesByPropertyName[item.PropertyName].Count < 1)
-                    _rulesByPropertyName.Remove(item.PropertyName);
+		private void RemoveFromIndex(BusinessRule item, string propertyName = "") {
+			if (_rulesByPropertyName.ContainsKey(propertyName)) {
+                _rulesByPropertyName[propertyName].Remove(item);
+				if (_rulesByPropertyName[propertyName].Count < 1)
+					_rulesByPropertyName.Remove(propertyName);
             }
         }
-        private IEnumerable<PropertyValidator> GetErrors(object model, Items<PropertyValidator> rules) {
-            foreach (PropertyValidator rule in rules) {
+		private IEnumerable<BusinessRule> GetErrors(object model, Items<BusinessRule> rules) {
+			foreach (BusinessRule rule in rules) {
                 if (rule.IsValid(model)) continue;
                 yield return rule;
             }
@@ -97,13 +98,13 @@ namespace Uaaa {
         public System.Collections.IEnumerable GetErrors(string propertyName) {
             if (string.IsNullOrEmpty(propertyName)) {
                 // return all errors
-                foreach (KeyValuePair<string, Items<PropertyValidator>> pair in _currentErrors) {
-                    foreach (PropertyValidator validator in pair.Value)
+				foreach (KeyValuePair<string, Items<BusinessRule>> pair in _currentErrors) {
+					foreach (BusinessRule validator in pair.Value)
                         yield return validator.Error;
                 }
             } else if (_currentErrors.ContainsKey(propertyName)) {
-                Items<PropertyValidator> errors = _currentErrors[propertyName];
-                foreach (PropertyValidator validator in errors)
+				Items<BusinessRule> errors = _currentErrors[propertyName];
+				foreach (BusinessRule validator in errors)
                     yield return validator.Error;
             }
         }

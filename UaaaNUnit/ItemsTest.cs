@@ -26,8 +26,8 @@ namespace UaaaNUnit {
                 return new ChangeManager();
             }
 
-            protected override void SetInitialValues() {
-                base.SetInitialValues();
+            protected override void OnSetInitialValues() {
+                base.OnSetInitialValues();
                 Property.Init<int>(ref _value1, _value1, "Value1");
                 Property.Init<int>(ref _value2, _value2, "Value2");
             }

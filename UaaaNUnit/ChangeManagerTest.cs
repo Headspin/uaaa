@@ -44,8 +44,8 @@ namespace UaaaNUnit {
             protected override ChangeManager CreateChangeManager() {
                 return new ChangeManager();
             }
-            protected override void SetInitialValues() {
-                base.SetInitialValues();
+            protected override void OnSetInitialValues() {
+                base.OnSetInitialValues();
                 Property.Init<int>(ref _value, _value, "Value");
             }
         }

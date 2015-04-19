@@ -6,17 +6,13 @@ using System.Threading.Tasks;
 
 namespace Uaaa {
     /// <summary>
-    /// Property data validator.
+    /// Provides model business rule validation checking.
     /// </summary>
-    public abstract class PropertyValidator {
-        public readonly string PropertyName = null;
+    public abstract class BusinessRule {
         public readonly string Error = null;
-        public PropertyValidator(string propertyName, string error) {
-            if (string.IsNullOrEmpty(propertyName))
-                throw new ArgumentNullException("propertyName");
+        protected BusinessRule(string error) {
             if (string.IsNullOrEmpty(error))
                 throw new ArgumentNullException("error");
-            this.PropertyName = propertyName;
             this.Error = error;
         }
         public abstract bool IsValid(object model);

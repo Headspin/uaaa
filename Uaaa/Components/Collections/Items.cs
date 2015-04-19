@@ -48,8 +48,8 @@ namespace Uaaa {
             #endregion
             #region -=Base class methods=-
             protected override ChangeManager CreateChangeManager() { return new ChangeManager(); }
-            protected override void SetInitialValues() {
-                base.SetInitialValues();
+            protected override void OnSetInitialValues() {
+                base.OnSetInitialValues();
                 Property.Init<int>(ref _count, _count, "Count");
             }
             #endregion
