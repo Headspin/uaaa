@@ -1,12 +1,13 @@
 ﻿<Properties StartupItem="Uaaa/Uaaa.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Uaaa/Components/PropertyTriggers.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="UaaaNUnit/BusinessRulesCheckerTest.cs">
     <Files>
-      <File FileName="Uaaa/Model.cs" Line="23" Column="8" />
-      <File FileName="Uaaa/ViewModel.cs" Line="1" Column="1" />
-      <File FileName="Uaaa/Components/DataErrorInfo.cs" Line="1" Column="1" />
-      <File FileName="Uaaa/Components/Descriptor.cs" Line="1" Column="1" />
-      <File FileName="Uaaa/Components/PropertyTriggers.cs" Line="1" Column="1" />
+      <File FileName="Uaaa/Components/BusinessRulesChecker.cs" Line="20" Column="78" />
+      <File FileName="Uaaa/Components/BusinessRule.cs" Line="1" Column="1" />
+      <File FileName="Uaaa/Components/ChangeManager.cs" Line="1" Column="1" />
+      <File FileName="Uaaa/Model.cs" Line="60" Column="4" />
+      <File FileName="UaaaNUnit/BusinessRulesCheckerTest.cs" Line="11" Column="12" />
+      <File FileName="UaaaNUnit/ChangeManagerTest.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

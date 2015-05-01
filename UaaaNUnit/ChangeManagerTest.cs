@@ -6,49 +6,65 @@ namespace UaaaNUnit {
 	[TestFixture ()]
     public class ChangeManagerTest {
 
-        internal class MyClass1 : INotifyObjectChanged {
-            public event EventHandler ObjectChanged;
-            private bool _isChanged = false;
-            public bool IsChanged {
-                get { return _isChanged; }
-                set {
-                    if (_isChanged == value) return;
-                    _isChanged = value;
-                    OnObjectChanged();
-                }
-            }
-            public void AcceptChanges() {
-                this.IsChanged = false;
-            }
-            private void OnObjectChanged() {
-                if (this.ObjectChanged != null)
-                    this.ObjectChanged(this, new EventArgs());
-            }
-        }
+        #region -=Support types=-
 
-        internal class Model1 : Model {
-            private int _value = 0;
-            public int Value {
-                get { return _value; }
-                set { Property.Set<int>(ref _value, value, "Value"); }
-            }
-            public Model1 SubModel { get; private set; }
-            public Model1() : this(false) { }
-            private Model1(bool isSubModel)
-                : base() {
-                if (!isSubModel) {
-                    this.SubModel = new Model1(true);
-                    this.ChangeManager.Track(this.SubModel);
-                }
-            }
-            protected override ChangeManager CreateChangeManager() {
-                return new ChangeManager();
-            }
-            protected override void OnSetInitialValues() {
-                base.OnSetInitialValues();
-                Property.Init<int>(ref _value, _value, "Value");
-            }
-        }
+		internal class MyClass1 : INotifyObjectChanged {
+			public event EventHandler ObjectChanged;
+
+			private bool _isChanged = false;
+
+			public bool IsChanged {
+				get { return _isChanged; }
+				set {
+					if (_isChanged == value)
+						return;
+					_isChanged = value;
+					OnObjectChanged ();
+				}
+			}
+
+			public void AcceptChanges () {
+				this.IsChanged = false;
+			}
+
+			private void OnObjectChanged () {
+				if (this.ObjectChanged != null)
+					this.ObjectChanged (this, new EventArgs ());
+			}
+		}
+
+		internal class Model1 : Model {
+			private int _value = 0;
+
+			public int Value {
+				get { return _value; }
+				set { Property.Set<int> (ref _value, value, "Value"); }
+			}
+
+			public Model1 SubModel { get; private set; }
+
+			public Model1 () : this (false) {
+			}
+
+			private Model1 (bool isSubModel)
+				: base () {
+				if (!isSubModel) {
+					this.SubModel = new Model1 (true);
+					this.ChangeManager.Track (this.SubModel);
+				}
+			}
+
+			protected override ChangeManager CreateChangeManager () {
+				return new ChangeManager ();
+			}
+
+			protected override void OnSetInitialValues () {
+				base.OnSetInitialValues ();
+				Property.Init<int> (ref _value, _value, "Value");
+			}
+		}
+
+		#endregion
 
 		[Test()]
         public void ChangeManager_OneObjectTracked() {
