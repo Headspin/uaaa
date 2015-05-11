@@ -2,13 +2,33 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="UaaaNUnit/BusinessRulesCheckerTest.cs">
     <Files>
-      <File FileName="Uaaa/Components/BusinessRulesChecker.cs" Line="20" Column="78" />
-      <File FileName="Uaaa/Components/BusinessRule.cs" Line="1" Column="1" />
       <File FileName="Uaaa/Components/ChangeManager.cs" Line="1" Column="1" />
-      <File FileName="Uaaa/Model.cs" Line="60" Column="4" />
-      <File FileName="UaaaNUnit/BusinessRulesCheckerTest.cs" Line="11" Column="12" />
+      <File FileName="Uaaa/Model.cs" Line="86" Column="21" />
+      <File FileName="UaaaNUnit/BusinessRulesCheckerTest.cs" Line="54" Column="45" />
       <File FileName="UaaaNUnit/ChangeManagerTest.cs" Line="1" Column="1" />
+      <File FileName="Uaaa/Components/PropertySetter.cs" Line="1" Column="1" />
+      <File FileName="Uaaa/Components/Descriptor.cs" Line="16" Column="43" />
+      <File FileName="Uaaa/ViewModel.cs" Line="13" Column="5" />
+      <File FileName="Uaaa/Components/PropertyTriggers.cs" Line="22" Column="9" />
+      <File FileName="Uaaa/Components/BusinessRule.cs" Line="1" Column="14" />
+      <File FileName="Uaaa/Components/BusinessRulesChecker.cs" Line="148" Column="27" />
+      <File FileName="Uaaa/Components/Collections/Items.cs" Line="13" Column="5" />
     </Files>
+    <Pads>
+      <Pad Id="MonoDevelop.NUnit.TestPad">
+        <State name="__root__">
+          <Node name="Uaaa" expanded="True">
+            <Node name="UaaaNUnit" expanded="True">
+              <Node name="UaaaNUnit" expanded="True">
+                <Node name="BusinessRulesCheckerTest" expanded="True">
+                  <Node name="BusinessRulesChecker_SingleRule_Per_Property" selected="True" />
+                </Node>
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
