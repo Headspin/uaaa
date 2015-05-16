@@ -2,6 +2,7 @@
 using System.Linq;
 using NUnit.Framework;
 using Uaaa;
+using System.Collections.Generic;
 
 namespace UaaaNUnit {
 	[TestFixture ()]
@@ -126,6 +127,62 @@ namespace UaaaNUnit {
 			Assert.IsTrue (result, "Checker result should be valid.");
 			Assert.IsFalse (checker.HasErrors, "No errors expected.");
 			Assert.AreEqual (0, errors.Count, "Invalid errors count.");
+		}
+
+		[Test ()]
+		public void BusinessRulesChecker_MultipleRules_Per_Property_Notification () {
+			TestModel testModel = new TestModel () { Label = "Label1", Value = 10 };
+			BusinessRulesChecker checker = new BusinessRulesChecker ();
+			checker.Add (new GenericRule<TestModel> (model => model.Label.EndsWith("1"), "Error1.1"),
+				"Label");
+			checker.Add (new GenericRule<TestModel> (model => model.Label.StartsWith("Label"), "Error1.2"), 
+				"Label");
+			checker.Add (new GenericRule<TestModel> (model => model.Value == 10, "Error2"), 
+				"Value");
+			int errorsChangedCount = 0;
+			HashSet<string> properties = new HashSet<string> ();
+			checker.ErrorsChanged += (sender, e) => {
+				errorsChangedCount++;
+				string propertyName = string.IsNullOrEmpty(e.PropertyName)? "": e.PropertyName;
+				properties.Add(propertyName);
+			}; 
+
+			Assert.IsFalse (checker.HasErrors, "No errors expected.");
+			checker.IsValid (testModel);
+			Assert.AreEqual (0, errorsChangedCount, "ErrorsChanged event should not be raised.");
+			Assert.AreEqual (0, properties.Count, "ErrorsChanged property name should not be set.");
+
+			testModel.Label = "Label2";
+			checker.IsValid (testModel);
+			Assert.AreEqual (1, errorsChangedCount, "ErrorsChanged event was not raised.");
+			Assert.AreEqual (1, properties.Count, "ErrorsChanged property name should be set.");
+			Assert.IsTrue (properties.Contains ("Label"), "ErrorsChanged property name invalid.");
+
+			errorsChangedCount = 0;
+			properties = new HashSet<string> ();
+
+			testModel.Label = "1";
+			checker.IsValid (testModel);
+			Assert.AreEqual(1, errorsChangedCount, "ErrorsChanged was not raised.");
+			Assert.AreEqual(1, properties.Count, "ErrorsChanged property name should be set.");
+			Assert.IsTrue (properties.Contains ("Label"), "ErrorsChanged property name invalid.");
+
+			errorsChangedCount = 0;
+			properties = new HashSet<string> ();
+
+			testModel.Label = "Label1";
+			checker.IsValid (testModel);
+			Assert.AreEqual(1, errorsChangedCount, "ErrorsChanged was not raised.");
+			Assert.AreEqual(1, properties.Count, "ErrorsChanged property name should be set.");
+			Assert.IsTrue (properties.Contains ("Label"), "ErrorsChanged property name invalid.");
+
+			errorsChangedCount = 0;
+			properties = new HashSet<string> ();
+
+			checker.IsValid (testModel);
+			Assert.AreEqual(0, errorsChangedCount, "ErrorsChanged should not be raised.");
+			Assert.AreEqual(0, properties.Count, "ErrorsChanged property name should not be set.");
+
 		}
 	}
 }
