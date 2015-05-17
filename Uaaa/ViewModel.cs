@@ -28,12 +28,18 @@ namespace Uaaa {
     /// </summary>
     public class ViewModel<TModel> : IViewModel, IModel, INotifyPropertyChanged, IDisposable where TModel : Model {
         #region -=Properties/Fields=-
+        /// <summary>
+        /// PropertySetter instance for setting property values.
+        /// </summary>
         protected readonly PropertySetter Property = null;
         /// <summary>
         /// Model property triggers.
         /// </summary>
         protected readonly PropertyTriggers<TModel> Triggers = new PropertyTriggers<TModel>();
         private TModel _model = null;
+        /// <summary>
+        /// Model object.
+        /// </summary>
         public virtual TModel Model {
             get { return _model; }
             set {
@@ -47,9 +53,16 @@ namespace Uaaa {
         protected bool IsReadonly { get; set; }
         #endregion
         #region -=Constructors=-
+        /// <summary>
+        /// Creates new object instance.
+        /// </summary>
         public ViewModel() {
             this.Property = new PropertySetter(this);
         }
+        /// <summary>
+        /// Creates new object instance.
+        /// </summary>
+        /// <param name="model"></param>
         public ViewModel(TModel model)
             : this() {
 			SetModel (model);
@@ -69,10 +82,15 @@ namespace Uaaa {
 		}
 		#endregion
         #region -=IModel members=-
+        /// <see cref="System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/>
         public event PropertyChangedEventHandler PropertyChanged;
         void IModel.RaisePropertyChanged(string propertyName) {
             RaisePropertyChanged(propertyName);
         }
+        /// <summary>
+        /// Raises PropertyChanged event for specific property name.
+        /// </summary>
+        /// <param name="propertyName"></param>
         protected void RaisePropertyChanged([CallerMemberName] string propertyName = null) {
             if (string.IsNullOrEmpty(propertyName)) return;
             PropertyChangedEventHandler handler = this.PropertyChanged;
@@ -90,9 +108,14 @@ namespace Uaaa {
         #endregion
         #region -=IDisposable members=-
         private bool _isDisposed = false;
+        /// <see cref="System.IDisposable.Dispose()"/>
         public void Dispose() {
             Dispose(true);
         }
+        /// <summary>
+        /// Disposes the object.
+        /// </summary>
+        /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing) {
             if (!_isDisposed) {
                 if (disposing) {

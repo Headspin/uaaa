@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Uaaa {
     /// <summary>
-    /// Handles property change tracking.
+    /// Handles property change tracking and notifications.
     /// </summary>
     public sealed class PropertySetter : INotifyObjectChanged {
         #region -=Properties/Fields=-

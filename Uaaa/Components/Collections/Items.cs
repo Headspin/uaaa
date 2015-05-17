@@ -14,7 +14,7 @@ namespace Uaaa {
         /// <summary>
         /// Counts marked items. Object is changed when count > 0;
         /// </summary>
-        /// <typeparam name="TItem"></typeparam>
+        /// <typeparam name="TModel"></typeparam>
         private sealed class ItemsCounter<TModel> : Model {
             private readonly HashSet<TModel> _items = new HashSet<TModel>();
             private int _count = 0;
@@ -57,9 +57,17 @@ namespace Uaaa {
 
         private readonly ItemsCounter<TItem> _addedItems = new ItemsCounter<TItem>();
         private readonly ItemsCounter<TItem> _removedItems = new ItemsCounter<TItem>();
-
+        /// <summary>
+        /// ChangeManager object instance.
+        /// </summary>
         protected ChangeManager ChangeManager { get; set; }
+        /// <summary>
+        /// Holds last item that was added to the collection.
+        /// </summary>
         public TItem LastAdded { get; private set; }
+        /// <summary>
+        /// Creates new object instance.
+        /// </summary>
         public Items() {
             this.ChangeManager = new Uaaa.ChangeManager();
             this.ChangeManager.Track(_addedItems);
@@ -85,6 +93,11 @@ namespace Uaaa {
         }
         #endregion
         #region -=Base class methods=-
+        /// <summary>
+        /// Inserts item to the collection at specified index.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="item"></param>
         protected override void InsertItem(int index, TItem item) {
             base.InsertItem(index, item);
             this.ChangeManager.Track(item as INotifyObjectChanged);
@@ -94,11 +107,19 @@ namespace Uaaa {
             else
                 _addedItems.Add(item);
         }
+
+        /// <summary>
+        /// Clears items collection.
+        /// </summary>
         protected override void ClearItems() {
             base.ClearItems();
             this.LastAdded = default(TItem);
             AcceptChanges();
         }
+        /// <summary>
+        /// Removes item from collection.
+        /// </summary>
+        /// <param name="index"></param>
         protected override void RemoveItem(int index) {
             TItem item = this[index];
             base.RemoveItem(index);
@@ -110,6 +131,11 @@ namespace Uaaa {
             else
                 _removedItems.Add(item);
         }
+        /// <summary>
+        /// Sets the item at specified index.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="item"></param>
         protected override void SetItem(int index, TItem item) {
             this.ChangeManager.Remove(this[index] as INotifyObjectChanged);
             if (_addedItems.Contains(item))
@@ -124,7 +150,9 @@ namespace Uaaa {
             ((IModel)this).RaisePropertyChanged("IsChanged");
         }
         #region -=INotifyObjectChanged members=-
+        /// <see cref="Uaaa.INotifyObjectChanged.ObjectChanged"/>
         public event EventHandler ObjectChanged;
+        /// <see cref="Uaaa.INotifyObjectChanged.IsChanged"/>
         public bool IsChanged { get { return this.ChangeManager.IsChanged; } }
         /// <summary>
         /// Accepts all changes made to the collection.

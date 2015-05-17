@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Uaaa</id>
+    <version>1.0.0</version>
+    <authors>DvaBita</authors>
+    <owners>DvaBita</owners>
+    <licenseUrl>https://raw.githubusercontent.com/Headspin/uaaa/master/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>UAAA is a small framework that focuses on business logic and MVVM pattern. Also contains components and base classes that simplify developers everyday tasks.</description>
+    <copyright>DvaBita</copyright>
+  </metadata>
+</package>

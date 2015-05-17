@@ -18,7 +18,6 @@ namespace Uaaa {
         /// <summary>
         /// Defines condition and action that should be executed if condition is met.
         /// </summary>
-        /// <typeparam name="TModel"></typeparam>
         private sealed class Trigger {
             /// <summary>
             /// Trigger condition.
@@ -32,6 +31,7 @@ namespace Uaaa {
             /// Creates new unconditional trigger.
             /// </summary>
             /// <param name="action"></param>
+            /// <param name="condition">Condition that is evaluated before trigger action is invoked.</param>
             public Trigger(Action<TModel> action, Predicate<TModel> condition = null) {
                 _action = action;
                 _condition = condition;
@@ -51,6 +51,9 @@ namespace Uaaa {
         }
         #endregion
         private TModel _model = null;
+        /// <summary>
+        /// Model object being observed.
+        /// </summary>
         public TModel Model {
             get { return _model; }
             set {
@@ -65,6 +68,9 @@ namespace Uaaa {
             }
         }
         private ConcurrentDictionary<string, Items<Trigger>> _triggersByProperty = new ConcurrentDictionary<string, Items<Trigger>>();
+        /// <summary>
+        /// Creates new object instance.
+        /// </summary>
         public PropertyTriggers() { }
         /// <summary>
         /// Adds trigger for property.
@@ -102,6 +108,7 @@ namespace Uaaa {
 
         #region -=IDisposable members=-
         private bool _isDisposed = false;
+        /// <see cref="System.IDisposable.Dispose"/>
         public void Dispose() {
             Dispose(true);
         }
