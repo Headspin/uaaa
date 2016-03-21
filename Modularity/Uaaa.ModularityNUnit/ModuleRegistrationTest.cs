@@ -28,7 +28,7 @@ namespace Uaaa.ModularityNUnit {
         [Test()]
         public void Modularity_ModuleInfo_Register_Missing_AssemblyName() {
             try {
-                var module = ModuleInfo.Register(ModuleName, null, TypeName);
+                ModuleInfo.Register(ModuleName, null, TypeName);
             } catch (ArgumentNullException) { return; }
 
             Assert.Fail("ArgumentNullException expected.");
@@ -36,7 +36,7 @@ namespace Uaaa.ModularityNUnit {
         [Test()]
         public void Modularity_ModuleInfo_Register_Missing_TypeName() {
             try {
-                var module = ModuleInfo.Register(ModuleName, AssemblyName, null);
+                ModuleInfo.Register(ModuleName, AssemblyName, null);
             } catch (ArgumentNullException) { return; }
 
             Assert.Fail("ArgumentNullException expected.");
