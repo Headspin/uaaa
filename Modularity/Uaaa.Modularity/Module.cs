@@ -36,8 +36,9 @@ namespace Uaaa.Modularity {
         }
         public ModuleState State { get; private set; } = ModuleState.Ready;
         #region -=IModule members=-
+		private readonly object _initializeSync = new object ();
         Task IModule.Initialize() {
-            lock (this) {
+            lock (_initializeSync) {
                 if (this.State != ModuleState.Ready) return Task.FromResult<bool>(false);
                 this.State = ModuleState.Initializing;
             }

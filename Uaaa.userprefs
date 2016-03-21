@@ -1,4 +1,4 @@
-﻿<Properties StartupItem="Uaaa/Uaaa.csproj">
+﻿<Properties StartupItem="Uaaa/Uaaa.csproj" RefactoringSettings.EnableRefactorings="True">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

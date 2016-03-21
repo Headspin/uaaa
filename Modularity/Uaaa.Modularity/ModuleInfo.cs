@@ -93,8 +93,7 @@ namespace Uaaa.Modularity {
                 await module.Load();
             }
             // load module and initialize.
-            _loadedModuleAssemblies.GetOrAdd(this.AssemblyName,
-                assemblyName => Assembly.LoadFrom(assemblyName)); // no need to load if already loaded.
+			_loadedModuleAssemblies.GetOrAdd (this.AssemblyName, Assembly.LoadFrom); // no need to load if already loaded.
             Type moduleType = Type.GetType(this.TypeName);
             var loadedModule = ServiceLocator.Current.GetInstance(moduleType) as IModule;
             if (loadedModule != null)
