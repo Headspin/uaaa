@@ -22,19 +22,19 @@ namespace Uaaa {
             /// <summary>
             /// Trigger condition.
             /// </summary>
-            private readonly Predicate<TModel> _condition = null;
+            private readonly Predicate<TModel> condition = null;
             /// <summary>
             /// Trigger action.
             /// </summary>
-            private readonly Action<TModel> _action = null;
+            private readonly Action<TModel> action = null;
             /// <summary>
             /// Creates new unconditional trigger.
             /// </summary>
             /// <param name="action"></param>
             /// <param name="condition">Condition that is evaluated before trigger action is invoked.</param>
             public Trigger(Action<TModel> action, Predicate<TModel> condition = null) {
-                _action = action;
-                _condition = condition;
+                this.action = action;
+                this.condition = condition;
             }
             /// <summary>
             /// Invokes the trigger.
@@ -42,32 +42,32 @@ namespace Uaaa {
             /// <param name="model"></param>
             /// <returns></returns>
             public bool Invoke(TModel model) {
-                if (_condition == null || _condition(model)) {
-                    _action(model);
+                if (condition == null || condition(model)) {
+                    action(model);
                     return true;
                 }
                 return false;
             }
         }
         #endregion
-        private TModel _model = null;
+        private TModel model = null;
         /// <summary>
         /// Model object being observed.
         /// </summary>
         public TModel Model {
-            get { return _model; }
+            get { return this.model; }
             set {
-                bool modelSwitched = _model != null;
-                if (_model != null) 
-                    _model.PropertyChanged -= Model_PropertyChanged;
-                _model = value;
-                if (_model != null) 
-                    _model.PropertyChanged += Model_PropertyChanged;
+                bool modelSwitched = model != null;
+                if (model != null) 
+                    model.PropertyChanged -= Model_PropertyChanged;
+                model = value;
+                if (model != null) 
+                    model.PropertyChanged += Model_PropertyChanged;
                 if (modelSwitched)
-                    TriggerAll(_model);
+                    TriggerAll(model);
             }
         }
-        private ConcurrentDictionary<string, Items<Trigger>> _triggersByProperty = new ConcurrentDictionary<string, Items<Trigger>>();
+        private ConcurrentDictionary<string, Items<Trigger>> triggersByProperty = new ConcurrentDictionary<string, Items<Trigger>>();
         /// <summary>
         /// Creates new object instance.
         /// </summary>
@@ -79,7 +79,7 @@ namespace Uaaa {
         /// <param name="action">Trigger action to be invoked.</param>
         /// <param name="condition">Trigger condition.</param>
         public void Add(string propertyName, Action<TModel> action, Predicate<TModel> condition = null){
-            Items<Trigger> triggers = _triggersByProperty.AddOrUpdate(propertyName, new Items<Trigger>(), (key, value) => value);
+            Items<Trigger> triggers = triggersByProperty.AddOrUpdate(propertyName, new Items<Trigger>(), (key, value) => value);
             triggers.Add(new Trigger(action, condition));
         }
 
@@ -87,7 +87,7 @@ namespace Uaaa {
             try {
                 Items<Trigger> triggers = null;
                 TModel model = (TModel)sender;
-                if (_triggersByProperty.TryGetValue(args.PropertyName, out triggers)) {
+                if (triggersByProperty.TryGetValue(args.PropertyName, out triggers)) {
                     foreach (Trigger trigger in triggers)
                         trigger.Invoke(model);
                 }
@@ -100,27 +100,27 @@ namespace Uaaa {
         /// </summary>
         /// <param name="model"></param>
         private void TriggerAll(TModel model) {
-            foreach (Items<Trigger> triggers in _triggersByProperty.Values) {
+            foreach (Items<Trigger> triggers in triggersByProperty.Values) {
                 foreach (Trigger trigger in triggers)
                     trigger.Invoke(model);
             }
         }
 
         #region -=IDisposable members=-
-        private bool _isDisposed = false;
+        private bool isDisposed = false;
         /// <see cref="System.IDisposable.Dispose"/>
         public void Dispose() {
             Dispose(true);
         }
         private void Dispose(bool disposing) {
-            if (!_isDisposed) {
+            if (!isDisposed) {
                 if (disposing) {
-                    if (_model != null) {
-                        _model.PropertyChanged -= Model_PropertyChanged;
-                        _model = null;
+                    if (model != null) {
+                        model.PropertyChanged -= Model_PropertyChanged;
+                        model = null;
                     }
                 }
-                _isDisposed = true;
+                isDisposed = true;
             }
         }
         #endregion

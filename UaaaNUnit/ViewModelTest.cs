@@ -6,10 +6,10 @@ namespace UaaaNUnit {
     public class ViewModelTest {
 
         public class Input : Model {
-            private int _value1 = 0;
-            private int _value2 = 0;
-            public int Value1 { get { return _value1; } set { Property.Set<int>(ref _value1, value); } }
-            public int Value2 { get { return _value2; } set { Property.Set<int>(ref _value2, value); } }
+            private int value1 = 0;
+            private int value2 = 0;
+            public int Value1 { get { return value1; } set { Property.Set<int>(ref value1, value); } }
+            public int Value2 { get { return value2; } set { Property.Set<int>(ref value2, value); } }
         }
 
         public class Calc : ViewModel<Input> {

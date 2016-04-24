@@ -36,14 +36,14 @@ namespace Uaaa {
         /// Model property triggers.
         /// </summary>
         protected readonly PropertyTriggers<TModel> Triggers = new PropertyTriggers<TModel>();
-        private TModel _model = null;
+        private TModel model = null;
         /// <summary>
         /// Model object.
         /// </summary>
         public virtual TModel Model {
-            get { return _model; }
+            get { return model; }
             set {
-                if (Property.Set<TModel>(ref _model, value, canChange: () => !this.IsReadonly || _model == default(TModel)))
+                if (Property.Set<TModel>(ref model, value, canChange: () => !this.IsReadonly || model == default(TModel)))
                     OnModelChanged();
             }
         }
@@ -73,7 +73,7 @@ namespace Uaaa {
         /// Triggers optional actions after model value changed.
         /// </summary>
         protected virtual void OnModelChanged() {
-            this.Triggers.Model = _model;
+            this.Triggers.Model = model;
         }
         #endregion
 		#region -=Private methods=-
@@ -100,14 +100,14 @@ namespace Uaaa {
         #endregion
         #region -=IViewModel members=-
         object IViewModel.GetModel() {
-            return _model;
+            return model;
         }
         void IViewModel.SetModel(object model) {
             this.Model = model as TModel;
         }
         #endregion
         #region -=IDisposable members=-
-        private bool _isDisposed = false;
+        private bool isDisposed = false;
         /// <see cref="System.IDisposable.Dispose()"/>
         public void Dispose() {
             Dispose(true);
@@ -117,11 +117,11 @@ namespace Uaaa {
         /// </summary>
         /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing) {
-            if (!_isDisposed) {
+            if (!isDisposed) {
                 if (disposing) {
                     this.Triggers.Dispose();
                 }
-                _isDisposed = true;
+                isDisposed = true;
             }
         }
         #endregion

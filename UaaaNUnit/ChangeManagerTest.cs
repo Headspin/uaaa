@@ -11,14 +11,14 @@ namespace UaaaNUnit {
 		internal class MyClass1 : INotifyObjectChanged {
 			public event EventHandler ObjectChanged;
 
-			private bool _isChanged = false;
+			private bool isChanged = false;
 
 			public bool IsChanged {
-				get { return _isChanged; }
+				get { return isChanged; }
 				set {
-					if (_isChanged == value)
+					if (isChanged == value)
 						return;
-					_isChanged = value;
+					isChanged = value;
 					OnObjectChanged ();
 				}
 			}
@@ -28,17 +28,16 @@ namespace UaaaNUnit {
 			}
 
 			private void OnObjectChanged () {
-				if (this.ObjectChanged != null)
-					this.ObjectChanged (this, new EventArgs ());
-			}
+                this.ObjectChanged?.Invoke(this, new EventArgs());
+            }
 		}
 
 		internal class Model1 : Model {
-			private int _value = 0;
+			private int value = 0;
 
 			public int Value {
-				get { return _value; }
-				set { Property.Set<int> (ref _value, value, "Value"); }
+				get { return this.value; }
+				set { Property.Set<int> (ref this.value, value, "Value"); }
 			}
 
 			public Model1 SubModel { get; private set; }
@@ -60,7 +59,7 @@ namespace UaaaNUnit {
 
 			protected override void OnSetInitialValues () {
 				base.OnSetInitialValues ();
-				Property.Init<int> (ref _value, _value, "Value");
+				Property.Init<int> (ref value, value, "Value");
 			}
 		}
 

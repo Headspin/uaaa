@@ -194,9 +194,7 @@ namespace Uaaa {
         /// Raises ObjectChanged event.
         /// </summary>
         protected virtual void OnObjectChanged() {
-            EventHandler handler = this.ObjectChanged;
-            if (handler != null)
-                handler(this, new EventArgs());
+            this.ObjectChanged?.Invoke(this, new EventArgs());
         }
 
         #endregion
@@ -222,9 +220,7 @@ namespace Uaaa {
         /// </summary>
         /// <param name="args"></param>
         protected virtual void OnErrorsChanged(DataErrorsChangedEventArgs args) {
-            var handler = this.ErrorsChanged;
-            if (handler != null)
-                handler(this, args);
+            this.ErrorsChanged?.Invoke(this, args);
         }
 
         #endregion

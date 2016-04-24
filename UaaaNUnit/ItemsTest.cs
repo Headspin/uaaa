@@ -9,17 +9,17 @@ namespace UaaaNUnit {
         /// Simple item that does not support change tracking (only property changed notifications).
         /// </summary>
         public class SimpleItem : Model {
-            private int _value1 = 0;
-            public int Value1 { get { return _value1; } set { Property.Set<int>(ref _value1, value); } }
+            private int value1 = 0;
+            public int Value1 { get { return value1; } set { Property.Set<int>(ref value1, value); } }
         }
         /// <summary>
         /// Item that supports change tracking functionality.
         /// </summary>
         public class Item : Model {
-            private int _value1 = 0;
-            private int _value2 = 0;
-            public int Value1 { get { return _value1; } set { Property.Set<int>(ref _value1, value); } }
-            public int Value2 { get { return _value2; } set { Property.Set<int>(ref _value2, value); } }
+            private int value1 = 0;
+            private int value2 = 0;
+            public int Value1 { get { return value1; } set { Property.Set<int>(ref value1, value); } }
+            public int Value2 { get { return value2; } set { Property.Set<int>(ref value2, value); } }
 
 
             protected override ChangeManager CreateChangeManager() {
@@ -28,8 +28,8 @@ namespace UaaaNUnit {
 
             protected override void OnSetInitialValues() {
                 base.OnSetInitialValues();
-                Property.Init<int>(ref _value1, _value1, "Value1");
-                Property.Init<int>(ref _value2, _value2, "Value2");
+                Property.Init<int>(ref value1, value1, "Value1");
+                Property.Init<int>(ref value2, value2, "Value2");
             }
         }
 

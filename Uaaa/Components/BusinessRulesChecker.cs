@@ -11,8 +11,8 @@ namespace Uaaa {
     /// Implements INotifyDataErrorInfo and handles data validation by checking added business rules.
     /// </summary>
     public class BusinessRulesChecker : INotifyDataErrorInfo, INotifyPropertyChanged {
-        private Dictionary<string, Items<BusinessRule>> _rulesByPropertyName = new Dictionary<string, Items<BusinessRule>>();
-        private Dictionary<string, Items<BusinessRule>> _currentErrors = new Dictionary<string, Items<BusinessRule>>();
+        private Dictionary<string, Items<BusinessRule>> rulesByPropertyName = new Dictionary<string, Items<BusinessRule>>();
+        private Dictionary<string, Items<BusinessRule>> currentErrors = new Dictionary<string, Items<BusinessRule>>();
         /// <see cref="System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/>
         public event PropertyChangedEventHandler PropertyChanged;
         /// <summary>
@@ -53,7 +53,7 @@ namespace Uaaa {
             Items<string> errorsChangedProperties = new Items<string>();
             if (string.IsNullOrEmpty(propertyName)) {
                 #region -=Check all rules=-
-                foreach (KeyValuePair<string, Items<BusinessRule>> pair in _rulesByPropertyName) {
+                foreach (KeyValuePair<string, Items<BusinessRule>> pair in rulesByPropertyName) {
                     Items<BusinessRule> errors = new Items<BusinessRule>();
                     foreach (BusinessRule rule in GetInvalidRules(model, pair.Value)) {
                         errors.Add(rule);
@@ -61,14 +61,14 @@ namespace Uaaa {
                     }
                     bool errorsChanged = false;
                     if (errors.Count > 0) {
-                        if (_currentErrors.ContainsKey(pair.Key))
-                            _currentErrors[pair.Key] = errors;
+                        if (currentErrors.ContainsKey(pair.Key))
+                            currentErrors[pair.Key] = errors;
                         else
-                            _currentErrors.Add(pair.Key, errors);
+                            currentErrors.Add(pair.Key, errors);
                         errorsChanged = true;
                     } else {
-                        if (_currentErrors.ContainsKey(pair.Key)) {
-                            _currentErrors.Remove(pair.Key);
+                        if (currentErrors.ContainsKey(pair.Key)) {
+                            currentErrors.Remove(pair.Key);
                             errorsChanged = true;
                         }
                     }
@@ -76,23 +76,23 @@ namespace Uaaa {
                         errorsChangedProperties.Add(pair.Key);
                 }
                 #endregion
-            } else if (_rulesByPropertyName.ContainsKey(propertyName)) {
+            } else if (rulesByPropertyName.ContainsKey(propertyName)) {
                 #region -=Check property specific rules=-
                 Items<BusinessRule> errors = new Items<BusinessRule>();
-                foreach (BusinessRule rule in GetInvalidRules(model, _rulesByPropertyName[propertyName])) {
+                foreach (BusinessRule rule in GetInvalidRules(model, rulesByPropertyName[propertyName])) {
                     errors.Add(rule);
                     isValid = false;
                 }
                 bool errorsChanged = false;
                 if (errors.Count > 0) {
-                    if (_currentErrors.ContainsKey(propertyName))
-                        _currentErrors[propertyName] = errors;
+                    if (currentErrors.ContainsKey(propertyName))
+                        currentErrors[propertyName] = errors;
                     else
-                        _currentErrors.Add(propertyName, errors);
+                        currentErrors.Add(propertyName, errors);
                     errorsChanged = true;
                 } else {
-                    if (_currentErrors.ContainsKey(propertyName)) {
-                        _currentErrors.Remove(propertyName);
+                    if (currentErrors.ContainsKey(propertyName)) {
+                        currentErrors.Remove(propertyName);
                         errorsChanged = true;
                     }
                 }
@@ -100,7 +100,7 @@ namespace Uaaa {
                     errorsChangedProperties.Add(propertyName);
                 #endregion
             }
-            this.HasErrors = _currentErrors.Count > 0;
+            this.HasErrors = currentErrors.Count > 0;
             foreach (string property in errorsChangedProperties)
                 OnErrorsChanged(property);
             return isValid;
@@ -116,17 +116,17 @@ namespace Uaaa {
         }
 
         private void AddToIndex(BusinessRule rule, string propertyName = "") {
-            if (!_rulesByPropertyName.ContainsKey(propertyName))
-                _rulesByPropertyName.Add(propertyName, new Items<BusinessRule>() { rule });
+            if (!rulesByPropertyName.ContainsKey(propertyName))
+                rulesByPropertyName.Add(propertyName, new Items<BusinessRule>() { rule });
             else
-                _rulesByPropertyName[propertyName].Add(rule);
+                rulesByPropertyName[propertyName].Add(rule);
         }
 
         private void RemoveFromIndex(BusinessRule rule, string propertyName = "") {
-            if (_rulesByPropertyName.ContainsKey(propertyName)) {
-                _rulesByPropertyName[propertyName].Remove(rule);
-                if (_rulesByPropertyName[propertyName].Count < 1)
-                    _rulesByPropertyName.Remove(propertyName);
+            if (rulesByPropertyName.ContainsKey(propertyName)) {
+                rulesByPropertyName[propertyName].Remove(rule);
+                if (rulesByPropertyName[propertyName].Count < 1)
+                    rulesByPropertyName.Remove(propertyName);
             }
         }
 
@@ -155,36 +155,34 @@ namespace Uaaa {
         public System.Collections.IEnumerable GetErrors(string propertyName) {
             if (string.IsNullOrEmpty(propertyName)) {
                 // return all errors
-                foreach (KeyValuePair<string, Items<BusinessRule>> pair in _currentErrors) {
+                foreach (KeyValuePair<string, Items<BusinessRule>> pair in currentErrors) {
                     foreach (BusinessRule rule in pair.Value)
                         yield return rule.Error;
                 }
-            } else if (_currentErrors.ContainsKey(propertyName)) {
-                Items<BusinessRule> errors = _currentErrors[propertyName];
+            } else if (currentErrors.ContainsKey(propertyName)) {
+                Items<BusinessRule> errors = currentErrors[propertyName];
                 foreach (BusinessRule rule in errors)
                     yield return rule.Error;
             }
         }
 
-        private bool _hasErrors = false;
+        private bool hasErrors = false;
         /// <summary>
         /// INotifyDataErrorInfo.HasErrors property implementation.
         /// </summary>
         /// <value><c>true</c> if this instance has errors; otherwise, <c>false</c>.</value>
         public bool HasErrors {
-            get { return _hasErrors; }
+            get { return hasErrors; }
             private set {
-                if (_hasErrors != value) {
-                    _hasErrors = value;
-                    OnPropertyChanged("HasErrors");
+                if (hasErrors != value) {
+                    hasErrors = value;
+                    OnPropertyChanged(nameof(HasErrors));
                 }
             }
         }
 
         private void OnErrorsChanged(string propertyName) {
-            EventHandler<DataErrorsChangedEventArgs> handler = this.ErrorsChanged;
-            if (handler != null)
-                handler(this, new DataErrorsChangedEventArgs(propertyName));
+            this.ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
         }
 
         #endregion

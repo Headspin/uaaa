@@ -16,27 +16,27 @@ namespace Uaaa {
         /// </summary>
         /// <typeparam name="TModel"></typeparam>
         private sealed class ItemsCounter<TModel> : Model {
-            private readonly HashSet<TModel> _items = new HashSet<TModel>();
-            private int _count = 0;
-            public int Count { get { return _count; } private set { Property.Set<int>(ref _count, value); } }
+            private readonly HashSet<TModel> items = new HashSet<TModel>();
+            private int count = 0;
+            public int Count { get { return count; } private set { Property.Set<int>(ref count, value); } }
             #region -=Public methods=-
             public IEnumerable<TModel> GetAll() {
-                foreach (TModel item in _items)
+                foreach (TModel item in items)
                     yield return item;
             }
             public bool Contains(TModel item) {
-                return _items.Contains(item);
+                return items.Contains(item);
             }
             public void Add(TModel item) {
-                _items.Add(item);
-                this.Count = _items.Count();
+                items.Add(item);
+                this.Count = items.Count();
             }
             public void Remove(TModel item) {
-                _items.Remove(item);
-                this.Count = _items.Count();
+                items.Remove(item);
+                this.Count = items.Count();
             }
             public void Reset() {
-                _items.Clear();
+                items.Clear();
                 this.Count = 0;
             }
             /// <summary>
@@ -50,13 +50,13 @@ namespace Uaaa {
             protected override ChangeManager CreateChangeManager() { return new ChangeManager(); }
             protected override void OnSetInitialValues() {
                 base.OnSetInitialValues();
-                Property.Init<int>(ref _count, _count, "Count");
+                Property.Init<int>(ref count, count, "Count");
             }
             #endregion
         }
 
-        private readonly ItemsCounter<TItem> _addedItems = new ItemsCounter<TItem>();
-        private readonly ItemsCounter<TItem> _removedItems = new ItemsCounter<TItem>();
+        private readonly ItemsCounter<TItem> addedItems = new ItemsCounter<TItem>();
+        private readonly ItemsCounter<TItem> removedItems = new ItemsCounter<TItem>();
         /// <summary>
         /// ChangeManager object instance.
         /// </summary>
@@ -70,8 +70,8 @@ namespace Uaaa {
         /// </summary>
         public Items() {
             this.ChangeManager = new Uaaa.ChangeManager();
-            this.ChangeManager.Track(_addedItems);
-            this.ChangeManager.Track(_removedItems);
+            this.ChangeManager.Track(addedItems);
+            this.ChangeManager.Track(removedItems);
             this.ChangeManager.ObjectChanged += ChangeManager_ObjectChanged;
         }
         #region -=Public methods=-
@@ -80,7 +80,7 @@ namespace Uaaa {
         /// </summary>
         /// <returns></returns>
         public IEnumerable<TItem> GetAddedItems() {
-            foreach (TItem item in _addedItems.GetAll())
+            foreach (TItem item in addedItems.GetAll())
                 yield return item;
         }
         /// <summary>
@@ -88,7 +88,7 @@ namespace Uaaa {
         /// </summary>
         /// <returns></returns>
         public IEnumerable<TItem> GetRemovedItems() {
-            foreach (TItem item in _removedItems.GetAll())
+            foreach (TItem item in removedItems.GetAll())
                 yield return item;
         }
         #endregion
@@ -102,10 +102,10 @@ namespace Uaaa {
             base.InsertItem(index, item);
             this.ChangeManager.Track(item as INotifyObjectChanged);
             this.LastAdded = item;
-            if (_removedItems.Contains(item))
-                _removedItems.Remove(item);
+            if (removedItems.Contains(item))
+                removedItems.Remove(item);
             else
-                _addedItems.Add(item);
+                addedItems.Add(item);
         }
 
         /// <summary>
@@ -126,10 +126,10 @@ namespace Uaaa {
             if (item.Equals(this.LastAdded))
                 this.LastAdded = default(TItem);
             this.ChangeManager.Remove(item as INotifyObjectChanged);
-            if (_addedItems.Contains(item))
-                _addedItems.Remove(item);
+            if (addedItems.Contains(item))
+                addedItems.Remove(item);
             else
-                _removedItems.Add(item);
+                removedItems.Add(item);
         }
         /// <summary>
         /// Sets the item at specified index.
@@ -138,8 +138,8 @@ namespace Uaaa {
         /// <param name="item"></param>
         protected override void SetItem(int index, TItem item) {
             this.ChangeManager.Remove(this[index] as INotifyObjectChanged);
-            if (_addedItems.Contains(item))
-                _addedItems.Remove(item);
+            if (addedItems.Contains(item))
+                addedItems.Remove(item);
             base.SetItem(index, item);
             this.ChangeManager.Track(item as INotifyObjectChanged);
         }

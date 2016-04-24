@@ -11,14 +11,14 @@ namespace Uaaa {
     /// </summary>
     public sealed class PropertySetter : INotifyObjectChanged {
         #region -=Properties/Fields=-
-        private readonly IModel _model;
-        private bool _isTrackingChanges = false;
-        private Dictionary<string, object> _initialValues = null;
-        private Dictionary<string, object> _changedValues = null;
+        private readonly IModel model;
+        private bool isTrackingChanges = false;
+        private Dictionary<string, object> initialValues = null;
+        private Dictionary<string, object> changedValues = null;
         /// <summary>
         /// TRUE when change tracking is enabled by setting inital value of at least one property.
         /// </summary>
-        public bool IsTrackingChanges { get { return _isTrackingChanges; } }
+        public bool IsTrackingChanges { get { return isTrackingChanges; } }
         #endregion
         #region -=Constructors=-
         /// <summary>
@@ -26,7 +26,7 @@ namespace Uaaa {
         /// </summary>
         /// <param name="model"></param>
         public PropertySetter(IModel model) {
-            _model = model;
+            this.model = model;
         }
         #endregion
         #region -=Public methods=-
@@ -46,18 +46,18 @@ namespace Uaaa {
             if (canChange != null && !canChange()) return false;
             store = value;
             if ((!string.IsNullOrEmpty(propertyName))) {
-                _model.RaisePropertyChanged(propertyName);
-                if (_isTrackingChanges && _initialValues.ContainsKey(propertyName)) {
+                model.RaisePropertyChanged(propertyName);
+                if (isTrackingChanges && initialValues.ContainsKey(propertyName)) {
                     #region -=Handle change tracking notifications=-
-                    bool isInitialValue = selectedComparer.Equals((T)_initialValues[propertyName], value);
-                    if (isInitialValue && _changedValues.ContainsKey(propertyName)) {
-                        _changedValues.Remove(propertyName); // remove from current values -> property holds initial value.
-                        this.IsChanged = _changedValues.Count > 0;
+                    bool isInitialValue = selectedComparer.Equals((T)initialValues[propertyName], value);
+                    if (isInitialValue && changedValues.ContainsKey(propertyName)) {
+                        changedValues.Remove(propertyName); // remove from current values -> property holds initial value.
+                        this.IsChanged = changedValues.Count > 0;
                     } else if (!isInitialValue) {
-                        if (_changedValues.ContainsKey(propertyName))
-                            _changedValues[propertyName] = value; // update changed value.
+                        if (changedValues.ContainsKey(propertyName))
+                            changedValues[propertyName] = value; // update changed value.
                         else {
-                            _changedValues.Add(propertyName, value); // add to changed values dictionary.
+                            changedValues.Add(propertyName, value); // add to changed values dictionary.
                             this.IsChanged = true;
                         }
                     }
@@ -76,27 +76,27 @@ namespace Uaaa {
         /// <param name="propertyName"></param>
         public void Init<T>(ref T store, T value, string propertyName) {
             if (string.IsNullOrEmpty(propertyName)) return;
-            if (!_isTrackingChanges) {
-                _initialValues = new Dictionary<string, object>();
-                _changedValues = new Dictionary<string, object>();
-                _isTrackingChanges = true;
+            if (!isTrackingChanges) {
+                initialValues = new Dictionary<string, object>();
+                changedValues = new Dictionary<string, object>();
+                isTrackingChanges = true;
             }
-            if (!_initialValues.ContainsKey(propertyName))
-                _initialValues.Add(propertyName, value);
+            if (!initialValues.ContainsKey(propertyName))
+                initialValues.Add(propertyName, value);
             else
-                _initialValues[propertyName] = value;
+                initialValues[propertyName] = value;
             store = value;
         }
         /// <summary>
         /// Accept changes by seting changed property values to initial property values.
         /// </summary>
         public void AcceptChanges() {
-            if (!_isTrackingChanges) return;
-            foreach (KeyValuePair<string, object> pair in _changedValues) {
-                if (!_initialValues.ContainsKey(pair.Key)) continue;
-                _initialValues[pair.Key] = pair.Value;
+            if (!isTrackingChanges) return;
+            foreach (KeyValuePair<string, object> pair in changedValues) {
+                if (!initialValues.ContainsKey(pair.Key)) continue;
+                initialValues[pair.Key] = pair.Value;
             }
-            _changedValues.Clear();
+            changedValues.Clear();
             this.IsChanged = false;
         }
         #endregion
@@ -105,21 +105,20 @@ namespace Uaaa {
         /// INotifyObjectChanged.ObjectChanged implementation.
         /// </summary>
         public event EventHandler ObjectChanged;
-        private bool _isChanged = false;
+        private bool isChanged = false;
         /// <summary>
         /// Returns TRUE if object is changed, FALSE otherwise.
         /// </summary>
         public bool IsChanged {
-            get { return _isChanged; }
+            get { return isChanged; }
             private set {
-                if (_isChanged == value) return;
-                _isChanged = value;
+                if (isChanged == value) return;
+                isChanged = value;
                 RaiseObjectChanged();
             }
         }
         private void RaiseObjectChanged() {
-            if (this.ObjectChanged != null)
-                this.ObjectChanged(this, new EventArgs());
+            this.ObjectChanged?.Invoke(this, new EventArgs());
         }
         #endregion
     }

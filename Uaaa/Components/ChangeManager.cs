@@ -10,8 +10,8 @@ namespace Uaaa {
     /// </summary>
     public class ChangeManager : INotifyObjectChanged {
         #region -=Properties/Fields=-
-        private readonly HashSet<INotifyObjectChanged> _trackedObjects = new HashSet<INotifyObjectChanged>();
-        private readonly HashSet<INotifyObjectChanged> _changedObjects = new HashSet<INotifyObjectChanged>();
+        private readonly HashSet<INotifyObjectChanged> trackedObjects = new HashSet<INotifyObjectChanged>();
+        private readonly HashSet<INotifyObjectChanged> changedObjects = new HashSet<INotifyObjectChanged>();
         #endregion
         #region -=Constructors=-
         /// <summary>
@@ -26,11 +26,11 @@ namespace Uaaa {
         /// <param name="trackedObject"></param>
         public void Track(INotifyObjectChanged trackedObject) {
             if (trackedObject == null) return;
-            if (_trackedObjects.Contains(trackedObject)) return;
-            _trackedObjects.Add(trackedObject);
+            if (trackedObjects.Contains(trackedObject)) return;
+            trackedObjects.Add(trackedObject);
             trackedObject.ObjectChanged += TrackedObject_ObjectChanged;
             if (trackedObject.IsChanged) {
-                _changedObjects.Add(trackedObject);
+                changedObjects.Add(trackedObject);
                 this.IsChanged = true;
             }
         }
@@ -40,11 +40,11 @@ namespace Uaaa {
         /// <param name="trackedObject"></param>
         public void Remove(INotifyObjectChanged trackedObject) {
             if (trackedObject == null) return;
-            if (!_trackedObjects.Contains(trackedObject)) return;
-            _trackedObjects.Remove(trackedObject);
-            if (_changedObjects.Contains(trackedObject)) {
-                _changedObjects.Remove(trackedObject);
-                this.IsChanged = _changedObjects.Count > 0;
+            if (!trackedObjects.Contains(trackedObject)) return;
+            trackedObjects.Remove(trackedObject);
+            if (changedObjects.Contains(trackedObject)) {
+                changedObjects.Remove(trackedObject);
+                this.IsChanged = changedObjects.Count > 0;
             }
             
         }
@@ -52,10 +52,10 @@ namespace Uaaa {
         /// Resets change manager be clearing all tracking data.
         /// </summary>
         public void Reset() {
-            foreach (INotifyObjectChanged trackedObject in _trackedObjects)
+            foreach (INotifyObjectChanged trackedObject in trackedObjects)
                 trackedObject.ObjectChanged -= TrackedObject_ObjectChanged;
-            _trackedObjects.Clear();
-            _changedObjects.Clear();
+            trackedObjects.Clear();
+            changedObjects.Clear();
             this.IsChanged = false;
         }
         #endregion
@@ -63,12 +63,12 @@ namespace Uaaa {
         private void TrackedObject_ObjectChanged(object sender, EventArgs args) {
             INotifyObjectChanged trackedObject = sender as INotifyObjectChanged;
             if (trackedObject == null) return;
-            if (trackedObject.IsChanged && !_changedObjects.Contains(trackedObject)) {
-                _changedObjects.Add(trackedObject);
+            if (trackedObject.IsChanged && !changedObjects.Contains(trackedObject)) {
+                changedObjects.Add(trackedObject);
                 this.IsChanged = true;
-            } else if (!trackedObject.IsChanged && _changedObjects.Contains(trackedObject)) {
-                _changedObjects.Remove(trackedObject);
-                this.IsChanged = _changedObjects.Count > 0;
+            } else if (!trackedObject.IsChanged && changedObjects.Contains(trackedObject)) {
+                changedObjects.Remove(trackedObject);
+                this.IsChanged = changedObjects.Count > 0;
             }
         }
         #endregion
@@ -77,15 +77,15 @@ namespace Uaaa {
         /// INotifyObjectChanged.ObjectChanged implementation.
         /// </summary>
         public event EventHandler ObjectChanged;
-        private bool _isChanged = false;
+        private bool isChanged = false;
         /// <summary>
         /// TRUE if object changed, FALSE otherwise.
         /// </summary>
         public bool IsChanged {
-            get { return _isChanged; }
+            get { return isChanged; }
             private set {
-                if (_isChanged == value) return;
-                _isChanged = value;
+                if (isChanged == value) return;
+                isChanged = value;
                 OnObjectChanged();
             }
         }
@@ -93,13 +93,12 @@ namespace Uaaa {
         /// Accepts changes on all tracked objects.
         /// </summary>
         public void AcceptChanges() {
-            foreach (INotifyObjectChanged item in _trackedObjects) 
+            foreach (INotifyObjectChanged item in trackedObjects) 
                 item.AcceptChanges();
         }
 
         private void OnObjectChanged() {
-            if (this.ObjectChanged != null)
-                this.ObjectChanged(this, new EventArgs());
+            this.ObjectChanged?.Invoke(this, new EventArgs());
         }
         #endregion
     }

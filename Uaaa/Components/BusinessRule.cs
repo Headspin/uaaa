@@ -34,7 +34,7 @@ namespace Uaaa {
 	/// Generic business rule implementation.
 	/// </summary>
 	public sealed class GenericRule<TModel>:BusinessRule {
-		private readonly Predicate<TModel> _criteria = null;
+		private readonly Predicate<TModel> criteria = null;
         /// <summary>
         /// Creates new object instance.
         /// </summary>
@@ -43,11 +43,11 @@ namespace Uaaa {
 		public GenericRule (Predicate<TModel> criteria, string error) : base (error) {
 			if (criteria == null)
 				throw new ArgumentNullException ("criteria");
-			_criteria = criteria;
+			this.criteria = criteria;
 		}
         ///<see cref="Uaaa.BusinessRule.IsValid(object)"/>
 		public override bool IsValid (object model) {
-			return _criteria ((TModel)model);
+			return criteria ((TModel)model);
 		}
 	}
 
