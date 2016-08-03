@@ -14,7 +14,7 @@ namespace Uaaa.Data.Initializers
         /// Initializes object instance with provided XElement data.
         /// </summary>
         /// <param name="data"></param>
-        void Init(XElement data);
+        void Initialize(XElement data);
 
         /// <summary>
         /// Serializes instance data to XElement.
@@ -28,15 +28,21 @@ namespace Uaaa.Data.Initializers
     /// <typeparam name="TModel"></typeparam>
     public abstract class XInitializerBase<TModel> : IXElementInitializer
     {
+        /// <summary>
+        /// Reference to model instance.
+        /// </summary>
         protected readonly TModel Model;
-
+        /// <summary>
+        /// Initializes XInitializerBase instance.
+        /// </summary>
+        /// <param name="model"></param>
         protected XInitializerBase(TModel model)
         {
             this.Model = model;
         }
 
         #region -=IXElementInitializer members=-
-        void IXElementInitializer.Init(XElement data)
+        void IXElementInitializer.Initialize(XElement data)
         {
             Initialize(data);
         }
@@ -44,7 +50,16 @@ namespace Uaaa.Data.Initializers
         XElement IXElementInitializer.ToXElement(XScope scope) => ToXElement(scope);
 
         #endregion
+        /// <summary>
+        /// Initializes model instance with provided data.
+        /// </summary>
+        /// <param name="data"></param>
         protected virtual void Initialize(XElement data) { }
+        /// <summary>
+        /// Serializes model instance as XElement representation.
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <returns></returns>
         protected abstract XElement ToXElement(XScope scope);
     }
 
@@ -143,11 +158,30 @@ namespace Uaaa.Data.Initializers
         /// </summary>
         /// <param name="model"></param>
         /// <param name="data"></param>
-        public static void Init(this IInitializerProvider<IXElementInitializer> model, XElement data)
+        public static void Initialize(this IInitializerProvider<IXElementInitializer> model, XElement data)
         {
-            model.GetInitializer().Init(data);
+            model.GetInitializer().Initialize(data);
         }
-
+        /// <summary>
+        /// Initializes items list with provided data elements.
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <param name="items"></param>
+        /// <param name="dataElements"></param>
+        public static void Initialize<TItem>(this IList<TItem> items, IEnumerable<XElement> dataElements)
+            where TItem : IInitializerProvider<IXElementInitializer>, new()
+        {
+            foreach (XElement element in dataElements)
+            {
+                items.Add(element.Create<TItem>());
+            }
+        }
+        /// <summary>
+        /// Serializes model data as XElement representation.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="scope"></param>
+        /// <returns></returns>
         public static XElement ToXElement(this IInitializerProvider<IXElementInitializer> model,
             XScope scope = null) => model.GetInitializer().ToXElement(scope);
         /// <summary>
@@ -174,7 +208,7 @@ namespace Uaaa.Data.Initializers
             where TModel : IInitializerProvider<IXElementInitializer>, new()
         {
             TModel model = Activator.CreateInstance<TModel>();
-            model.Init(data);
+            model.Initialize(data);
             return model;
         }
     }

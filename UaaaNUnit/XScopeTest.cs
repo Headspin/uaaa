@@ -79,7 +79,7 @@ namespace UaaaNUnit
                     {
                         this.model = model;
                     }
-                    void IXElementInitializer.Init(XElement data)
+                    void IXElementInitializer.Initialize(XElement data)
                     {
                         throw new NotImplementedException();
                     }
