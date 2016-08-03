@@ -32,13 +32,17 @@
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AmbientOperationTest.cs" />
     <Compile Include="ChangeManagerTest.cs" />
     <Compile Include="ItemsTest.cs" />
     <Compile Include="PropertySetterTest.cs" />
     <Compile Include="ViewModelTest.cs" />
     <Compile Include="BusinessRulesCheckerTest.cs" />
+    <Compile Include="XScopeTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
