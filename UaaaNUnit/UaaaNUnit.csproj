@@ -38,6 +38,7 @@
   <ItemGroup>
     <Compile Include="AmbientOperationTest.cs" />
     <Compile Include="ChangeManagerTest.cs" />
+    <Compile Include="Data\Mapper\MapperTest.cs" />
     <Compile Include="ItemsTest.cs" />
     <Compile Include="PropertySetterTest.cs" />
     <Compile Include="ViewModelTest.cs" />
