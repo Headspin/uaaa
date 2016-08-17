@@ -55,7 +55,9 @@
     <Compile Include="Components\Descriptor.cs" />
     <Compile Include="Data\Initializers\IInitializerProvider.cs" />
     <Compile Include="Data\Initializers\XElementInitializer.cs" />
-    <Compile Include="Data\Mapper\Converters\NumericValueConverter.cs" />
+    <Compile Include="Data\Mapper\Converters\StringToBooleanConverter.cs" />
+    <Compile Include="Data\Mapper\Converters\StringToEnumConverter.cs" />
+    <Compile Include="Data\Mapper\Converters\StringToNumberConverter.cs" />
     <Compile Include="Data\Mapper\DataContainer.cs" />
     <Compile Include="Data\Mapper\FieldAttribute.cs" />
     <Compile Include="Data\Mapper\FieldData.cs" />

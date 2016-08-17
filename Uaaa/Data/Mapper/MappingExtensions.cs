@@ -18,7 +18,7 @@ namespace Uaaa.Data.Mapper
         /// <param name="data"></param>
         /// <param name="target"></param>
         public static void WriteTo<TTarget>(this Dictionary<string, object> data, TTarget target)
-            => MappingSchema.Get<TTarget>().Write(target, name => data[name]);
+            => MappingSchema.Get<TTarget>().Write(target, name => data.ContainsKey(name) ? data[name] : System.Type.Missing);
 
         /// <summary>
         /// Reads data from source object instance using mapping schema defined for source object type.
@@ -41,7 +41,7 @@ namespace Uaaa.Data.Mapper
         /// <param name="data"></param>
         /// <param name="target"></param>
         public static void WriteTo<TTarget>(this DataContainer data, TTarget target)
-            => MappingSchema.Get<TTarget>().Write(target, name => data[name]);
+            => MappingSchema.Get<TTarget>().Write(target, name => data.Contains(name) ? data[name] : System.Type.Missing);
         /// <summary>
         /// Reads data from source object instance using mapping schema defined for source object type.
         /// </summary>

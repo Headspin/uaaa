@@ -5,7 +5,7 @@ namespace Uaaa.Data.Mapper.Converters
     /// <summary>
     /// Converts value.ToString() to numeric type.
     /// </summary>
-    public class NumericValueConverter : ValueConverter
+    public class StringToNumberConverter : ValueConverter
     {
         public override object Convert(object value, Type targetType)
         {

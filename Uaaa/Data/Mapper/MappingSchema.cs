@@ -34,7 +34,8 @@ namespace Uaaa.Data.Mapper
         /// Writes data to target object instance.
         /// </summary>
         /// <param name="target"></param>
-        /// <param name="retrieveFieldValue"></param>
+        /// <param name="retrieveFieldValue">Function that returns value of field with provided name. 
+        ///                                  Field missing when System.Type.Missing is returned as field value.</param>
         public void Write(object target, Func<string, object> retrieveFieldValue)
         {
             if (target == null || retrieveFieldValue == null) return;
@@ -42,6 +43,9 @@ namespace Uaaa.Data.Mapper
             {
                 IFieldAccessor accessor = valuePair.Value;
                 object value = retrieveFieldValue(valuePair.Key.Name);
+                if (value.Equals(System.Type.Missing)) continue;
+
+                Type valueType = value.GetType();
 
                 if (accessor.Attribute.ValueConverter != null)
                 {
@@ -50,13 +54,25 @@ namespace Uaaa.Data.Mapper
                     if (converter != null)
                         value = converter.Convert(value, accessor.Type);
                 }
-                else if (accessor.Type != value.GetType() && DefaultConverters.ContainsKey(accessor.Type))
+                else if (accessor.Type != valueType && Converters.ContainsKey(valueType) && Converters[valueType].ContainsKey(accessor.Type))
                 {
                     // try to convert with generic converter
-                    ValueConverter converter = DefaultConverters[accessor.Type];
+                    ValueConverter converter = Converters[valueType][accessor.Type];
                     value = converter.Convert(value, accessor.Type);
                 }
-                accessor.SetValue(target, value);
+                try
+                {
+                    accessor.SetValue(target, value);
+                }
+                catch (InvalidCastException ex)
+                {
+                    throw new MappingException(
+                        $"Failed to map value to field '{accessor.Attribute.Name}'.\nValue Type: {value?.GetType()}\nHint: Specify ValueConverter type.",
+                        ex)
+                    {
+                        FieldName = accessor.Attribute.Name
+                    };
+                }
             }
         }
         /// <summary>
@@ -109,17 +125,25 @@ namespace Uaaa.Data.Mapper
         }
         #endregion
         #region -=Static members=-
-        private static readonly NumericValueConverter NumericValueConverter = new NumericValueConverter();
+        #region -=Default converters=-
+        private static readonly StringToNumberConverter StringToNumberConverter = new StringToNumberConverter();
+
         /// <summary>
-        /// Registered default converters.
+        /// Registered default converters. Indexed by value (source) type.
         /// </summary>
-        private static readonly Dictionary<Type, ValueConverter> DefaultConverters = new Dictionary<Type, ValueConverter>
+        private static readonly Dictionary<Type, Dictionary<Type, ValueConverter>> Converters = new Dictionary
+            <Type, Dictionary<Type, ValueConverter>>
+        {
+            {typeof(string), new Dictionary<Type, ValueConverter>
             {
-                {typeof(byte), NumericValueConverter},
-                {typeof(int), NumericValueConverter},
-                {typeof(double), NumericValueConverter},
-                {typeof(decimal), NumericValueConverter}
-            };
+                {typeof(byte), StringToNumberConverter},
+                {typeof(int), StringToNumberConverter},
+                {typeof(double), StringToNumberConverter},
+                {typeof(decimal), StringToNumberConverter},
+                {typeof(bool), new StringToBooleanConverter()}
+            } }
+        };
+        #endregion
 
         private static readonly ConcurrentDictionary<Type, MappingSchema> Schemas =
             new ConcurrentDictionary<Type, MappingSchema>();
@@ -308,5 +332,18 @@ namespace Uaaa.Data.Mapper
             }
         }
         #endregion
+    }
+    /// <summary>
+    /// Signals field value mapping failure.
+    /// </summary>
+    public class MappingException : Exception
+    {
+        public string FieldName { get; set; }
+        public Type SourceType { get; set; }
+        public Type TargeType { get; set; }
+
+        public MappingException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
     }
 }
