@@ -54,11 +54,26 @@ namespace Uaaa.Data.Mapper
                     if (converter != null)
                         value = converter.Convert(value, accessor.Type);
                 }
-                else if (accessor.Type != valueType && Converters.ContainsKey(valueType) && Converters[valueType].ContainsKey(accessor.Type))
+                else if (accessor.Type != valueType)
                 {
-                    // try to convert with generic converter
-                    ValueConverter converter = Converters[valueType][accessor.Type];
-                    value = converter.Convert(value, accessor.Type);
+                    #region -=Try to convert value by using registered converters=-
+                    if (Converters.ContainsKey(valueType) && Converters[valueType].ContainsKey(accessor.Type))
+                    {
+                        // try to convert with generic converter
+                        ValueConverter converter = Converters[valueType][accessor.Type];
+                        value = converter.Convert(value, accessor.Type);
+                    }
+                    else
+                    {
+                        // handle special types with default converters
+                        var typeInfo = accessor.Type.GetTypeInfo();
+                        if (typeInfo.IsEnum || Nullable.GetUnderlyingType(accessor.Type).GetTypeInfo().IsEnum)
+                        {
+                            ValueConverter converter = new StringToEnumConverter();
+                            value = converter.Convert(value, accessor.Type);
+                        }
+                    } 
+                    #endregion
                 }
                 try
                 {
@@ -140,7 +155,8 @@ namespace Uaaa.Data.Mapper
                 {typeof(int), StringToNumberConverter},
                 {typeof(double), StringToNumberConverter},
                 {typeof(decimal), StringToNumberConverter},
-                {typeof(bool), new StringToBooleanConverter()}
+                {typeof(bool), new StringToBooleanConverter()},
+                {typeof(Enum), new StringToEnumConverter()}
             } }
         };
         #endregion
@@ -159,6 +175,13 @@ namespace Uaaa.Data.Mapper
         /// <param name="type"></param>
         /// <returns></returns>
         public static MappingSchema Get(Type type) => Schemas.GetOrAdd(type, new MappingSchema(type));
+
+        #region -=Private methods=-
+        public static bool IsNullableType(TypeInfo typeInfo)
+        {
+            return typeInfo.IsGenericType && typeInfo.GetGenericTypeDefinition() == typeof(Nullable<>);
+        }
+        #endregion  
         #endregion
 
         #region -=Support types=-

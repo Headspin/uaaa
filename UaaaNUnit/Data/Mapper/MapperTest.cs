@@ -79,6 +79,24 @@ namespace UaaaNUnit.Data.Mapper
             Assert.AreEqual(values["ValueBool"], source.ValueBool);
             Assert.AreEqual(values["Status"], source.Status);
         }
+        [Test]
+        public void Mapper_Dictionary_WriteTo_EnumFields()
+        {
+            Dictionary<string, object> values =
+                new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
+                {
+                    {"StatusByte", (byte) MapperExamples.Status.Normal},
+                    {"StatusString", "Special"},
+                    {"StatusStringNumber", $"{(int) MapperExamples.Status.Special}"}
+                };
+
+            var target = new MapperExamples.EnumMappings();
+            values.WriteTo(target);
+
+            Assert.AreEqual(MapperExamples.Status.Normal, target.StatusByte);
+            Assert.AreEqual(MapperExamples.Status.Special, target.StatusString);
+            Assert.AreEqual(MapperExamples.Status.Special, target.StatusStringNumber);
+        }
     }
 
     public static class MapperExamples
@@ -123,6 +141,21 @@ namespace UaaaNUnit.Data.Mapper
             public byte ValueByte => valueByte;
             public bool ValueBool => valueBool;
             public Status Status => status;
+
+        }
+
+        public class EnumMappings
+        {
+            [Field]
+            private Status statusByte = Status.Unknown;
+            [Field]
+            private Status statusString = Status.Unknown;
+            [Field]
+            private Status? statusStringNumber = Status.Unknown;
+
+            public Status StatusByte => statusByte;
+            public Status StatusString => statusString;
+            public Status? StatusStringNumber => statusStringNumber;
 
         }
     }
