@@ -7,6 +7,7 @@ namespace Uaaa.Data.Mapper.Converters
     /// </summary>
     public class StringToNumberConverter : ValueConverter
     {
+        /// <see cref="ValueConverter.Convert"/>
         public override object Convert(object value, Type targetType)
         {
             if (value == null) return null;
@@ -43,7 +44,7 @@ namespace Uaaa.Data.Mapper.Converters
 
             return value;
         }
-
+        /// <see cref="ValueConverter.ConvertBack"/>
         public override object ConvertBack(object value)
             => value.ToString();
     }

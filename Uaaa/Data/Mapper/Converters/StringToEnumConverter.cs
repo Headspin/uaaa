@@ -7,8 +7,12 @@ using System.Threading.Tasks;
 
 namespace Uaaa.Data.Mapper.Converters
 {
+    /// <summary>
+    /// Converts string value to enumeration.
+    /// </summary>
     public class StringToEnumConverter : ValueConverter
     {
+        /// <see cref="ValueConverter.Convert"/>
         public override object Convert(object value, Type targetType)
         {
             if (value == null) return null;
@@ -20,7 +24,7 @@ namespace Uaaa.Data.Mapper.Converters
 
             return Enum.Parse(enumType, value.ToString());
         }
-
+        /// <see cref="ValueConverter.ConvertBack"/>
         public override object ConvertBack(object value)
         {
             throw new NotImplementedException();

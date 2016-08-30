@@ -177,6 +177,11 @@ namespace Uaaa.Data.Mapper
         public static MappingSchema Get(Type type) => Schemas.GetOrAdd(type, new MappingSchema(type));
 
         #region -=Private methods=-
+        /// <summary>
+        /// Returns true if type is nullable type.
+        /// </summary>
+        /// <param name="typeInfo"></param>
+        /// <returns></returns>
         public static bool IsNullableType(TypeInfo typeInfo)
         {
             return typeInfo.IsGenericType && typeInfo.GetGenericTypeDefinition() == typeof(Nullable<>);
@@ -361,10 +366,23 @@ namespace Uaaa.Data.Mapper
     /// </summary>
     public class MappingException : Exception
     {
+        /// <summary>
+        /// Field name.
+        /// </summary>
         public string FieldName { get; set; }
+        /// <summary>
+        /// Mapper source type.
+        /// </summary>
         public Type SourceType { get; set; }
+        /// <summary>
+        /// Mapper target type.
+        /// </summary>
         public Type TargeType { get; set; }
-
+        /// <summary>
+        /// Creates new instance.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="innerException"></param>
         public MappingException(string message, Exception innerException) : base(message, innerException)
         {
         }
