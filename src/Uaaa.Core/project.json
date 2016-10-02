@@ -1,0 +1,21 @@
+﻿{
+  "version": "1.0.0-*",
+  "title": "Uaaa Framework",
+  "copyright": "© 2016 Dvabita",
+  "description": "Uaaa LOB framework.",
+
+  "dependencies": {
+    "NETStandard.Library": "1.6.0"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50"
+    }
+  },
+  "packOptions": {
+    "owners": [ "DvaBita " ],
+    "licenseUrl": "https://raw.githubusercontent.com/Headspin/uaaa/master/LICENSE",
+    "requireLicenseAcceptance": true
+  }
+}
