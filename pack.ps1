@@ -1,6 +1,6 @@
 #=-Global variables-=#
 $solutionDir=Split-Path ((Get-Variable MyInvocation -Scope 0).Value).MyCommand.Path
-$releaseDir="_Release"
+$releaseDir="output"
 #=-Script-=#
 # Clean release directory
 if (Test-Path "$solutionDir\$releaseDir"){

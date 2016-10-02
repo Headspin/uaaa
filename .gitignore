@@ -182,5 +182,5 @@ UpgradeLog*.htm
 # Microsoft Fakes
 FakesAssemblies/
 
-_Release/
+output/
 project.lock.json
