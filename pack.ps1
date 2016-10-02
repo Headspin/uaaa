@@ -25,8 +25,6 @@ $project = "Uaaa.Data.Sql"
 if (Test-Path "$solutionDir/src/$project/bin/release"){
 	gci -Path "$solutionDir/src/$project/bin/release"|ri -Force -Recurse
 }
-Write-Host "$solutionDir/src/$project/project.json"
-
 dotnet pack "$solutionDir/src/$project/project.json" -c Release
 if (! $?){ 
 	#=-If last error code <> 0 -> return exit code 1
