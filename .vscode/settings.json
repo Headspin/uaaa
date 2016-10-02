@@ -4,6 +4,7 @@
     "files.exclude": {
         ".vs": true,
         ".vscode": true,
-        "/**/bin": true
+        "/**/bin": true,
+        "**/obj": true
     }    
 }
