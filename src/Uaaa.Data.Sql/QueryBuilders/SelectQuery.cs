@@ -139,7 +139,7 @@ namespace Uaaa.Data.Sql
             if (whereText.Length > 0)
                 commandText = $"{commandText} WHERE {whereText}";
 
-            var command = new SqlCommand { CommandText = commandText };
+            var command = new SqlCommand { CommandText = $"{commandText};" };
             command.Parameters.AddRange(parameters.ToArray());
             return command;
         }

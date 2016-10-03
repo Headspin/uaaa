@@ -48,37 +48,39 @@ namespace Uaaa.Data.Mapper
             {
                 IFieldAccessor accessor = valuePair.Value;
                 object value = retrieveFieldValue(valuePair.Key.Name);
-                if (value.Equals(System.Type.Missing)) continue;
+                if (value == System.Type.Missing) continue;
 
-                Type valueType = value.GetType();
-
-                if (accessor.Attribute.ValueConverter != null)
+                if (value != null)
                 {
-                    // convert value with converter
-                    ValueConverter converter = Activator.CreateInstance(accessor.Attribute.ValueConverter) as ValueConverter;
-                    if (converter != null)
-                        value = converter.Convert(value, accessor.Type);
-                }
-                else if (accessor.Type != valueType)
-                {
-                    #region -=Try to convert value by using registered converters=-
-                    if (Converters.ContainsKey(valueType) && Converters[valueType].ContainsKey(accessor.Type))
+                    Type valueType = value.GetType();
+                    if (accessor.Attribute.ValueConverter != null)
                     {
-                        // try to convert with generic converter
-                        ValueConverter converter = Converters[valueType][accessor.Type];
-                        value = converter.Convert(value, accessor.Type);
-                    }
-                    else
-                    {
-                        // handle special types with default converters
-                        var typeInfo = accessor.Type.GetTypeInfo();
-                        if (typeInfo.IsEnum || Nullable.GetUnderlyingType(accessor.Type).GetTypeInfo().IsEnum)
-                        {
-                            ValueConverter converter = new StringToEnumConverter();
+                        // convert value with converter
+                        var converter = Activator.CreateInstance(accessor.Attribute.ValueConverter) as ValueConverter;
+                        if (converter != null)
                             value = converter.Convert(value, accessor.Type);
+                    } else if (accessor.Type != valueType)
+                    {
+                        #region -=Try to convert value by using registered converters=-
+
+                        if (Converters.ContainsKey(valueType) && Converters[valueType].ContainsKey(accessor.Type))
+                        {
+                            // try to convert with generic converter
+                            ValueConverter converter = Converters[valueType][accessor.Type];
+                            value = converter.Convert(value, accessor.Type);
+                        } else
+                        {
+                            // handle special types with default converters
+                            var typeInfo = accessor.Type.GetTypeInfo();
+                            if (typeInfo.IsEnum || Nullable.GetUnderlyingType(accessor.Type).GetTypeInfo().IsEnum)
+                            {
+                                ValueConverter converter = new StringToEnumConverter();
+                                value = converter.Convert(value, accessor.Type);
+                            }
                         }
+
+                        #endregion
                     }
-                    #endregion
                 }
                 try
                 {

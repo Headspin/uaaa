@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using Uaaa.Data;
 
 namespace Uaaa.Data.Sql.Extensions
 {
@@ -16,13 +17,13 @@ namespace Uaaa.Data.Sql.Extensions
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public static async Task<Dictionary<string, object>> ReadSingle(this SqlDataReader reader)
+        public static async Task<DataRecord> ReadSingle(this SqlDataReader reader)
         {
             try
             {
                 if (reader.HasRows && await reader.ReadAsync())
                 {
-                    var item = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+                    var item = new DataRecord();
                     for (var idx = 0; idx < reader.FieldCount; idx++)
                         item[reader.GetName(idx)] = !reader.IsDBNull(idx) ? reader.GetValue(idx) : null;
                     return item;
@@ -39,16 +40,16 @@ namespace Uaaa.Data.Sql.Extensions
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public static async Task<IEnumerable<Dictionary<string, object>>> ReadAll(this SqlDataReader reader)
+        public static async Task<IEnumerable<DataRecord>> ReadAll(this SqlDataReader reader)
         {
             try
             {
-                List<Dictionary<string, object>> records = new List<Dictionary<string, object>>();
+                var records = new List<DataRecord>();
                 if (reader.HasRows)
                 {
                     while (await reader.ReadAsync())
                     {
-                        var item = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+                        var item = new DataRecord();
                         for (var idx = 0; idx < reader.FieldCount; idx++)
                             item[reader.GetName(idx)] = !reader.IsDBNull(idx) ? reader.GetValue(idx) : null;
                         records.Add(item);

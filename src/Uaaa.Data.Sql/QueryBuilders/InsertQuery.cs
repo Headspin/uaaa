@@ -64,7 +64,7 @@ namespace Uaaa.Data.Sql
 
             var writableFields = new HashSet<string>(
                      (from field in schema.Fields
-                      where field.MappingType != MappingType.Read && field.MappingType != MappingType.PrimaryKey
+                      where field.MappingType == MappingType.ReadWrite || field.MappingType == MappingType.Write 
                       select field.Name).ToArray()
             );
 
@@ -95,7 +95,7 @@ namespace Uaaa.Data.Sql
             valuesText.Remove(valuesText.Length - 2, 2); // remove last ", "
             
             string commandText = $"INSERT INTO {tableText} ({fieldsText}) VALUES({valuesText})";
-            var command = new SqlCommand { CommandText = commandText };
+            var command = new SqlCommand { CommandText = $"{commandText};" };
             command.Parameters.AddRange(parameters.ToArray());
             return command;
         }

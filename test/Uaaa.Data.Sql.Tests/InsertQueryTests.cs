@@ -30,6 +30,8 @@ namespace Uaaa.Data.Sql.Tests
             public int Age { get; set; }
             [Field(MappingType = MappingType.Read)]
             public DateTime BirthDay { get; set; }
+            [Field(MappingType = MappingType.ReadUpdate)]
+            public DateTime? ChangedDateTime { get; set; }
         }
         #endregion
 
@@ -40,7 +42,7 @@ namespace Uaaa.Data.Sql.Tests
             var poco = new MyPocoClass { Id = 10, Name = "Name1", Surname = "Surname1", Age = 15 };
 
             SqlCommand command = Insert(poco).Into(table);
-            string expectedText = $"INSERT INTO \"{table}\" (\"Name\", \"Surname\", \"Age\") VALUES(@p1, @p2, @p3)";
+            string expectedText = $"INSERT INTO \"{table}\" (\"Name\", \"Surname\", \"Age\") VALUES(@p1, @p2, @p3);";
             Assert.Equal(expectedText, command.CommandText);
             Assert.Equal(3, command.Parameters.Count);
             Assert.Equal(poco.Name, command.Parameters[0].Value);
@@ -58,7 +60,7 @@ namespace Uaaa.Data.Sql.Tests
             var value = new MySimpleClass { PersonId = 10, Name = "Name1", Surname = "Surname1", Age = 15 };
 
             SqlCommand command = Insert(value).Into(table);
-            string expectedText = $"INSERT INTO \"{table}\" (\"Name\", \"Surname\", \"Age\") VALUES(@p1, @p2, @p3)";
+            string expectedText = $"INSERT INTO \"{table}\" (\"Name\", \"Surname\", \"Age\") VALUES(@p1, @p2, @p3);";
             Assert.Equal(expectedText, command.CommandText);
             Assert.Equal(3, command.Parameters.Count);
             Assert.Equal(value.Name, command.Parameters[0].Value);

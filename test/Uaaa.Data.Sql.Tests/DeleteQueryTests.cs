@@ -41,7 +41,7 @@ namespace Uaaa.Data.Sql.Tests
             var poco = new MyPocoClass { Id = 10, Name = "Name1", Surname = "Surname1", Age = 15 };
 
             SqlCommand command = Delete(poco).From(table);
-            string expectedText = $"DELETE FROM \"{table}\" WHERE (\"Id\" = @p1)";
+            string expectedText = $"DELETE FROM \"{table}\" WHERE (\"Id\" = @p1);";
             Assert.Equal(expectedText, command.CommandText);
             Assert.Equal(1, command.Parameters.Count);
             Assert.Equal(poco.Id, command.Parameters[0].Value);
@@ -55,7 +55,7 @@ namespace Uaaa.Data.Sql.Tests
             var value = new MySimpleClass { PersonId = 10, Name = "Name1", Surname = "Surname1", Age = 15 };
 
             SqlCommand command = Delete(value).From(table);
-            string expectedText = $"DELETE FROM \"{table}\" WHERE (\"PersonId\" = @p1)";
+            string expectedText = $"DELETE FROM \"{table}\" WHERE (\"PersonId\" = @p1);";
             Assert.Equal(expectedText, command.CommandText);
             Assert.Equal(1, command.Parameters.Count);
             Assert.Equal(value.PersonId, command.Parameters[0].Value);
@@ -69,7 +69,7 @@ namespace Uaaa.Data.Sql.Tests
             var value = new MySimpleClass { PersonId = 10, Name = "Name1", Surname = "Surname1", Age = 15 };
 
             SqlCommand command = Delete(value).From(table).Where("disabled = 0");
-            string expectedText = $"DELETE FROM \"{table}\" WHERE (\"PersonId\" = @p1) AND (disabled = 0)";
+            string expectedText = $"DELETE FROM \"{table}\" WHERE (\"PersonId\" = @p1) AND (disabled = 0);";
             Assert.Equal(expectedText, command.CommandText);
             Assert.Equal(1, command.Parameters.Count);
             Assert.Equal(value.PersonId, command.Parameters[0].Value);
@@ -86,7 +86,7 @@ namespace Uaaa.Data.Sql.Tests
                 new MySimpleClass {PersonId = 30, Name = "Name3", Surname = "Surname3", Age = 25}
             };
             SqlCommand command = Delete(values).From(table);
-            string expectedText = $"DELETE FROM \"{table}\" WHERE \"PersonId\" IN (@p1, @p2, @p3)";
+            string expectedText = $"DELETE FROM \"{table}\" WHERE \"PersonId\" IN (@p1, @p2, @p3);";
             Assert.Equal(expectedText, command.CommandText);
             Assert.Equal(3, command.Parameters.Count);
             Assert.Equal(values[0].PersonId, command.Parameters[0].Value);
@@ -103,7 +103,7 @@ namespace Uaaa.Data.Sql.Tests
             const string table = "Table1";
 
             SqlCommand command = Delete().From(table);
-            string expectedText = $"DELETE FROM \"{table}\"";
+            string expectedText = $"DELETE FROM \"{table}\";";
             Assert.Equal(expectedText, command.CommandText);
             Assert.Equal(0, command.Parameters.Count);
         }
@@ -114,7 +114,7 @@ namespace Uaaa.Data.Sql.Tests
             const string table = "Table1";
 
             SqlCommand command = Delete().From(table).Where("deleted = 1");
-            string expectedText = $"DELETE FROM \"{table}\" WHERE (deleted = 1)";
+            string expectedText = $"DELETE FROM \"{table}\" WHERE (deleted = 1);";
             Assert.Equal(expectedText, command.CommandText);
             Assert.Equal(0, command.Parameters.Count);
         }

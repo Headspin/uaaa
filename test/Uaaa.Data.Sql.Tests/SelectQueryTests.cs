@@ -35,7 +35,7 @@ namespace Uaaa.Data.Sql.Tests
         {
             const string table = "Table1";
             SqlCommand command = Select<MyPocoClass>().From(table);
-            string expectedText = $"SELECT \"Name\", \"Surname\", \"Age\" FROM \"{table}\"";
+            string expectedText = $"SELECT \"Name\", \"Surname\", \"Age\" FROM \"{table}\";";
             Assert.Equal(expectedText, command.CommandText);
         }
         [Fact]
@@ -43,7 +43,7 @@ namespace Uaaa.Data.Sql.Tests
         {
             const string table = "Table1";
             SqlCommand command = Select<MySimpleClass>().From(table);
-            string expectedText = $"SELECT \"PersonId\", \"Name\", \"Surname\" FROM \"{table}\"";
+            string expectedText = $"SELECT \"PersonId\", \"Name\", \"Surname\" FROM \"{table}\";";
             Assert.Equal(expectedText, command.CommandText);
         }
 
@@ -52,7 +52,7 @@ namespace Uaaa.Data.Sql.Tests
         {
             const string table = "Table1";
             SqlCommand command = Select<MySimpleClass>().From(table).Where("personID = 5");
-            string expectedText = $"SELECT \"PersonId\", \"Name\", \"Surname\" FROM \"{table}\" WHERE (personID = 5)";
+            string expectedText = $"SELECT \"PersonId\", \"Name\", \"Surname\" FROM \"{table}\" WHERE (personID = 5);";
             Assert.Equal(expectedText, command.CommandText);
         }
 
@@ -63,7 +63,7 @@ namespace Uaaa.Data.Sql.Tests
             SqlCommand command = Select<MySimpleClass>().From(table)
                                 .Where("personID = 5")
                                 .Where("name like 'MyName'");
-            string expectedText = $"SELECT \"PersonId\", \"Name\", \"Surname\" FROM \"{table}\" WHERE (personID = 5) AND (name like 'MyName')";
+            string expectedText = $"SELECT \"PersonId\", \"Name\", \"Surname\" FROM \"{table}\" WHERE (personID = 5) AND (name like 'MyName');";
             Assert.Equal(expectedText, command.CommandText);
         }
 
@@ -75,7 +75,7 @@ namespace Uaaa.Data.Sql.Tests
                                       .Where("surname like 'MySurname'")
                                       .Where("name like 'MyName'")
                                       .Where(40);
-            string expectedText = $"SELECT \"PersonId\", \"Name\", \"Surname\" FROM \"{table}\" WHERE (\"PersonId\" = @p1) AND (surname like 'MySurname') AND (name like 'MyName')";
+            string expectedText = $"SELECT \"PersonId\", \"Name\", \"Surname\" FROM \"{table}\" WHERE (\"PersonId\" = @p1) AND (surname like 'MySurname') AND (name like 'MyName');";
             Assert.Equal(expectedText, command.CommandText);
             Assert.Equal(1, command.Parameters.Count);
             Assert.Equal("@p1", command.Parameters[0].ParameterName);
@@ -90,7 +90,7 @@ namespace Uaaa.Data.Sql.Tests
             SqlCommand command = Select<MySimpleClass>().From(table)
                                       .Where(10)
                                       .Where(40);
-            string expectedText = $"SELECT \"PersonId\", \"Name\", \"Surname\" FROM \"{table}\" WHERE (\"PersonId\" = @p1)";
+            string expectedText = $"SELECT \"PersonId\", \"Name\", \"Surname\" FROM \"{table}\" WHERE (\"PersonId\" = @p1);";
             Assert.Equal(expectedText, command.CommandText);
             Assert.Equal(1, command.Parameters.Count);
             Assert.Equal("@p1", command.Parameters[0].ParameterName);
@@ -114,7 +114,7 @@ namespace Uaaa.Data.Sql.Tests
             const string table = "Table1";
             SqlCommand command = Select<MySimpleClass>().From(table)
                                       .Take(10);
-            string expectedText = $"SELECT TOP 10 \"PersonId\", \"Name\", \"Surname\" FROM \"{table}\"";
+            string expectedText = $"SELECT TOP 10 \"PersonId\", \"Name\", \"Surname\" FROM \"{table}\";";
             Assert.Equal(expectedText, command.CommandText);
         }
     }

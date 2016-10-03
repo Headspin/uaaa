@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Net.Sockets;
 using System.Threading.Tasks;
-using Uaaa.Data.Mapper;
 using Uaaa.Data.Sql.Extensions;
 
 namespace Uaaa.Data.Sql
@@ -31,7 +28,7 @@ namespace Uaaa.Data.Sql
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<Dictionary<string, object>>> Query(SqlCommand command)
+        public async Task<IEnumerable<DataRecord>> Query(SqlCommand command)
         {
             await OpenConnection();
             command.Connection = connection;
@@ -58,7 +55,7 @@ namespace Uaaa.Data.Sql
         /// Executes provided SqlCommand without returning any values.
         /// </summary>
         /// <param name="command"></param>
-        public async Task NonQuery(SqlCommand command)
+        public async Task Execute(SqlCommand command)
         {
             await OpenConnection();
             command.Connection = connection;
@@ -112,75 +109,11 @@ namespace Uaaa.Data.Sql
         }
         #endregion
         #region -=Private methods=-
-
         private Task OpenConnection() 
             => connection.State != ConnectionState.Open
                                 ? connection.OpenAsync()
                                 : Task.FromResult(true);
         #endregion
         #endregion
-    }
-    /// <summary>
-    /// DbContext related extension methods.
-    /// </summary>
-    public static class DbContextExtensions
-    {
-        /// <summary>
-        /// Returns list of TItems.
-        /// </summary>
-        /// <typeparam name="TItem"></typeparam>
-        /// <param name="context"></param>
-        /// <param name="command"></param>
-        /// <returns></returns>
-        public static Task<IEnumerable<TItem>> Query<TItem>(this DbContext context, SqlCommand command) where TItem : new()
-        => context.Query(command, Activator.CreateInstance<TItem>);
-        /// <summary>
-        /// Returns list of TItems.
-        /// </summary>
-        /// <typeparam name="TItem"></typeparam>
-        /// <param name="context"></param>
-        /// <param name="command"></param>
-        /// <param name="createItem"></param>
-        /// <returns></returns>
-        public static async Task<IEnumerable<TItem>> Query<TItem>(this DbContext context, SqlCommand command, Func<TItem> createItem)
-        {
-            List<TItem> records = new List<TItem>();
-            foreach (var record in await context.Query(command))
-            {
-                TItem item = createItem();
-                record.WriteTo(item);
-                records.Add(item);
-            }
-            return records;
-        }
-        /// <summary>
-        /// Returns first TItem that is returned by provided command. If no records returned, method returns null value.
-        /// </summary>
-        /// <typeparam name="TItem"></typeparam>
-        /// <param name="context"></param>
-        /// <param name="command"></param>
-        /// <returns></returns>
-        public static Task<TItem> QueryFirst<TItem>(this DbContext context, SqlCommand command) where TItem : class, new()
-            => context.QueryFirst(command, Activator.CreateInstance<TItem>);
-
-        /// <summary>
-        /// Returns first TItem that is returned by provided command. If no records returned, method returns null value.
-        /// </summary>
-        /// <typeparam name="TItem"></typeparam>
-        /// <param name="context"></param>
-        /// <param name="command"></param>
-        /// <param name="createItem"></param>
-        /// <returns></returns>
-        public static async Task<TItem> QueryFirst<TItem>(this DbContext context, SqlCommand command, Func<TItem> createItem) where TItem : class, new()
-        {
-            var record = (await context.Query(command)).FirstOrDefault();
-            if (record != null)
-            {
-                TItem item = createItem();
-                record.WriteTo(item);
-                return item;
-            }
-            return null;
-        }
     }
 }
