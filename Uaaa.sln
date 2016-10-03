@@ -1,21 +1,24 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uaaa", "Uaaa\Uaaa.csproj", "{94539294-2765-4B00-9E3C-3293A37AC329}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F547F5BA-FD3E-4408-9F08-9DA4D4E831DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UaaaNUnit", "UaaaNUnit\UaaaNUnit.csproj", "{A37D54B6-4277-4ABE-A22D-0FB5E127E899}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{7A106B09-E789-4ABE-83D4-113DBA5A41D3}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A62684B3-3E9D-4427-8890-54551E27D664}"
 	ProjectSection(SolutionItems) = preProject
-		Uaaa.nuspec = Uaaa.nuspec
+		global.json = global.json
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{4781E376-1A1A-48CA-8534-F0D2169C8DFC}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\packages.config = .nuget\packages.config
-	EndProjectSection
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Uaaa.Core", "src\Uaaa.Core\Uaaa.Core.xproj", "{1F8FE203-0958-41FE-8E6D-055EC0F56B16}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Uaaa.Core.Tests", "test\Uaaa.Core.Tests\Uaaa.Core.Tests.xproj", "{6DADA8D6-93E6-4FC5-B283-3AA57ADA37E6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{9A0AEE78-A42C-46BA-A977-C16C04BFC145}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Uaaa.Data.Sql", "src\Uaaa.Data.Sql\Uaaa.Data.Sql.xproj", "{B9F62D03-6E86-49BA-84CE-966813D4FF61}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Uaaa.Data.Sql.Tests", "test\Uaaa.Data.Sql.Tests\Uaaa.Data.Sql.Tests.xproj", "{8770E5CB-88E2-415C-93AB-86E7D23D82F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,15 +26,30 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{94539294-2765-4B00-9E3C-3293A37AC329}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{94539294-2765-4B00-9E3C-3293A37AC329}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{94539294-2765-4B00-9E3C-3293A37AC329}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{94539294-2765-4B00-9E3C-3293A37AC329}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A37D54B6-4277-4ABE-A22D-0FB5E127E899}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A37D54B6-4277-4ABE-A22D-0FB5E127E899}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A37D54B6-4277-4ABE-A22D-0FB5E127E899}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F8FE203-0958-41FE-8E6D-055EC0F56B16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F8FE203-0958-41FE-8E6D-055EC0F56B16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F8FE203-0958-41FE-8E6D-055EC0F56B16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F8FE203-0958-41FE-8E6D-055EC0F56B16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DADA8D6-93E6-4FC5-B283-3AA57ADA37E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DADA8D6-93E6-4FC5-B283-3AA57ADA37E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DADA8D6-93E6-4FC5-B283-3AA57ADA37E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DADA8D6-93E6-4FC5-B283-3AA57ADA37E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9F62D03-6E86-49BA-84CE-966813D4FF61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9F62D03-6E86-49BA-84CE-966813D4FF61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9F62D03-6E86-49BA-84CE-966813D4FF61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9F62D03-6E86-49BA-84CE-966813D4FF61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8770E5CB-88E2-415C-93AB-86E7D23D82F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8770E5CB-88E2-415C-93AB-86E7D23D82F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8770E5CB-88E2-415C-93AB-86E7D23D82F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8770E5CB-88E2-415C-93AB-86E7D23D82F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1F8FE203-0958-41FE-8E6D-055EC0F56B16} = {F547F5BA-FD3E-4408-9F08-9DA4D4E831DD}
+		{6DADA8D6-93E6-4FC5-B283-3AA57ADA37E6} = {9A0AEE78-A42C-46BA-A977-C16C04BFC145}
+		{B9F62D03-6E86-49BA-84CE-966813D4FF61} = {F547F5BA-FD3E-4408-9F08-9DA4D4E831DD}
+		{8770E5CB-88E2-415C-93AB-86E7D23D82F5} = {9A0AEE78-A42C-46BA-A977-C16C04BFC145}
 	EndGlobalSection
 EndGlobal

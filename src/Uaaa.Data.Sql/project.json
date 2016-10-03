@@ -1,0 +1,30 @@
+﻿{
+  "version": "1.0.0-beta1",
+  "title": "Uaaa Data Sql Extensions",
+  "copyright": "© 2016 Dvabita",
+  "description": "Uaaa Framework data extensions for SQL",
+
+  "dependencies": {
+    "NETStandard.Library": "1.6.0",
+    "System.Collections.Immutable": "1.2.0",
+    "System.Data.SqlClient": "4.1.0",
+    "System.Linq": "4.1.0",
+    "Uaaa.Core": "2.0.0-*"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50"
+    }
+  },
+
+  "buildOptions": {
+    "warningsAsErrors": true
+  },
+
+  "packOptions": {
+    "owners": [ "DvaBita " ],
+    "licenseUrl": "https://raw.githubusercontent.com/Headspin/uaaa/master/LICENSE",
+    "requireLicenseAcceptance": true
+  }
+}
