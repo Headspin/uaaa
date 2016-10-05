@@ -5,6 +5,6 @@
         ".vs": true,
         ".vscode": true,
         "/**/bin": true,
-        "**/obj": true
+        "/**/obj": true
     }    
 }
