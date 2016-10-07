@@ -11,7 +11,7 @@ using Xunit;
 
 namespace Uaaa.Data.Sql.Tests
 {
-    public class DbContextTests
+    public class DbContextTests:IDisposable
     {
         #region -=Sample models=-
 
@@ -34,6 +34,23 @@ namespace Uaaa.Data.Sql.Tests
             public int? Age { get; set; }
         }
 
+        #endregion
+
+        #region -=Constructors=-
+        public DbContextTests()
+        {
+            // test setup code.
+            Database.Create();
+        }
+        #endregion
+
+        #region -=IDisposable members=-
+
+        public void Dispose()
+        {
+            // test cleanup code.
+            Database.Clear();
+        }
         #endregion
 
         #region -=Tests=-

@@ -25,5 +25,10 @@
     }
   },
   "testRunner": "xunit",
-  "buildOptions": { "debugType": "portable" }
+  "buildOptions": {
+    "debugType": "portable",
+    "copyToOutput": {
+      "includeFiles": [ "Scripts/CreateTestDb.sql" ]
+    }
+  }
 }
