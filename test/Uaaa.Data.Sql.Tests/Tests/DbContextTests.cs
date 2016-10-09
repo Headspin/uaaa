@@ -40,7 +40,7 @@ namespace Uaaa.Data.Sql.Tests
         public DbContextTests()
         {
             // test setup code.
-            Database.Create();
+            Database.Initialize();
         }
         #endregion
 
@@ -49,7 +49,7 @@ namespace Uaaa.Data.Sql.Tests
         public void Dispose()
         {
             // test cleanup code.
-            Database.Clear();
+            Database.CleanUp();
         }
         #endregion
 
