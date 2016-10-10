@@ -11,7 +11,7 @@ using Xunit;
 
 namespace Uaaa.Data.Sql.Tests
 {
-    public class DbContextTests:IDisposable
+    public class DbContextTests:IDisposable, IClassFixture<Database>
     {
         #region -=Sample models=-
 
@@ -36,20 +36,21 @@ namespace Uaaa.Data.Sql.Tests
 
         #endregion
 
+        private readonly Database databaseFixture = null;
         #region -=Constructors=-
-        public DbContextTests()
+        public DbContextTests(Database database)
         {
-            // test setup code.
-            Database.Initialize();
+            databaseFixture = database;
+            // test setup code
+            databaseFixture.Clear();
         }
         #endregion
 
         #region -=IDisposable members=-
-
         public void Dispose()
         {
             // test cleanup code.
-            Database.CleanUp();
+            databaseFixture?.Clear();
         }
         #endregion
 

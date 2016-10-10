@@ -5,6 +5,7 @@
         "NETStandard.Library": "1.6.0",
         "System.Data.SqlClient": "4.1.0",
         "Microsoft.Extensions.Configuration": "1.0.0",
+        "Microsoft.Extensions.Configuration.Json": "1.0.0",
         "Microsoft.Extensions.Configuration.UserSecrets": "1.0.0",
         "xunit": "2.1.0",
         "dotnet-test-xunit": "2.2.0-preview2-build1029",
@@ -29,7 +30,12 @@
     "buildOptions": {
         "debugType": "portable",
         "copyToOutput": {
-            "includeFiles": ["Scripts/CreateTestDb.sql"]
+            "includeFiles": ["project.json",
+                "testSettings.json",
+                "Scripts/InitializeDb.sql",
+                "Scripts/ClearData.sql",
+                "Scripts/DestroyDb.sql"
+            ]
         }
     },
     "tools": {
