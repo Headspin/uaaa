@@ -11,7 +11,7 @@ using Xunit;
 
 namespace Uaaa.Data.Sql.Tests
 {
-    public class DbContextTests:IDisposable, IClassFixture<Database>
+    public class DbContextTests : IDisposable, IClassFixture<Database>
     {
         #region -=Sample models=-
 
@@ -77,8 +77,7 @@ namespace Uaaa.Data.Sql.Tests
                 var people = await context.Query(Select<Person>().From(table)).As<Person>();
                 Assert.Equal(0, people.Count);
                 // Create records
-                await context.Execute(Insert(person1).Into(table));
-                await context.Execute(Insert(person2).Into(table));
+                await context.Execute(Insert(new[] { person1, person2 }).Into(table));
                 people = await context.Query(Select<Person>().From(table)).As<Person>();
                 Assert.Equal(2, people.Count);
                 person1 = people[0];
@@ -87,13 +86,15 @@ namespace Uaaa.Data.Sql.Tests
                 // Update records
                 person1.Age = 10;
                 person2.Surname = "Surname2.1";
-                await context.Execute(Update(new[] {person1, person2}).Into(table));
+                await context.Execute(Update(new[] { person1, person2 }).Into(table));
                 people = await context.Query(Select<Person>().From(table)).As<Person>();
 
                 Assert.Equal(2, people.Count);
                 person1 = people[0];
                 person2 = people[1];
                 Assert.Equal(10, person1.Age);
+                Assert.Equal("Surname1", person1.Surname);
+                Assert.Null(person2.Age);
                 Assert.Equal("Surname2.1", person2.Surname);
 
                 // delete records
