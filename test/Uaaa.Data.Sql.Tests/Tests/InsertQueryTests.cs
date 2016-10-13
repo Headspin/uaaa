@@ -79,7 +79,7 @@ namespace Uaaa.Data.Sql.Tests
             var value2 = new MySimpleClass { PersonId = 20, Name = "Name2", Surname = "Surname2", Age = 25 };
             var value3 = new MySimpleClass { PersonId = 30, Name = "Name3", Surname = "Surname3", Age = 35 };
 
-            SqlCommand command = Insert<MySimpleClass>(new[] { value1, value2, value3 }).Into(table);
+            SqlCommand command = Insert(new[] { value1, value2, value3 }).Into(table);
             string expectedText =
                 $"INSERT INTO \"{table}\" (\"Name\", \"Surname\", \"Age\") VALUES(@p1, @p2, @p3);" +
                 $"INSERT INTO \"{table}\" (\"Name\", \"Surname\", \"Age\") VALUES(@p4, @p5, @p6);" +
