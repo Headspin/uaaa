@@ -18,8 +18,16 @@ namespace Uaaa.Data.Sql
         /// Initializes insert query builder object.
         /// </summary>
         /// <returns></returns>
-        public static InsertQuery Insert(object value)
-            => new InsertQuery(MappingSchema.Get(value.GetType())).From(value);
+        public static InsertQuery Insert(object record)
+            => new InsertQuery(MappingSchema.Get(record.GetType())).From(new[] { record });
+        /// <summary>
+        /// Initializes insert query builder object.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="records"></param>
+        /// <returns></returns>
+        public static InsertQuery Insert<T>(IEnumerable<T> records)
+            => new InsertQuery(MappingSchema.Get<T>()).From(records.Cast<object>());
         /// <summary>
         /// Initializes select query builder object.
         /// </summary>
@@ -35,7 +43,7 @@ namespace Uaaa.Data.Sql
         public static UpdateQuery Update(object record)
             => new UpdateQuery().From(new[] { record });
 
-        public static UpdateQuery Update(IEnumerable<object> records) 
+        public static UpdateQuery Update(IEnumerable<object> records)
             => new UpdateQuery().From(records);
         /// <summary>
         /// Initialies delete query builder object.
@@ -46,17 +54,17 @@ namespace Uaaa.Data.Sql
         /// <summary>
         /// Initializes delete query builder object.
         /// </summary>
-        /// <param name="target"></param>
+        /// <param name="record"></param>
         /// <returns></returns>
-        public static DeleteQuery Delete(object target)
-            => new DeleteQuery(target);
+        public static DeleteQuery Delete(object record)
+            => new DeleteQuery(record);
         /// <summary>
         /// Initializes delete query builder object.
         /// </summary>
-        /// <param name="targets"></param>
+        /// <param name="records"></param>
         /// <returns></returns>
-        public static DeleteQuery Delete(IEnumerable<object> targets)
-            => new DeleteQuery(targets);
+        public static DeleteQuery Delete(IEnumerable<object> records)
+            => new DeleteQuery(records);
 
         #region -=Internal methods=-
         internal static string GetParameterName(List<SqlParameter> parameters)

@@ -17,7 +17,7 @@ namespace Uaaa.Data.Sql
         #region -=Instance members=-
         private readonly MappingSchema schema;
         private string tableName;
-        private object record;
+        private List<object> records;
         /// <summary>
         /// Creates new instance of query builder object.
         /// </summary>
@@ -43,13 +43,16 @@ namespace Uaaa.Data.Sql
         /// <summary>
         /// Sets record object where data is being read from.
         /// </summary>
-        /// <param name="recordObject"></param>
+        /// <param name="recordItems"></param>
         /// <returns></returns>
-        public InsertQuery From(object recordObject)
+        public InsertQuery From(IEnumerable<object> recordItems)
         {
-            if (recordObject == null)
-                throw new ArgumentNullException(nameof(recordObject));
-            this.record = recordObject;
+            if (recordItems == null)
+                throw new ArgumentNullException(nameof(recordItems));
+            List<object> recordsList = new List<object>(recordItems);
+            if (!recordsList.Any())
+                throw new ArgumentException("Cannot create InsertQuery builder object. Records list empty.");
+            this.records = recordsList;
             return this;
         }
         #region -=ISqlCommandGenerator=-
@@ -64,7 +67,7 @@ namespace Uaaa.Data.Sql
 
             var writableFields = new HashSet<string>(
                      (from field in schema.Fields
-                      where field.MappingType == MappingType.ReadWrite || field.MappingType == MappingType.Write 
+                      where field.MappingType == MappingType.ReadWrite || field.MappingType == MappingType.Write
                       select field.Name).ToArray()
             );
 
@@ -72,30 +75,32 @@ namespace Uaaa.Data.Sql
                 throw new InvalidOperationException("Cannot generate insert command. No writable fields in schema.");
 
             string tableText = $"\"{tableName}\"";
-            var fieldsText = new StringBuilder();
-            var valuesText = new StringBuilder();
-            
+            StringBuilder commandText = new StringBuilder();
             List<SqlParameter> parameters = new List<SqlParameter>();
-            schema.Read(record, (field, value) =>
+            foreach (object record in records)
             {
-                if (writableFields.Contains(field))
+                var fieldsText = new StringBuilder();
+                var valuesText = new StringBuilder();
+                schema.Read(record, (field, value) =>
                 {
-                    var parameter = new SqlParameter
+                    if (writableFields.Contains(field))
                     {
-                        ParameterName = Query.GetParameterName(parameters),
-                        Value = value ?? DBNull.Value
-                    };
-                    parameters.Add(parameter);
-                    fieldsText.Append($"\"{field}\", ");
-                    valuesText.Append($"{parameter.ParameterName}, ");
-                }
-            });
+                        var parameter = new SqlParameter
+                        {
+                            ParameterName = Query.GetParameterName(parameters),
+                            Value = value ?? DBNull.Value
+                        };
+                        parameters.Add(parameter);
+                        fieldsText.Append($"\"{field}\", ");
+                        valuesText.Append($"{parameter.ParameterName}, ");
+                    }
+                });
+                fieldsText.Remove(fieldsText.Length - 2, 2); // remove last ", "
+                valuesText.Remove(valuesText.Length - 2, 2); // remove last ", "
+                commandText.Append($"INSERT INTO {tableText} ({fieldsText}) VALUES({valuesText});");
+            }
 
-            fieldsText.Remove(fieldsText.Length - 2, 2); // remove last ", "
-            valuesText.Remove(valuesText.Length - 2, 2); // remove last ", "
-            
-            string commandText = $"INSERT INTO {tableText} ({fieldsText}) VALUES({valuesText})";
-            var command = new SqlCommand { CommandText = $"{commandText};" };
+            var command = new SqlCommand { CommandText = $"{commandText}" };
             command.Parameters.AddRange(parameters.ToArray());
             return command;
         }
@@ -107,7 +112,7 @@ namespace Uaaa.Data.Sql
         /// Converts InsertQuery object to SqlCommand.
         /// </summary>
         /// <param name="value"></param>
-        public static implicit operator SqlCommand(InsertQuery value) 
+        public static implicit operator SqlCommand(InsertQuery value)
             => ((ISqlCommandGenerator)value).ToSqlCommand();
 
         #endregion
