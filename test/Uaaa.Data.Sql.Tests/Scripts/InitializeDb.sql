@@ -6,6 +6,6 @@ create table People(
 	Name nvarchar(50) not null,
 	Surname nvarchar(50) not null,
 	Age int null,
-	CreateDateTimeUtc datetime not null,
+	CreatedDateTimeUtc datetime not null default(GETUTCDATE()),
 	ChangedDateTimeUtc datetime null
 );

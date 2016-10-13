@@ -70,5 +70,23 @@ namespace Uaaa.Data.Sql.Tests
             Assert.Equal(value.Age, command.Parameters[2].Value);
             Assert.Equal("@p3", command.Parameters[2].ParameterName);
         }
+
+        [Fact]
+        public void Query_Insert_HandleNullParameters()
+        {
+            const string table = "Table1";
+            var value = new MySimpleClass { PersonId = 10, Name = "Name1", Surname = null, Age = 15 };
+
+            SqlCommand command = Insert(value).Into(table);
+            string expectedText = $"INSERT INTO \"{table}\" (\"Name\", \"Surname\", \"Age\") VALUES(@p1, @p2, @p3);";
+            Assert.Equal(expectedText, command.CommandText);
+            Assert.Equal(3, command.Parameters.Count);
+            Assert.Equal(value.Name, command.Parameters[0].Value);
+            Assert.Equal("@p1", command.Parameters[0].ParameterName);
+            Assert.Equal(DBNull.Value, command.Parameters[1].Value);
+            Assert.Equal("@p2", command.Parameters[1].ParameterName);
+            Assert.Equal(value.Age, command.Parameters[2].Value);
+            Assert.Equal("@p3", command.Parameters[2].ParameterName);
+        }
     }
 }

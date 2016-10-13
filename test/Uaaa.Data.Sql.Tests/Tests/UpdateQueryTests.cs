@@ -145,5 +145,15 @@ namespace Uaaa.Data.Sql.Tests
             Assert.Equal(poco.Id, command.Parameters[3].Value);
             Assert.Equal("@p4", command.Parameters[3].ParameterName);
         }
+
+        [Fact]
+        public void Query_Update_HandleNullParameters()
+        {
+            const string table = "Table1";
+            var poco = new MyPocoClass { Id = 10, Surname = null };
+            SqlCommand command = Update(poco).Into(table);
+            Assert.Equal(DBNull.Value, command.Parameters[0].Value);
+        }
+
     }
 }

@@ -10,7 +10,7 @@ namespace Uaaa.Data.Sql
     public sealed class DbContext : ITransactionContext, IDisposable
     {
         #region -=Instance members=-
-        private SqlConnection connection = null;
+        private readonly SqlConnection connection = null;
         private SqlTransaction transaction = null;
         private int transactionsCounter = 0;
         private readonly object transactionLock = new object();

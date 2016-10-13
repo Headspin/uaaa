@@ -112,11 +112,20 @@ namespace Uaaa.Data.Mapper
 
                 if (accessor.Attribute.ValueConverter != null)
                 {
-                    ValueConverter converter = Activator.CreateInstance(accessor.Attribute.ValueConverter) as ValueConverter;
+                    var converter = Activator.CreateInstance(accessor.Attribute.ValueConverter) as ValueConverter;
                     if (converter != null)
                         value = converter.ConvertBack(value);
                 }
                 processFieldValue(valuePair.Key.Name, value);
+            }
+            // read additional data via DataRecord.IReader if implemented by source.
+            DataRecord data = (source as DataRecord.IReader)?.Read();
+            if (data != null)
+            {
+                foreach (string field in data.Keys)
+                {
+                    processFieldValue(field, data[field]);
+                }
             }
         }
         /// <summary>

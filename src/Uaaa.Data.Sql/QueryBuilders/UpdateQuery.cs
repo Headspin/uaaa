@@ -112,7 +112,7 @@ namespace Uaaa.Data.Sql
                     }
                     string parameterName = Query.GetParameterName(parameters);
                     fieldsText.Append($"\"{field}\" = {parameterName}, ");
-                    var parameter = new SqlParameter(parameterName, value);
+                    var parameter = new SqlParameter(parameterName, value ?? DBNull.Value);
                     parameters.Add(parameter);
                 });
                 if (fieldsText.Length == 0) continue;
@@ -121,7 +121,11 @@ namespace Uaaa.Data.Sql
                 var whereText = new StringBuilder();
                 if (!updateAll && primaryKeyCondition.HasValue && !string.IsNullOrEmpty(primaryKeyField))
                 {
-                    var parameter = new SqlParameter($"{Query.GetParameterName(parameters)}", primaryKeyCondition.Value);
+                    var parameter = new SqlParameter
+                    {
+                        ParameterName = $"{Query.GetParameterName(parameters)}",
+                        Value = primaryKeyCondition.Value 
+                    };
                     whereText.Append($"(\"{primaryKeyField}\" = {parameter.ParameterName})");
                     parameters.Add(parameter);
                 }

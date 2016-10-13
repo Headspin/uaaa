@@ -11,6 +11,14 @@ namespace Uaaa.Data
     /// </summary>
     public class DataRecord : Dictionary<string, object>
     {
+        public interface IReader
+        {
+            /// <summary>
+            /// Returns DataRecord containing objects data.
+            /// </summary>
+            /// <returns></returns>
+            DataRecord Read();
+        }
         public DataRecord() : base(StringComparer.OrdinalIgnoreCase) { }
     }
 

@@ -83,7 +83,7 @@ namespace Uaaa.Data.Sql
                     var parameter = new SqlParameter
                     {
                         ParameterName = Query.GetParameterName(parameters),
-                        Value = value
+                        Value = value ?? DBNull.Value
                     };
                     parameters.Add(parameter);
                     fieldsText.Append($"\"{field}\", ");

@@ -36,13 +36,14 @@ namespace Uaaa.Data.Sql.Tests
 
         #endregion
 
-        private readonly Database databaseFixture = null;
+        public Database DatabaseFixture { get; } = null;
+
         #region -=Constructors=-
-        public DbContextTests(Database database)
+        public DbContextTests(Database databaseFixture)
         {
-            databaseFixture = database;
+            this.DatabaseFixture = databaseFixture;
             // test setup code
-            databaseFixture.Clear();
+            this.DatabaseFixture.Clear();
         }
         #endregion
 
@@ -50,7 +51,7 @@ namespace Uaaa.Data.Sql.Tests
         public void Dispose()
         {
             // test cleanup code.
-            databaseFixture?.Clear();
+            this.DatabaseFixture.Clear();
         }
         #endregion
 
@@ -73,7 +74,6 @@ namespace Uaaa.Data.Sql.Tests
 
             using (DbContext context = CreateDbContext())
             {
-                await context.Execute(Delete().From(table)); // clear table contents
                 var people = await context.Query(Select<Person>().From(table)).As<Person>();
                 Assert.Equal(0, people.Count);
                 // Create records
@@ -110,13 +110,8 @@ namespace Uaaa.Data.Sql.Tests
         #endregion
 
         #region -=Private helper methods=-
-        #endregion
-
-        #region -=Static members=-
-        private const string ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=test-db;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-
-        private static DbContext CreateDbContext()
-            => new DbContext(ConnectionInfo.Create(ConnectionString));
+        private DbContext CreateDbContext()
+            => new DbContext(ConnectionInfo.Create(this.DatabaseFixture.ConnectionString));
 
         #endregion
     }
