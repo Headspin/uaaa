@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Uaaa.Data;
 using Uaaa.Data.Mapper;
 using Xunit;
 
@@ -96,6 +97,19 @@ namespace Uaaa.Core.Data.Tests
             Assert.Equal(MapperExamples.Status.Special, target.StatusString);
             Assert.Equal(MapperExamples.Status.Special, target.StatusStringNumber);
         }
+        [Fact]
+        public void Mapper_Dictionary_DataRecordReader()
+        {
+            Dictionary<string, object> values = new Dictionary<string, object>();
+            var source = new MapperExamples.RecordReaderClass(5) { Label = "Label1" }; // id = 5
+            values.ReadFrom(source);
+
+            Assert.True(values.ContainsKey("Id"));
+            Assert.Equal(MapperExamples.RecordReaderClass.AllRecordID, values["Id"]);
+
+            Assert.True(values.ContainsKey("Label"));
+            Assert.Equal(source.Label, values["Label"]);
+        }
     }
 
     public static class MapperExamples
@@ -155,7 +169,28 @@ namespace Uaaa.Core.Data.Tests
             public Status StatusByte => statusByte;
             public Status StatusString => statusString;
             public Status? StatusStringNumber => statusStringNumber;
+        }
 
+        /// <summary>
+        /// IReader sets/overrides Id.
+        /// </summary>
+        public class RecordReaderClass : DataRecord.IReader
+        {
+            public readonly int Id;
+            public string Label { get; set; }
+
+            public RecordReaderClass(int id)
+            {
+                Id = id;
+            }
+
+            DataRecord DataRecord.IReader.Read()
+            {
+                var record = new DataRecord { ["Id"] = AllRecordID };
+                return record;
+            }
+
+            public static int AllRecordID = 1000;
         }
     }
 }

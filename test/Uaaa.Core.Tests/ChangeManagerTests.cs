@@ -36,7 +36,7 @@ namespace Uaaa.Core.Tests
 
 			public int Value {
 				get { return this.value; }
-				set { Property.Set<int> (ref this.value, value, "Value"); }
+				set { Property.Set (ref this.value, value); }
 			}
 
 			public Model1 SubModel { get; private set; }
@@ -45,7 +45,7 @@ namespace Uaaa.Core.Tests
 			}
 
 			private Model1 (bool isSubModel)
-				: base () {
+			{
 				if (!isSubModel) {
 					this.SubModel = new Model1 (true);
 					this.ChangeManager.Track (this.SubModel);
