@@ -22,9 +22,9 @@
         /// </summary>
         public TValue Value { get; private set; }
         /// <see cref="Uaaa.IDescriptor.Label"/>
-        public virtual string Label { get; protected set; }
+        public string Label { get; protected set; }
         /// <see cref="Uaaa.IDescriptor.Description"/>
-        public virtual string Description { get; protected set; }
+        public string Description { get; protected set; }
         /// <summary>
         /// Creates new instance of descriptor class.
         /// </summary>

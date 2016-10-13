@@ -10,12 +10,6 @@ namespace Uaaa {
         private readonly HashSet<INotifyObjectChanged> trackedObjects = new HashSet<INotifyObjectChanged>();
         private readonly HashSet<INotifyObjectChanged> changedObjects = new HashSet<INotifyObjectChanged>();
         #endregion
-        #region -=Constructors=-
-        /// <summary>
-        /// Creates new instance of ChangeManager.
-        /// </summary>
-        public ChangeManager() { }
-        #endregion
         #region -=Public methods=-
         /// <summary>
         /// Adds object to be tracked by change manager instance.

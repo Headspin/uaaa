@@ -39,15 +39,15 @@ namespace Uaaa.Data.Sql
         /// <summary>
         /// Modifies query to update one or may records with data from provided record(s) list.
         /// </summary>
-        /// <param name="records"></param>
+        /// <param name="recordItems"></param>
         /// <returns></returns>
-        public UpdateQuery From(IEnumerable<object> records)
+        public UpdateQuery From(IEnumerable<object> recordItems)
         {
             if (this.records.Any())
                 throw new InvalidOperationException("Record already set on UpdateQuery builder object.");
-            if (records == null)
-                throw new ArgumentNullException(nameof(records));
-            List<object> recordsList = new List<object>(records);
+            if (recordItems == null)
+                throw new ArgumentNullException(nameof(recordItems));
+            List<object> recordsList = new List<object>(recordItems);
             if (!recordsList.Any())
                 throw new ArgumentException("Cannot create UpdateQuery builder object. Records list empty.");
             schema = MappingSchema.Get(recordsList.First().GetType());
@@ -57,7 +57,7 @@ namespace Uaaa.Data.Sql
                                          where field.MappingType == MappingType.PrimaryKey
                                          select field).FirstOrDefault();
             if (primaryKey == null)
-                throw new ArgumentException("MappingSchema does not define primary key field.", nameof(records));
+                throw new ArgumentException("MappingSchema does not define primary key field.", nameof(recordItems));
             this.records.AddRange(recordsList);
             primaryKeyField = primaryKey.Name;
             return this;
@@ -105,7 +105,7 @@ namespace Uaaa.Data.Sql
                 {
                     if (!string.IsNullOrEmpty(primaryKeyName) && string.CompareOrdinal(primaryKeyName, field) == 0)
                     {
-                        var key = 0;
+                        int key;
                         if (int.TryParse(value.ToString(), out key))
                             primaryKeyCondition = key;
                         return; // skip primary key field.
@@ -121,6 +121,7 @@ namespace Uaaa.Data.Sql
                 var whereText = new StringBuilder();
                 if (!updateAll && primaryKeyCondition.HasValue && !string.IsNullOrEmpty(primaryKeyField))
                 {
+                    
                     var parameter = new SqlParameter
                     {
                         ParameterName = $"{Query.GetParameterName(parameters)}",

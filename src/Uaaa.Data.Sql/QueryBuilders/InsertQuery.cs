@@ -43,13 +43,13 @@ namespace Uaaa.Data.Sql
         /// <summary>
         /// Sets record object where data is being read from.
         /// </summary>
-        /// <param name="record"></param>
+        /// <param name="recordObject"></param>
         /// <returns></returns>
-        public InsertQuery From(object record)
+        public InsertQuery From(object recordObject)
         {
-            if (record == null)
-                throw new ArgumentNullException(nameof(record));
-            this.record = record;
+            if (recordObject == null)
+                throw new ArgumentNullException(nameof(recordObject));
+            this.record = recordObject;
             return this;
         }
         #region -=ISqlCommandGenerator=-

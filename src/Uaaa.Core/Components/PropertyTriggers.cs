@@ -36,12 +36,10 @@ namespace Uaaa {
             /// </summary>
             /// <param name="model"></param>
             /// <returns></returns>
-            public bool Invoke(TModel model) {
+            public void Invoke(TModel model) {
                 if (condition == null || condition(model)) {
                     action(model);
-                    return true;
                 }
-                return false;
             }
         }
         #endregion
@@ -62,11 +60,7 @@ namespace Uaaa {
                     TriggerAll(model);
             }
         }
-        private ConcurrentDictionary<string, Items<Trigger>> triggersByProperty = new ConcurrentDictionary<string, Items<Trigger>>();
-        /// <summary>
-        /// Creates new object instance.
-        /// </summary>
-        public PropertyTriggers() { }
+        private readonly ConcurrentDictionary<string, Items<Trigger>> triggersByProperty = new ConcurrentDictionary<string, Items<Trigger>>();
         /// <summary>
         /// Adds trigger for property.
         /// </summary>
@@ -80,11 +74,11 @@ namespace Uaaa {
 
         private void Model_PropertyChanged(object sender, PropertyChangedEventArgs args) {
             try {
-                Items<Trigger> triggers = null;
-                TModel model = (TModel)sender;
+                Items<Trigger> triggers;
+                TModel senderModel = (TModel)sender;
                 if (triggersByProperty.TryGetValue(args.PropertyName, out triggers)) {
                     foreach (Trigger trigger in triggers)
-                        trigger.Invoke(model);
+                        trigger.Invoke(senderModel);
                 }
             } catch (Exception ex) {
                 Debug.WriteLine(ex.Message);
@@ -93,11 +87,11 @@ namespace Uaaa {
         /// <summary>
         /// Invokes all registered triggers.
         /// </summary>
-        /// <param name="model"></param>
-        private void TriggerAll(TModel model) {
+        /// <param name="modelObject"></param>
+        private void TriggerAll(TModel modelObject) {
             foreach (Items<Trigger> triggers in triggersByProperty.Values) {
                 foreach (Trigger trigger in triggers)
-                    trigger.Invoke(model);
+                    trigger.Invoke(modelObject);
             }
         }
 

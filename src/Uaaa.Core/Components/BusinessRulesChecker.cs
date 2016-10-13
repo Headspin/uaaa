@@ -11,10 +11,6 @@ namespace Uaaa {
         private Dictionary<string, Items<BusinessRule>> currentErrors = new Dictionary<string, Items<BusinessRule>>();
         /// <see cref="System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/>
         public event PropertyChangedEventHandler PropertyChanged;
-        /// <summary>
-        /// Creates new object instance.
-        /// </summary>
-        public BusinessRulesChecker() { }
 
         #region -=Public methods=-
 

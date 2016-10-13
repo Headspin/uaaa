@@ -73,8 +73,8 @@ namespace Uaaa {
         }
         #endregion
 		#region -=Private methods=-
-		private void SetModel(TModel model){
-			this.Model = model;
+		private void SetModel(TModel value){
+			this.Model = value;
 		}
 		#endregion
         #region -=IModel members=-
@@ -98,8 +98,8 @@ namespace Uaaa {
         object IViewModel.GetModel() {
             return model;
         }
-        void IViewModel.SetModel(object model) {
-            this.Model = model as TModel;
+        void IViewModel.SetModel(object value) {
+            this.Model = value as TModel;
         }
         #endregion
         #region -=IDisposable members=-
