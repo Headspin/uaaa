@@ -21,6 +21,22 @@ namespace Uaaa.Data.Mapper
 
         private readonly Dictionary<FieldAttribute, IFieldAccessor> fieldAccessors =
             new Dictionary<FieldAttribute, IFieldAccessor>();
+
+        private FieldAttribute primaryKeyAttribute = null;
+        /// <summary>
+        /// Returns name of primary key field (if defined).
+        /// </summary>
+        public string PrimaryKey{
+            get{
+                if (primaryKeyAttribute != null)
+                    return primaryKeyAttribute.Name;
+                return string.Empty;
+            }
+        }
+        /// <summary>
+        /// Returns TRUE if schema contains PrimaryKey field attribute.
+        /// </summary>
+        public bool DefinesPrimaryKey => primaryKeyAttribute != null;
         /// <summary>
         /// Returns list of field attributes contained in the schema.
         /// </summary>
@@ -154,6 +170,9 @@ namespace Uaaa.Data.Mapper
                                             select accessor;
                 foreach (FieldAccessor accessor in privateFieldAccessors)
                     fieldAccessors[accessor.Attribute] = accessor;
+
+                if (baseSchema.DefinesPrimaryKey)
+                    primaryKeyAttribute = baseSchema.primaryKeyAttribute;
             } 
             #endregion
 
@@ -167,6 +186,9 @@ namespace Uaaa.Data.Mapper
                 if (string.IsNullOrEmpty(attribute.Name))
                     attribute.Name = field.Name;
                 fieldAccessors[attribute] = new FieldAccessor(field, attribute);
+                // store primaryKey if found.
+                if (primaryKeyAttribute == null && attribute.MappingType == MappingType.PrimaryKey)
+                    primaryKeyAttribute = attribute;
             }
 
             List<PropertyInfo> properties = new List<PropertyInfo>();
@@ -181,6 +203,9 @@ namespace Uaaa.Data.Mapper
                 if (string.IsNullOrEmpty(attribute.Name))
                     attribute.Name = property.Name;
                 fieldAccessors[attribute] = new PropertyAccessor(property, attribute);
+                // store primaryKey if found.
+                if (primaryKeyAttribute == null && attribute.MappingType == MappingType.PrimaryKey)
+                    primaryKeyAttribute = attribute;
             }
 
             if (!fieldAccessors.Keys.Any())
@@ -193,8 +218,9 @@ namespace Uaaa.Data.Mapper
                     if (!primaryKeyFound && possiblePrimaryKeyFields.Contains(property.Name))
                     {
                         primaryKeyFound = true;
-                        var primaryKeyAttribute = new FieldAttribute { MappingType = MappingType.PrimaryKey, Name = property.Name };
-                        fieldAccessors[primaryKeyAttribute] = new PropertyAccessor(property, primaryKeyAttribute);
+                        var primaryKey = new FieldAttribute { MappingType = MappingType.PrimaryKey, Name = property.Name };
+                        fieldAccessors[primaryKey] = new PropertyAccessor(property, primaryKeyAttribute);
+                        this.primaryKeyAttribute = primaryKey;
                         continue;
                     }
                     if (property.SetMethod?.IsPublic == false || property.GetMethod == null) continue;

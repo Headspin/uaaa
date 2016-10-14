@@ -18,6 +18,7 @@ namespace Uaaa.Data.Sql
         private readonly MappingSchema schema;
         private string tableName;
         private List<object> records;
+        private bool selectKey = false;
         /// <summary>
         /// Creates new instance of query builder object.
         /// </summary>
@@ -54,6 +55,18 @@ namespace Uaaa.Data.Sql
                 throw new ArgumentException("Cannot create InsertQuery builder object. Records list empty.");
             this.records = recordsList;
             return this;
+        }
+        /// <summary>
+        /// Modifies query to return primary key set for new record database.
+        /// </summary>
+        public InsertQuery SelectKey()
+        {
+            if (records == null || !records.Any())
+                throw new InvalidOperationException("Cannot create InsertQuery builder object. Record list empty.");
+
+            if (!schema.DefinesPrimaryKey)
+                throw new InvalidOperationException("Cannot create InseryQuery builder object. Schema does not define PrimaryKey field");
+            selectKey = true;
         }
         #region -=ISqlCommandGenerator=-
         /// <summary>
