@@ -125,5 +125,13 @@ namespace Uaaa.Data.Sql.Tests
             Assert.Equal(value.Age, command.Parameters[2].Value);
             Assert.Equal("@p3", command.Parameters[2].ParameterName);
         }
+
+        [Fact]
+        public void Query_Insert_Synchronize_Id()
+        {
+            const string table = "Table1";
+            var value = new MyPocoClass { Name = "Name1", Surname = "Surname1", Age = 15 };
+            SqlCommand command = Insert(value).Into(table).SelectKey();
+        }
     }
 }
