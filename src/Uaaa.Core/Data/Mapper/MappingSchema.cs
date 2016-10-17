@@ -219,7 +219,7 @@ namespace Uaaa.Data.Mapper
                     {
                         primaryKeyFound = true;
                         var primaryKey = new FieldAttribute { MappingType = MappingType.PrimaryKey, Name = property.Name };
-                        fieldAccessors[primaryKey] = new PropertyAccessor(property, primaryKeyAttribute);
+                        fieldAccessors[primaryKey] = new PropertyAccessor(property, primaryKey);
                         this.primaryKeyAttribute = primaryKey;
                         continue;
                     }

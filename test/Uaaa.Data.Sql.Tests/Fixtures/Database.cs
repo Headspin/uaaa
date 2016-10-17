@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using System.IO;
 using Microsoft.Extensions.Configuration;
+using System.Reflection;
 
 namespace Uaaa.Data.Sql.Tests
 {
@@ -16,6 +17,8 @@ namespace Uaaa.Data.Sql.Tests
         private const string SettingsFilename = "testSettings.json";
 
         #region -=Instance members=-
+
+        private string assemblyLocation = Path.GetDirectoryName((typeof(Database).GetTypeInfo().Assembly.Location));
         private string connectionString = string.Empty;
         public string ConnectionString {
             get {
@@ -32,13 +35,15 @@ namespace Uaaa.Data.Sql.Tests
         }
         public Database()
         {
-            Execute(File.ReadAllText(Scripts.InitializeDb));
+            string script = Path.Combine(assemblyLocation, Scripts.InitializeDb);
+            Execute(File.ReadAllText(script));
         }
 
         #region -=IDisposable members=-
         public void Dispose()
         {
-            Execute(File.ReadAllText(Scripts.DestroyDb));
+            string script = Path.Combine(assemblyLocation, Scripts.DestroyDb);
+            Execute(File.ReadAllText(script));
         }
         #endregion
         /// <summary>
@@ -49,7 +54,10 @@ namespace Uaaa.Data.Sql.Tests
             try
             {
                 if (!string.IsNullOrEmpty(ConnectionString))
-                    Execute(File.ReadAllText(Scripts.ClearData));
+                {
+                    string script = Path.Combine(assemblyLocation, Scripts.ClearData);
+                    Execute(File.ReadAllText(script));
+                }
             }
             catch { /* ignore */ }
         }
