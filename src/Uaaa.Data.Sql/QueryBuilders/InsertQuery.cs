@@ -66,7 +66,9 @@ namespace Uaaa.Data.Sql
 
             if (!schema.DefinesPrimaryKey)
                 throw new InvalidOperationException("Cannot create InseryQuery builder object. Schema does not define PrimaryKey field");
-            selectKey = true;
+            if (!selectKey)
+                selectKey = true;
+            return this;
         }
         #region -=ISqlCommandGenerator=-
         /// <summary>
