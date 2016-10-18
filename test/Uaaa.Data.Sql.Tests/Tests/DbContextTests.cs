@@ -32,6 +32,8 @@ namespace Uaaa.Data.Sql.Tests
             public string Surname { get; set; }
             [Field]
             public int? Age { get; set; }
+
+            public void SetId(int newId) => this.id = newId;
         }
 
         #endregion
@@ -106,6 +108,40 @@ namespace Uaaa.Data.Sql.Tests
                 await context.Execute(Delete(person2).From(table));
                 people = await context.Query(Select<Person>().From(table)).As<Person>();
                 Assert.Equal(0, people.Count);
+            }
+        }
+        [Fact]
+        public async Task DbContext_Insert_ResolveKeys()
+        {
+            const string table = "People";
+            var person1 = new Person { Name = "Person1", Surname = "Surname1" };
+            var person2 = new Person { Name = "Person2", Surname = "Surname2" };
+            var person3 = new Person { Name = "Person3", Surname = "Surname3" };
+
+            using (DbContext context = CreateDbContext())
+            {
+                // Create records
+                List<DataRecord> records = new List<DataRecord>(await context.Query(Insert(new[] { person1, person2, person3 }).Into(table).ResolveKeys()));
+
+                Assert.Equal(3, records.Count);
+                Assert.Equal((int)records[0]["recordHash"], InsertQuery.GetRecordHash(person1));
+                Assert.True(records[0].ContainsKey(nameof(Person.Id)));
+                person1.SetId((int)records[0][nameof(Person.Id)]);
+
+                Assert.Equal((int)records[1]["recordHash"], InsertQuery.GetRecordHash(person2));
+                Assert.True(records[1].ContainsKey(nameof(Person.Id)));
+                person2.SetId((int)records[1][nameof(Person.Id)]);
+
+                Assert.Equal((int)records[2]["recordHash"], InsertQuery.GetRecordHash(person3));
+                Assert.True(records[2].ContainsKey(nameof(Person.Id)));
+                person3.SetId((int)records[2][nameof(Person.Id)]);
+
+                Assert.NotEqual(person1.Id, person2.Id);
+                Assert.NotEqual(person1.Id, person3.Id);
+                Assert.NotEqual(person2.Id, person3.Id);
+
+                var people = await context.Query(Select<Person>().From(table)).As<Person>();
+                Assert.Equal(3, people.Count);
             }
         }
         #endregion

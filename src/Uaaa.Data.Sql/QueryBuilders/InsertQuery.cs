@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Uaaa.Data.Mapper;
 
@@ -18,7 +19,7 @@ namespace Uaaa.Data.Sql
         private readonly MappingSchema schema;
         private string tableName;
         private List<object> records;
-        private bool selectKey = false;
+        private bool resolveKeys = false;
         /// <summary>
         /// Creates new instance of query builder object.
         /// </summary>
@@ -57,17 +58,17 @@ namespace Uaaa.Data.Sql
             return this;
         }
         /// <summary>
-        /// Modifies query to return primary key set for new record database.
+        /// Modifies query to return keyvalue pair records of new primary key value (set by database) and calculated recordHash.
+        /// Returned data record should contain fields ([primaryKey as defined by mapping schema], recordHash).
         /// </summary>
-        public InsertQuery SelectKey()
+        public InsertQuery ResolveKeys()
         {
             if (records == null || !records.Any())
                 throw new InvalidOperationException("Cannot create InsertQuery builder object. Record list empty.");
 
             if (!schema.DefinesPrimaryKey)
                 throw new InvalidOperationException("Cannot create InseryQuery builder object. Schema does not define PrimaryKey field");
-            if (!selectKey)
-                selectKey = true;
+            resolveKeys = true;
             return this;
         }
         #region -=ISqlCommandGenerator=-
@@ -90,8 +91,11 @@ namespace Uaaa.Data.Sql
                 throw new InvalidOperationException("Cannot generate insert command. No writable fields in schema.");
 
             string tableText = $"\"{tableName}\"";
-            StringBuilder commandText = new StringBuilder();
+            var commandText = new StringBuilder();
             List<SqlParameter> parameters = new List<SqlParameter>();
+
+            if (resolveKeys)
+                commandText.Append($"DECLARE @TempIdentityTable TABLE({schema.PrimaryKey} INT, recordHash INT);");
             foreach (object record in records)
             {
                 var fieldsText = new StringBuilder();
@@ -112,8 +116,17 @@ namespace Uaaa.Data.Sql
                 });
                 fieldsText.Remove(fieldsText.Length - 2, 2); // remove last ", "
                 valuesText.Remove(valuesText.Length - 2, 2); // remove last ", "
-                commandText.Append($"INSERT INTO {tableText} ({fieldsText}) VALUES({valuesText});");
+                if (!resolveKeys)
+                    commandText.Append($"INSERT INTO {tableText} ({fieldsText}) VALUES({valuesText});");
+                else
+                {
+                    int recordHash = GetRecordHash(record);
+                    commandText.Append($"INSERT INTO {tableText} ({fieldsText}) OUTPUT INSERTED.{schema.PrimaryKey}, {recordHash} INTO @TempIdentityTable VALUES({valuesText});");
+                }
             }
+
+            if (resolveKeys)
+                commandText.Append($"SELECT {schema.PrimaryKey}, recordHash FROM @TempIdentityTable;");
 
             var command = new SqlCommand { CommandText = $"{commandText}" };
             command.Parameters.AddRange(parameters.ToArray());
@@ -130,6 +143,8 @@ namespace Uaaa.Data.Sql
         public static implicit operator SqlCommand(InsertQuery value)
             => ((ISqlCommandGenerator)value).ToSqlCommand();
 
+        public static int GetRecordHash(object record)
+            => RuntimeHelpers.GetHashCode(record);
         #endregion
     }
 }
