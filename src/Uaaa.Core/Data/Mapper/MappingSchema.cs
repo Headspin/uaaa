@@ -26,13 +26,8 @@ namespace Uaaa.Data.Mapper
         /// <summary>
         /// Returns name of primary key field (if defined).
         /// </summary>
-        public string PrimaryKey{
-            get{
-                if (primaryKeyAttribute != null)
-                    return primaryKeyAttribute.Name;
-                return string.Empty;
-            }
-        }
+        public string PrimaryKey => primaryKeyAttribute != null ? primaryKeyAttribute.Name : string.Empty;
+
         /// <summary>
         /// Returns TRUE if schema contains PrimaryKey field attribute.
         /// </summary>
@@ -75,7 +70,8 @@ namespace Uaaa.Data.Mapper
                         var converter = Activator.CreateInstance(accessor.Attribute.ValueConverter) as ValueConverter;
                         if (converter != null)
                             value = converter.Convert(value, accessor.Type);
-                    } else if (accessor.Type != valueType)
+                    }
+                    else if (accessor.Type != valueType)
                     {
                         #region -=Try to convert value by using registered converters=-
 
@@ -84,7 +80,8 @@ namespace Uaaa.Data.Mapper
                             // try to convert with generic converter
                             ValueConverter converter = Converters[valueType][accessor.Type];
                             value = converter.Convert(value, accessor.Type);
-                        } else
+                        }
+                        else
                         {
                             // handle special types with default converters
                             var typeInfo = accessor.Type.GetTypeInfo();
@@ -173,7 +170,7 @@ namespace Uaaa.Data.Mapper
 
                 if (baseSchema.DefinesPrimaryKey)
                     primaryKeyAttribute = baseSchema.primaryKeyAttribute;
-            } 
+            }
             #endregion
 
             // register field mappings
@@ -266,7 +263,7 @@ namespace Uaaa.Data.Mapper
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static MappingSchema Get(Type type) => Schemas.GetOrAdd(type, new MappingSchema(type));
+        public static MappingSchema Get(Type type) => Schemas.GetOrAdd(type, t => new MappingSchema(t));
         /// <summary>
         /// Returns true if type is nullable type.
         /// </summary>
@@ -318,7 +315,7 @@ namespace Uaaa.Data.Mapper
 
             public FieldInfo Field => field;
             public FieldAttribute Attribute => attribute;
-            
+
             public FieldAccessor(FieldInfo field, FieldAttribute attribute)
             {
                 this.field = field;

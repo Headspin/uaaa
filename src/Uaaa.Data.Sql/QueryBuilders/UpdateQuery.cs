@@ -18,7 +18,6 @@ namespace Uaaa.Data.Sql
         private readonly List<object> records = new List<object>();
         private string tableName;
         private readonly List<string> conditions = new List<string>();
-        private string primaryKeyField;
         private bool updateAll = false;
         /// <summary>
         /// Creates new instance of query builder object.
@@ -29,7 +28,7 @@ namespace Uaaa.Data.Sql
         /// </summary>
         /// <param name="table"></param>
         /// <returns></returns>
-        public UpdateQuery Into(string table)
+        public UpdateQuery In(string table)
         {
             if (string.IsNullOrEmpty(table))
                 throw new ArgumentNullException(nameof(table));
@@ -47,19 +46,14 @@ namespace Uaaa.Data.Sql
                 throw new InvalidOperationException("Record already set on UpdateQuery builder object.");
             if (recordItems == null)
                 throw new ArgumentNullException(nameof(recordItems));
-            List<object> recordsList = new List<object>(recordItems);
-            if (!recordsList.Any())
+            this.records.AddRange(recordItems);
+            if (!this.records.Any())
                 throw new ArgumentException("Cannot create UpdateQuery builder object. Records list empty.");
-            schema = MappingSchema.Get(recordsList.First().GetType());
+            schema = MappingSchema.Get(this.records.First().GetType());
             if (!schema.Fields.Any())
                 throw new ArgumentException("MappingSchema for record type does not define fields.", nameof(schema));
-            FieldAttribute primaryKey = (from field in schema.Fields
-                                         where field.MappingType == MappingType.PrimaryKey
-                                         select field).FirstOrDefault();
-            if (primaryKey == null)
+            if (!schema.DefinesPrimaryKey)
                 throw new ArgumentException("MappingSchema does not define primary key field.", nameof(recordItems));
-            this.records.AddRange(recordsList);
-            primaryKeyField = primaryKey.Name;
             return this;
         }
         /// <summary>
@@ -92,43 +86,43 @@ namespace Uaaa.Data.Sql
             if (string.IsNullOrEmpty(tableName))
                 throw new InvalidOperationException("Unable to generate SqlCommand. Query does not define table name.");
 
-            var parameters = new List<SqlParameter>();
-            var commands = new List<string>();
+            SqlCommand command = new SqlCommand();
+            int parameterIndex = 1;
+            var commands = new StringBuilder();
             string tableText = $"\"{tableName}\"";
+            string primaryKey = schema.PrimaryKey ?? string.Empty;
 
-            string primaryKeyName = primaryKeyField ?? schema.Fields.FirstOrDefault(field => field.MappingType == MappingType.PrimaryKey)?.Name;
             foreach (object record in records)
             {
                 var fieldsText = new StringBuilder();
                 int? primaryKeyCondition = null;
                 schema.Read(record, (field, value) =>
                 {
-                    if (!string.IsNullOrEmpty(primaryKeyName) && string.CompareOrdinal(primaryKeyName, field) == 0)
+                    if (string.CompareOrdinal(primaryKey, field) == 0)
                     {
                         int key;
                         if (int.TryParse(value.ToString(), out key))
                             primaryKeyCondition = key;
                         return; // skip primary key field.
                     }
-                    string parameterName = Query.GetParameterName(parameters);
+                    string parameterName = Query.GetParameterName(ref parameterIndex);
                     fieldsText.Append($"\"{field}\" = {parameterName}, ");
                     var parameter = new SqlParameter(parameterName, value ?? DBNull.Value);
-                    parameters.Add(parameter);
+                    command.Parameters.Add(parameter);
                 });
                 if (fieldsText.Length == 0) continue;
                 fieldsText.Remove(fieldsText.Length - 2, 2); // remove last ", "
 
                 var whereText = new StringBuilder();
-                if (!updateAll && primaryKeyCondition.HasValue && !string.IsNullOrEmpty(primaryKeyField))
+                if (!updateAll && primaryKeyCondition.HasValue && !string.IsNullOrEmpty(schema.PrimaryKey))
                 {
-                    
                     var parameter = new SqlParameter
                     {
-                        ParameterName = $"{Query.GetParameterName(parameters)}",
-                        Value = primaryKeyCondition.Value 
+                        ParameterName = $"{Query.GetParameterName(ref parameterIndex)}",
+                        Value = primaryKeyCondition.Value
                     };
-                    whereText.Append($"(\"{primaryKeyField}\" = {parameter.ParameterName})");
-                    parameters.Add(parameter);
+                    whereText.Append($"(\"{schema.PrimaryKey}\" = {parameter.ParameterName})");
+                    command.Parameters.Add(parameter);
                 }
 
                 foreach (string condition in conditions)
@@ -141,15 +135,14 @@ namespace Uaaa.Data.Sql
                 string commandText = $"UPDATE {tableText} SET {fieldsText}";
                 if (whereText.Length > 0)
                     commandText = $"{commandText} WHERE {whereText}";
-                commands.Add(commandText);
+                commands.Append($"{commandText};");
                 if (updateAll) break; // only one record expected -> stop procesing after 1st record.
             }
 
-            if (!commands.Any())
+            if (commands.Length == 0)
                 throw new InvalidOperationException("UpdateQuery builder object cannot generate SqlCommand. No data to update.");
 
-            var command = new SqlCommand { CommandText = $"{string.Join("; ", commands)};" };
-            command.Parameters.AddRange(parameters.ToArray());
+            command.CommandText = commands.ToString();
             return command;
         }
         #endregion

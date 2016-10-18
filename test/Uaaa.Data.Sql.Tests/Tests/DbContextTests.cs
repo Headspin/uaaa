@@ -88,7 +88,7 @@ namespace Uaaa.Data.Sql.Tests
                 // Update records
                 person1.Age = 10;
                 person2.Surname = "Surname2.1";
-                await context.Execute(Update(new[] { person1, person2 }).Into(table));
+                await context.Execute(Update(new[] { person1, person2 }).In(table));
                 people = await context.Query(Select<Person>().From(table)).As<Person>();
 
                 Assert.Equal(2, people.Count);

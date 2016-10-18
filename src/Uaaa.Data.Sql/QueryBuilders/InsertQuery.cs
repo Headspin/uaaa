@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data.SqlClient;
@@ -81,18 +82,18 @@ namespace Uaaa.Data.Sql
             if (string.IsNullOrEmpty(tableName))
                 throw new InvalidOperationException("Unable to generate SqlCommand. Query does not define table name.");
 
-            var writableFields = new HashSet<string>(
-                     (from field in schema.Fields
-                      where field.MappingType == MappingType.ReadWrite || field.MappingType == MappingType.Write
-                      select field.Name).ToArray()
-            );
+            var writableFields = WritableFieldsBySchema.GetOrAdd(schema, s => new HashSet<string>(
+                                            (from field in schema.Fields
+                                             where field.MappingType == MappingType.ReadWrite || field.MappingType == MappingType.Write
+                                             select field.Name).ToArray()));
 
             if (!writableFields.Any())
                 throw new InvalidOperationException("Cannot generate insert command. No writable fields in schema.");
 
+            SqlCommand command = new SqlCommand();
+            int parameterIndex = 1;
             string tableText = $"\"{tableName}\"";
             var commandText = new StringBuilder();
-            List<SqlParameter> parameters = new List<SqlParameter>();
 
             if (resolveKeys)
                 commandText.Append($"DECLARE @TempIdentityTable TABLE({schema.PrimaryKey} INT, recordHash INT);");
@@ -106,12 +107,12 @@ namespace Uaaa.Data.Sql
                     {
                         var parameter = new SqlParameter
                         {
-                            ParameterName = Query.GetParameterName(parameters),
+                            ParameterName = Query.GetParameterName(ref parameterIndex),
                             Value = value ?? DBNull.Value
                         };
-                        parameters.Add(parameter);
                         fieldsText.Append($"\"{field}\", ");
                         valuesText.Append($"{parameter.ParameterName}, ");
+                        command.Parameters.Add(parameter);
                     }
                 });
                 fieldsText.Remove(fieldsText.Length - 2, 2); // remove last ", "
@@ -124,12 +125,10 @@ namespace Uaaa.Data.Sql
                     commandText.Append($"INSERT INTO {tableText} ({fieldsText}) OUTPUT INSERTED.{schema.PrimaryKey}, {recordHash} INTO @TempIdentityTable VALUES({valuesText});");
                 }
             }
-
             if (resolveKeys)
                 commandText.Append($"SELECT {schema.PrimaryKey}, recordHash FROM @TempIdentityTable;");
 
-            var command = new SqlCommand { CommandText = $"{commandText}" };
-            command.Parameters.AddRange(parameters.ToArray());
+            command.CommandText = $"{commandText}";
             return command;
         }
         #endregion
@@ -145,6 +144,13 @@ namespace Uaaa.Data.Sql
 
         public static int GetRecordHash(object record)
             => RuntimeHelpers.GetHashCode(record);
+
+        /// <summary>
+        /// Cached writable fields hashset by mapping schema.
+        /// </summary>
+        private static readonly ConcurrentDictionary<MappingSchema, HashSet<string>> WritableFieldsBySchema =
+            new ConcurrentDictionary<MappingSchema, HashSet<string>>();
+
         #endregion
     }
 }

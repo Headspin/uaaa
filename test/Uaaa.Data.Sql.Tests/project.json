@@ -10,7 +10,7 @@
         "xunit": "2.1.0",
         "dotnet-test-xunit": "2.2.0-preview2-build1029",
         "Uaaa.Core": { "target": "project" },
-        "Uaaa.Data.Sql": "1.0.0-*"
+        "Uaaa.Data.Sql": {"target": "project" }
     },
     "frameworks": {
         "netcoreapp1.0": {

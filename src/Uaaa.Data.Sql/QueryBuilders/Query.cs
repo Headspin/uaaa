@@ -70,6 +70,7 @@ namespace Uaaa.Data.Sql
         internal static string GetParameterName(List<SqlParameter> parameters)
             => $"@p{parameters.Count + 1}";
 
-        #endregion 
+        internal static string GetParameterName(ref int index) => $"@p{index++}";
+        #endregion
     }
 }

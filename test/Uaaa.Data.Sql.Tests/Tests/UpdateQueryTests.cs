@@ -40,7 +40,7 @@ namespace Uaaa.Data.Sql.Tests
         {
             const string table = "Table1";
             var poco = new MyPocoClass { Id = 10, Name = "Name1", Surname = "Surname1", Age = 15 };
-            SqlCommand command = Update(poco).Into(table);
+            SqlCommand command = Update(poco).In(table);
             string expectedText = $"UPDATE \"{table}\" SET \"Name\" = @p1, \"Surname\" = @p2, \"Age\" = @p3 WHERE (\"Id\" = @p4);";
             Assert.Equal(expectedText, command.CommandText);
             Assert.Equal(4, command.Parameters.Count);
@@ -58,7 +58,7 @@ namespace Uaaa.Data.Sql.Tests
         {
             const string table = "Table1";
             var poco = new MyPocoClass { Id = 10, Name = "Name1", Surname = "Surname1", Age = 15 };
-            SqlCommand command = Update(poco).Into(table).All();
+            SqlCommand command = Update(poco).In(table).All();
             string expectedText = $"UPDATE \"{table}\" SET \"Name\" = @p1, \"Surname\" = @p2, \"Age\" = @p3;";
             Assert.Equal(expectedText, command.CommandText);
             Assert.Equal(3, command.Parameters.Count);
@@ -76,11 +76,11 @@ namespace Uaaa.Data.Sql.Tests
                 new MyPocoClass { Id = 12, Name = "Name3", Surname = "Surname3", Age = 17 },
                 new MyPocoClass { Id = 13, Name = "Name4", Surname = "Surname4", Age = 18 }
             };
-            SqlCommand command = Update(records).Into(table);
+            SqlCommand command = Update(records).In(table);
             var expectedText = new StringBuilder();
-            expectedText.Append($"UPDATE \"{table}\" SET \"Name\" = @p1, \"Surname\" = @p2, \"Age\" = @p3 WHERE (\"Id\" = @p4); ");
-            expectedText.Append($"UPDATE \"{table}\" SET \"Name\" = @p5, \"Surname\" = @p6, \"Age\" = @p7 WHERE (\"Id\" = @p8); ");
-            expectedText.Append($"UPDATE \"{table}\" SET \"Name\" = @p9, \"Surname\" = @p10, \"Age\" = @p11 WHERE (\"Id\" = @p12); ");
+            expectedText.Append($"UPDATE \"{table}\" SET \"Name\" = @p1, \"Surname\" = @p2, \"Age\" = @p3 WHERE (\"Id\" = @p4);");
+            expectedText.Append($"UPDATE \"{table}\" SET \"Name\" = @p5, \"Surname\" = @p6, \"Age\" = @p7 WHERE (\"Id\" = @p8);");
+            expectedText.Append($"UPDATE \"{table}\" SET \"Name\" = @p9, \"Surname\" = @p10, \"Age\" = @p11 WHERE (\"Id\" = @p12);");
             expectedText.Append($"UPDATE \"{table}\" SET \"Name\" = @p13, \"Surname\" = @p14, \"Age\" = @p15 WHERE (\"Id\" = @p16);");
 
             Assert.Equal(expectedText.ToString(), command.CommandText);
@@ -108,7 +108,7 @@ namespace Uaaa.Data.Sql.Tests
         {
             const string table = "Table1";
             var poco = new MyPocoClass { Id = 10, Name = "Name1", Surname = "Surname1", Age = 15 };
-            SqlCommand command = Update(poco).Into(table).All().Where("name = 'Name1'");
+            SqlCommand command = Update(poco).In(table).All().Where("name = 'Name1'");
             string expectedText = $"UPDATE \"{table}\" SET \"Name\" = @p1, \"Surname\" = @p2, \"Age\" = @p3 WHERE (name = 'Name1');";
             Assert.Equal(expectedText, command.CommandText);
         }
@@ -118,7 +118,7 @@ namespace Uaaa.Data.Sql.Tests
         {
             const string table = "Table1";
             var poco = new MyPocoClass { Id = 10, Name = "Name1", Surname = "Surname1", Age = 15 };
-            SqlCommand command = Update(poco).Into(table).All()
+            SqlCommand command = Update(poco).In(table).All()
                                               .Where("personId = 12")
                                               .Where("name = 'Name1'");
             string expectedText = $"UPDATE \"{table}\" SET \"Name\" = @p1, \"Surname\" = @p2, \"Age\" = @p3 WHERE (personId = 12) AND (name = 'Name1');";
@@ -130,7 +130,7 @@ namespace Uaaa.Data.Sql.Tests
         {
             const string table = "Table1";
             var poco = new MyPocoClass { Id = 10, Name = "Name1", Surname = "Surname1", Age = 15 };
-            SqlCommand command = Update(poco).Into(table)
+            SqlCommand command = Update(poco).In(table)
                                               .Where("personId = 12")
                                               .Where("name = 'Name1'");
             string expectedText = $"UPDATE \"{table}\" SET \"Name\" = @p1, \"Surname\" = @p2, \"Age\" = @p3 WHERE (\"Id\" = @p4) AND (personId = 12) AND (name = 'Name1');";
@@ -151,7 +151,7 @@ namespace Uaaa.Data.Sql.Tests
         {
             const string table = "Table1";
             var poco = new MyPocoClass { Id = 10, Surname = null };
-            SqlCommand command = Update(poco).Into(table);
+            SqlCommand command = Update(poco).In(table);
             Assert.Equal(DBNull.Value, command.Parameters[0].Value);
         }
 

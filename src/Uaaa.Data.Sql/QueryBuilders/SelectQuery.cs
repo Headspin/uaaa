@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -20,8 +21,6 @@ namespace Uaaa.Data.Sql
         private string tableAlias;
         private readonly List<string> conditions = new List<string>();
         private int? primaryKeyCondition;
-
-        private readonly string primaryKeyField;
         /// <summary>
         /// Creates new instance of select query builder.
         /// </summary>
@@ -29,10 +28,6 @@ namespace Uaaa.Data.Sql
         internal SelectQuery(MappingSchema schema)
         {
             this.schema = schema;
-            FieldAttribute primaryKey = (from field in schema.Fields
-                                         where field.MappingType == MappingType.PrimaryKey
-                                         select field).FirstOrDefault();
-            primaryKeyField = primaryKey?.Name;
         }
         /// <summary>
         /// Generated query returns specified number of records.
@@ -91,7 +86,7 @@ namespace Uaaa.Data.Sql
         /// <returns></returns>
         public SelectQuery Where(int key)
         {
-            if (string.IsNullOrEmpty(primaryKeyField))
+            if (!schema.DefinesPrimaryKey)
                 throw new InvalidOperationException("MappingSchema does not define primary key field.");
             primaryKeyCondition = key;
             return this;
@@ -105,27 +100,30 @@ namespace Uaaa.Data.Sql
             string fieldPrefix = !string.IsNullOrEmpty(tableAlias) ? $"{tableAlias}." : string.Empty;
             string topText = top != null ? $"TOP {top.Value} " : string.Empty;
 
-            var fields = (from field in schema.Fields
-                          where field.MappingType != MappingType.Write
-                          let fieldText = $"{fieldPrefix}\"{field.Name}\""
-                          select fieldText).ToList();
-
-            string fieldsText = fields.Any()
-                ? string.Join(", ", fields)
-                : "*";
+            var fieldsText = FieldsTextBySchema.GetOrAdd(schema, s =>
+            {
+                var fieldsList = (from field in s.Fields
+                                  where field.MappingType != MappingType.Write
+                                  let fieldText = $"{fieldPrefix}\"{field.Name}\""
+                                  select fieldText).ToList();
+                return fieldsList.Any()
+                    ? string.Join(", ", fieldsList)
+                    : "*";
+            });
 
             string tableText = !string.IsNullOrEmpty(tableAlias)
                              ? $"\"{tableName}\" AS {tableAlias}"
                              : $"\"{tableName}\"";
 
-            List<SqlParameter> parameters = new List<SqlParameter>();
+            SqlCommand command = new SqlCommand();
+            int parameterIndex = 1;
             var whereText = new StringBuilder();
-            if (primaryKeyCondition.HasValue && !string.IsNullOrEmpty(primaryKeyField))
+            if (primaryKeyCondition.HasValue)
             {
-                string parameterName = GetParameterName(parameters);
+                string parameterName = Query.GetParameterName(ref parameterIndex);
                 var parameter = new SqlParameter(parameterName, primaryKeyCondition.Value);
-                whereText.Append($"(\"{primaryKeyField}\" = {parameter.ParameterName})");
-                parameters.Add(parameter);
+                whereText.Append($"(\"{schema.PrimaryKey}\" = {parameter.ParameterName})");
+                command.Parameters.Add(parameter);
             }
 
             foreach (string condition in conditions)
@@ -139,16 +137,10 @@ namespace Uaaa.Data.Sql
             if (whereText.Length > 0)
                 commandText = $"{commandText} WHERE {whereText}";
 
-            var command = new SqlCommand { CommandText = $"{commandText};" };
-            command.Parameters.AddRange(parameters.ToArray());
+            command.CommandText = $"{commandText};";
             return command;
         }
         #endregion
-        #region -=Private methods=-
-        private string GetParameterName(List<SqlParameter> parameters)
-            => $"@p{parameters.Count + 1}";
-
-        #endregion 
         #endregion
 
         #region -=Static members=-
@@ -156,8 +148,14 @@ namespace Uaaa.Data.Sql
         /// Converts SelectQuery object to SqlCommand.
         /// </summary>
         /// <param name="value"></param>
-        public static implicit operator SqlCommand(SelectQuery value) 
+        public static implicit operator SqlCommand(SelectQuery value)
             => ((ISqlCommandGenerator)value).ToSqlCommand();
+
+        /// <summary>
+        /// Cached field texts by mapping schema.
+        /// </summary>
+        private static readonly ConcurrentDictionary<MappingSchema, string> FieldsTextBySchema =
+            new ConcurrentDictionary<MappingSchema, string>();
 
         #endregion
     }

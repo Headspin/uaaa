@@ -1,6 +1,4 @@
-#:C:\Users\Simon Balazic\Documents\GitHub\uaaa\src\Uaaa.Data.Sql\Uaaa.Data.Sql.xproj
-C:\Users\Simon Balazic\Documents\GitHub\uaaa\src\Uaaa.Data.Sql\Uaaa.Data.Sql.xproj|C:\Users\Simon Balazic\Documents\GitHub\uaaa\src\Uaaa.Core\Uaaa.Core.xproj
-#:C:\Users\Simon Balazic\Documents\GitHub\uaaa\test\Uaaa.Data.Sql.Tests\Uaaa.Data.Sql.Tests.xproj
-C:\Users\Simon Balazic\Documents\GitHub\uaaa\test\Uaaa.Data.Sql.Tests\Uaaa.Data.Sql.Tests.xproj|C:\Users\Simon Balazic\Documents\GitHub\uaaa\src\Uaaa.Core\Uaaa.Core.xproj
-C:\Users\Simon Balazic\Documents\GitHub\uaaa\test\Uaaa.Data.Sql.Tests\Uaaa.Data.Sql.Tests.xproj|C:\Users\Simon Balazic\Documents\GitHub\uaaa\src\Uaaa.Data.Sql\Uaaa.Data.Sql.xproj
-C:\Users\Simon Balazic\Documents\GitHub\uaaa\src\Uaaa.Data.Sql\Uaaa.Data.Sql.xproj|C:\Users\Simon Balazic\Documents\GitHub\uaaa\src\Uaaa.Core\Uaaa.Core.xproj
+#:C:\GitHub\uaaa\test\Uaaa.Data.Sql.Tests.Perf\Uaaa.Data.Sql.Tests.Perf.xproj
+C:\GitHub\uaaa\test\Uaaa.Data.Sql.Tests.Perf\Uaaa.Data.Sql.Tests.Perf.xproj|C:\GitHub\uaaa\src\Uaaa.Core\Uaaa.Core.xproj
+C:\GitHub\uaaa\test\Uaaa.Data.Sql.Tests.Perf\Uaaa.Data.Sql.Tests.Perf.xproj|C:\GitHub\uaaa\src\Uaaa.Data.Sql\Uaaa.Data.Sql.xproj
+C:\GitHub\uaaa\src\Uaaa.Data.Sql\Uaaa.Data.Sql.xproj|C:\GitHub\uaaa\src\Uaaa.Core\Uaaa.Core.xproj
