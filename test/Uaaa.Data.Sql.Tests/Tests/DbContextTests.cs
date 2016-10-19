@@ -243,8 +243,42 @@ namespace Uaaa.Data.Sql.Tests
                 Assert.Equal(25, person1.Age);
             }
         }
-        #endregion
+        [Fact]
+        public async Task DbContext_Records_Save()
+        {
+            const string table = "People";
+            var person1 = new Person { Name = "Person1", Surname = "Surname1" };
+            Assert.Equal(0, person1.Id);
+            using (var context = CreateDbContext())
+            {
+                await context.Save(person1, table);
+                Assert.True(person1.Id > 0);
 
+                var people = await context.Query(Select<Person>().From(table)).As<Person>();
+                Assert.Equal(1, people.Count);
+
+                Assert.Equal(person1.Id, people[0].Id);
+                Assert.Equal(person1.Name, people[0].Name);
+                Assert.Equal(person1.Surname, people[0].Surname);
+                Assert.Equal(person1.Age, people[0].Age);
+
+                person1 = people[0];
+                person1.Age = 15;
+
+                int id = person1.Id;
+
+                await context.Save(person1, table);
+                Assert.Equal(id, person1.Id);
+
+                people = await context.Query(Select<Person>().From(table)).As<Person>();
+                Assert.Equal(1, people.Count);
+                Assert.Equal(id, people[0].Id);
+                Assert.Equal(person1.Name, people[0].Name);
+                Assert.Equal(person1.Surname, people[0].Surname);
+                Assert.Equal(person1.Age, people[0].Age);
+            }
+        }
+        #endregion
         #region -=Private helper methods=-
         private DbContext CreateDbContext()
             => new DbContext(ConnectionInfo.Create(this.DatabaseFixture.ConnectionString));

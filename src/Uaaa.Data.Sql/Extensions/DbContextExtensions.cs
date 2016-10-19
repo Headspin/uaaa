@@ -74,5 +74,40 @@ namespace Uaaa.Data.Sql.Extensions
                 ((ITransactionContext)context).CommitTransaction();
             }
         }
+        /// <summary>
+        /// Saves single record to database.
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <param name="context"></param>
+        /// <param name="record"></param>
+        /// <param name="table"></param>
+        /// <returns></returns>
+        public static async Task Save<TItem>(this DbContext context, TItem record, string table)
+        {
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+            if (record == null)
+                throw new ArgumentNullException(nameof(record));
+            if (string.IsNullOrEmpty(table))
+                throw new ArgumentNullException(nameof(table));
+
+            MappingSchema schema = MappingSchema.Get<TItem>();
+            if (!schema.DefinesPrimaryKey)
+                throw new InvalidOperationException("MappingSchema does not define primary key.");
+            int key;
+            if (int.TryParse(schema.GetPrimaryKeyValue(record)?.ToString(), out key) && key < 1)
+            {
+                // new record
+                var keys = new List<DataRecord>(
+                    await context.Query(Insert(record).Into(table).ResolveKeys()));
+                if (keys.Any())
+                    keys[0].WriteTo(record); // write new key value to record instance.
+            }
+            else
+            {
+                // update record
+                await context.Execute(Update(record).In(table));
+            }
+        }
     }
 }

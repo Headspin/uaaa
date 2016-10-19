@@ -153,6 +153,17 @@ namespace Uaaa.Data.Mapper
             IFieldAccessor accessor = fieldAccessors[field];
             return accessor.GetValue(instance);
         }
+        /// <summary>
+        /// Returns primary key field value for provided object instance.
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        public object GetPrimaryKeyValue(object instance)
+        {
+            if (!DefinesPrimaryKey)
+                throw new InvalidOperationException("Schema does not define primaryKey field.");
+            return GetFieldValue(primaryKeyAttribute, instance);
+        }
 
         private void ReadSchema()
         {
