@@ -44,8 +44,8 @@ namespace Uaaa.Data.Sql
         public static UpdateQuery Update(object record)
             => new UpdateQuery().From(new[] { record });
 
-        public static UpdateQuery Update(IEnumerable<object> records)
-            => new UpdateQuery().From(records);
+        public static UpdateQuery Update<TItem>(IEnumerable<TItem> records)
+            => new UpdateQuery().From(records.Cast<object>());
         /// <summary>
         /// Initialies delete query builder object.
         /// </summary>
@@ -64,8 +64,8 @@ namespace Uaaa.Data.Sql
         /// </summary>
         /// <param name="records"></param>
         /// <returns></returns>
-        public static DeleteQuery Delete(IEnumerable<object> records)
-            => new DeleteQuery(records);
+        public static DeleteQuery Delete<T>(IEnumerable<T> records)
+            => new DeleteQuery(records.Cast<object>());
 
         #region -=Internal methods=-
         internal static string GetParameterName(List<SqlParameter> parameters)

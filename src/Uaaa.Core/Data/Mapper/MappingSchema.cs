@@ -158,7 +158,7 @@ namespace Uaaa.Data.Mapper
         {
 
             #region -=Read base type schema=-
-            if (typeInfo.BaseType != null && typeInfo.BaseType != typeof(object))
+            if (typeInfo.BaseType != null && typeInfo.BaseType != typeof(object) && typeInfo.BaseType != typeof(Model))
             {
                 // read base type schema and copy private fields accessors (other protected/public fields are available on current type).
                 MappingSchema baseSchema = Get(typeInfo.BaseType);

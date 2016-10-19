@@ -44,20 +44,21 @@ namespace Uaaa.Data
         }
 
         /// <summary>
-        /// Converts DataRecord list to TItem list by reading data from DataRecord.
+        /// Converts DataRecord list to Items(of TItem) collection by reading data from DataRecord.
         /// </summary>
         /// <typeparam name="TItem"></typeparam>
         /// <param name="records"></param>
         /// <returns></returns>
-        public static async Task<List<TItem>> As<TItem>(this Task<IEnumerable<DataRecord>> records) where TItem : class, new()
+        public static async Task<Items<TItem>> As<TItem>(this Task<IEnumerable<DataRecord>> records) where TItem : class, new()
         {
-            List<TItem> items = new List<TItem>();
+            Items<TItem> items = new Items<TItem>();
             foreach (DataRecord record in await records)
             {
                 var item = Activator.CreateInstance<TItem>();
                 record.WriteTo(item);
                 items.Add(item);
             }
+            items.AcceptChanges();
             return items;
         }
     }

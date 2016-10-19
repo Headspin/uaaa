@@ -6,6 +6,7 @@ using System.Reflection.PortableExecutable;
 using System.Threading.Tasks;
 using Uaaa.Data;
 using Uaaa.Data.Mapper;
+using Uaaa.Data.Sql.Extensions;
 using static Uaaa.Data.Sql.Query;
 using Xunit;
 
@@ -15,7 +16,7 @@ namespace Uaaa.Data.Sql.Tests
     {
         #region -=Sample models=-
 
-        public class Person
+        public class Person : Model
         {
             [Field(MappingType = MappingType.PrimaryKey)]
             private int id = 0;
@@ -23,6 +24,8 @@ namespace Uaaa.Data.Sql.Tests
             private DateTime createdDateTimeUtc = DateTime.UtcNow;
             [Field(MappingType = MappingType.ReadUpdate)]
             private DateTime? changedDateTimeUtc = null;
+            [Field]
+            private int? age = null;
             public int Id => id;
             public DateTime CreatedDateTimeUtc => createdDateTimeUtc;
             public DateTime? ChangedDateTimeUtc => changedDateTimeUtc;
@@ -30,10 +33,19 @@ namespace Uaaa.Data.Sql.Tests
             public string Name { get; set; }
             [Field]
             public string Surname { get; set; }
-            [Field]
-            public int? Age { get; set; }
+
+            public int? Age {
+                get { return age; }
+                set { Property.Set(ref age, value); }
+            }
 
             public void SetId(int newId) => this.id = newId;
+
+            protected override ChangeManager CreateChangeManager() => new ChangeManager();
+            protected override void OnSetInitialValues()
+            {
+                Property.Init(ref age, null, nameof(Age));
+            }
         }
 
         #endregion
@@ -142,6 +154,93 @@ namespace Uaaa.Data.Sql.Tests
 
                 var people = await context.Query(Select<Person>().From(table)).As<Person>();
                 Assert.Equal(3, people.Count);
+            }
+        }
+        [Fact]
+        public async Task DbContext_Items_Save_AddedItems()
+        {
+            const string table = "People";
+            var person1 = new Person { Name = "Person1", Surname = "Surname1" };
+            var person2 = new Person { Name = "Person2", Surname = "Surname2" };
+            var person3 = new Person { Name = "Person3", Surname = "Surname3" };
+
+            Items<Person> people = new Items<Person> { person1, person2, person3 };
+
+            using (var context = CreateDbContext())
+            {
+                await context.Save(people, table);
+                Assert.True(person1.Id > 0);
+                Assert.True(person2.Id > 0);
+                Assert.True(person3.Id > 0);
+
+                Assert.NotEqual(person1.Id, person2.Id);
+                Assert.NotEqual(person1.Id, person3.Id);
+                Assert.NotEqual(person2.Id, person3.Id);
+            }
+        }
+        [Fact]
+        public async Task DbContext_Items_Save_Removedtems()
+        {
+            const string table = "People";
+            var person1 = new Person { Name = "Person1", Surname = "Surname1" };
+            var person2 = new Person { Name = "Person2", Surname = "Surname2" };
+            var person3 = new Person { Name = "Person3", Surname = "Surname3" };
+
+
+            using (var context = CreateDbContext())
+            {
+                await context.Execute(Insert(new[] { person1, person2, person3 }).Into(table));
+                var people = await context.Query(Select<Person>().From(table)).As<Person>();
+                Assert.Equal(3, people.Count);
+
+                person1 = people[0];
+                people.Remove(person1);
+                await context.Save(people, table);
+
+                Assert.Equal(2, people.Count);
+                Assert.False(people.Any(person => person.Id == person1.Id));
+                people.RemoveAll();
+                Assert.Equal(0, people.Count);
+
+                await context.Save(people, table);
+                Assert.Equal(0, people.Count);
+                people = await context.Query(Select<Person>().From(table)).As<Person>();
+                Assert.Equal(0, people.Count);
+            }
+        }
+        [Fact]
+        public async Task DbContext_Items_Save_ChangedItems()
+        {
+            const string table = "People";
+            var person1 = new Person { Name = "Person1", Surname = "Surname1" };
+            var person2 = new Person { Name = "Person2", Surname = "Surname2" };
+            var person3 = new Person { Name = "Person3", Surname = "Surname3" };
+
+            person1.Age = 15;
+            Assert.True(person1.IsChanged);
+            Assert.False(person2.IsChanged);
+            Assert.False(person3.IsChanged);
+
+            var people = new Items<Person>();
+            people.AddRange(new[] { person1, person2, person3 });
+
+            using (var context = CreateDbContext())
+            {
+                await context.Save(people, table);
+                people = await context.Query(Select<Person>().From(table)).As<Person>();
+                Assert.Equal(3, people.Count);
+
+                person1 = people.First(item => item.Id == person1.Id);
+                Assert.False(person1.IsChanged);
+                person1.Age = 25;
+                Assert.True(person1.IsChanged);
+
+                await context.Save(people, table);
+                people = await context.Query(Select<Person>().From(table)).As<Person>();
+                Assert.Equal(3, people.Count);
+
+                person1 = people.First(item => item.Id == person1.Id);
+                Assert.Equal(25, person1.Age);
             }
         }
         #endregion

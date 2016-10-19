@@ -32,6 +32,7 @@ namespace Uaaa.Data.Sql
         {
             await OpenConnection();
             command.Connection = connection;
+            command.Transaction = transaction;
             using (SqlDataReader reader = command.ExecuteReader())
             {
                 return await reader.ReadAll();
@@ -46,6 +47,7 @@ namespace Uaaa.Data.Sql
         {
             await OpenConnection();
             command.Connection = connection;
+            command.Transaction = transaction;
             using (SqlDataReader reader = command.ExecuteReader())
             {
                 return await reader.ReadSingle();
@@ -59,6 +61,7 @@ namespace Uaaa.Data.Sql
         {
             await OpenConnection();
             command.Connection = connection;
+            command.Transaction = transaction;
             await command.ExecuteNonQueryAsync();
         }
         #endregion
@@ -84,7 +87,10 @@ namespace Uaaa.Data.Sql
             lock (transactionLock)
             {
                 if (transactionsCounter == 0)
+                {
+                    OpenConnection();
                     transaction = connection.BeginTransaction();
+                }
                 transactionsCounter++;
             }
         }
@@ -109,7 +115,7 @@ namespace Uaaa.Data.Sql
         }
         #endregion
         #region -=Private methods=-
-        private Task OpenConnection() 
+        private Task OpenConnection()
             => connection.State != ConnectionState.Open
                                 ? connection.OpenAsync()
                                 : Task.FromResult(true);

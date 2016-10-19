@@ -83,7 +83,30 @@ namespace Uaaa
             this.ChangeManager.Track(removedItems);
             this.ChangeManager.ObjectChanged += ChangeManager_ObjectChanged;
         }
+
         #region -=Public methods=-
+        /// <summary>
+        /// Adds collection of items to items collection.
+        /// </summary>
+        /// <param name="collection"></param>
+        public void AddRange(IEnumerable<TItem> collection)
+        {
+            foreach (TItem item in collection)
+            {
+                Add(item);
+            }
+        }
+        /// <summary>
+        /// Removes all records from collection. 
+        /// Method does not clear the collection state and changetracking.
+        /// </summary>
+        public void RemoveAll()
+        {
+            for (int index = this.Count - 1; index >= 0; index--)
+            {
+                RemoveItem(index);
+            }
+        }
         /// <summary>
         /// Returns all items that were added to the initial items collection.
         /// </summary>
