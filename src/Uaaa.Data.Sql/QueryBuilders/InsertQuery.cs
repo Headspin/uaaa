@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Uaaa.Data.Mapper;
+using Uaaa.Data.Sql.QueryBuilders;
 
 namespace Uaaa.Data.Sql
 {
@@ -77,10 +78,12 @@ namespace Uaaa.Data.Sql
         /// Returns newly configured SqlCommand.
         /// </summary>
         /// <returns></returns>
-        SqlCommand ISqlCommandGenerator.ToSqlCommand()
+        SqlCommand ISqlCommandGenerator.ToSqlCommand(ParameterScope parameterScope)
         {
             if (string.IsNullOrEmpty(tableName))
                 throw new InvalidOperationException("Unable to generate SqlCommand. Query does not define table name.");
+
+            ParameterScope scope = parameterScope ?? new ParameterScope();
 
             var writableFields = WritableFieldsBySchema.GetOrAdd(schema, s => new HashSet<string>(
                                             (from field in schema.Fields
@@ -91,12 +94,11 @@ namespace Uaaa.Data.Sql
                 throw new InvalidOperationException("Cannot generate insert command. No writable fields in schema.");
 
             SqlCommand command = new SqlCommand();
-            int parameterIndex = 1;
             string tableText = $"\"{tableName}\"";
             var commandText = new StringBuilder();
 
             if (resolveKeys)
-                commandText.Append($"DECLARE @TempIdentityTable TABLE({schema.PrimaryKey} INT, recordHash INT);");
+                commandText.Append($"DECLARE @TempIdentityTable TABLE({schema.PrimaryKey} INT, {RecordHashFieldName} INT);");
             foreach (object record in records)
             {
                 var fieldsText = new StringBuilder();
@@ -107,7 +109,7 @@ namespace Uaaa.Data.Sql
                     {
                         var parameter = new SqlParameter
                         {
-                            ParameterName = Query.GetParameterName(ref parameterIndex),
+                            ParameterName = Query.GetParameterName(scope),
                             Value = value ?? DBNull.Value
                         };
                         fieldsText.Append($"\"{field}\", ");
@@ -126,7 +128,7 @@ namespace Uaaa.Data.Sql
                 }
             }
             if (resolveKeys)
-                commandText.Append($"SELECT {schema.PrimaryKey}, recordHash FROM @TempIdentityTable;");
+                commandText.Append($"SELECT {schema.PrimaryKey}, {RecordHashFieldName} FROM @TempIdentityTable;");
 
             command.CommandText = $"{commandText}";
             return command;
@@ -136,12 +138,20 @@ namespace Uaaa.Data.Sql
 
         #region -=Static members=-
         /// <summary>
+        /// Defines field name for recordHash field in DataRecord.
+        /// </summary>
+        public static readonly string RecordHashFieldName = "recordHash";
+        /// <summary>
         /// Converts InsertQuery object to SqlCommand.
         /// </summary>
         /// <param name="value"></param>
         public static implicit operator SqlCommand(InsertQuery value)
             => ((ISqlCommandGenerator)value).ToSqlCommand();
-
+        /// <summary>
+        /// Computes record hash that uniquely identifies record instance.
+        /// </summary>
+        /// <param name="record"></param>
+        /// <returns></returns>
         public static int GetRecordHash(object record)
             => RuntimeHelpers.GetHashCode(record);
 

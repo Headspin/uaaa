@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using Uaaa.Data.Mapper;
+using Uaaa.Data.Sql.QueryBuilders;
 
 namespace Uaaa.Data.Sql
 {
@@ -100,21 +101,22 @@ namespace Uaaa.Data.Sql
         }
 
         #region -=ISqlCommandGenerator=-
-        SqlCommand ISqlCommandGenerator.ToSqlCommand()
+        SqlCommand ISqlCommandGenerator.ToSqlCommand(ParameterScope parameterScope)
         {
             if (string.IsNullOrEmpty(tableName))
                 throw new InvalidOperationException("Unable to generate SqlCommand. Query does not define table name.");
 
-            List<SqlParameter> parameters = new List<SqlParameter>();
+            ParameterScope scope = parameterScope ?? new ParameterScope();
+            SqlCommand command = new SqlCommand();
 
             string tableText = $"\"{tableName}\"";
 
             var whereText = new StringBuilder();
             if (primaryKeyCondition.HasValue && !string.IsNullOrEmpty(primaryKeyField))
             {
-                var parameter = new SqlParameter($"@p{(parameters.Count + 1)}", primaryKeyCondition.Value);
+                var parameter = new SqlParameter(Query.GetParameterName(scope), primaryKeyCondition.Value);
                 whereText.Append($"(\"{primaryKeyField}\" = {parameter.ParameterName})");
-                parameters.Add(parameter);
+                command.Parameters.Add(parameter);
             }
             else if (primaryKeyConditions != null && primaryKeyConditions.Any() && !string.IsNullOrEmpty(primaryKeyField))
             {
@@ -122,8 +124,8 @@ namespace Uaaa.Data.Sql
                 var conditionsListText = new StringBuilder();
                 foreach (int keyCondition in primaryKeyConditions)
                 {
-                    string parameterName = Query.GetParameterName(parameters);
-                    parameters.Add(new SqlParameter { ParameterName = parameterName, Value = keyCondition });
+                    string parameterName = Query.GetParameterName(scope);
+                    command.Parameters.Add(new SqlParameter { ParameterName = parameterName, Value = keyCondition });
                     conditionsListText.Append($"{parameterName}, ");
                 }
                 conditionsListText.Remove(conditionsListText.Length - 2, 2); // remove last ", "
@@ -141,8 +143,7 @@ namespace Uaaa.Data.Sql
             if (whereText.Length > 0)
                 commandText = $"{commandText} WHERE {whereText}";
 
-            var command = new SqlCommand { CommandText = $"{commandText};" };
-            command.Parameters.AddRange(parameters.ToArray());
+            command.CommandText = $"{commandText};";
             return command;
         }
         #endregion 

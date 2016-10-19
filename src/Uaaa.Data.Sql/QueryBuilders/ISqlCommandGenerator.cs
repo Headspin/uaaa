@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Uaaa.Data.Sql.QueryBuilders;
 
 namespace Uaaa.Data.Sql
 {
@@ -14,8 +15,9 @@ namespace Uaaa.Data.Sql
     {
         /// <summary>
         /// Generates sql command.
+        /// <param name="scope">Defines scope for generating command parameters names (optional).</param>
         /// </summary>
         /// <returns></returns>
-        SqlCommand ToSqlCommand();
+        SqlCommand ToSqlCommand(ParameterScope scope = null);
     }
 }

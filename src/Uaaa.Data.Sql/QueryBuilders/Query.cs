@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Uaaa.Data.Mapper;
+using Uaaa.Data.Sql.QueryBuilders;
 
 namespace Uaaa.Data.Sql
 {
@@ -71,6 +72,9 @@ namespace Uaaa.Data.Sql
             => $"@p{parameters.Count + 1}";
 
         internal static string GetParameterName(ref int index) => $"@p{index++}";
+
+        internal static string GetParameterName(ParameterScope scope) => $"@p{scope.GetParameterIndex()}";
+
         #endregion
     }
 }

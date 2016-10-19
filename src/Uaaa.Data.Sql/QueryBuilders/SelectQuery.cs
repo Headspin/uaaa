@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using Uaaa.Data.Mapper;
+using Uaaa.Data.Sql.QueryBuilders;
 
 namespace Uaaa.Data.Sql
 {
@@ -93,10 +94,13 @@ namespace Uaaa.Data.Sql
         }
         #region -=ISqlCommandGenerator=-
 
-        SqlCommand ISqlCommandGenerator.ToSqlCommand()
+        SqlCommand ISqlCommandGenerator.ToSqlCommand(ParameterScope parameterScope)
         {
             if (string.IsNullOrEmpty(tableName))
                 throw new InvalidOperationException("Unable to generate SqlCommand. Query does not define table name.");
+
+            ParameterScope scope = parameterScope ?? new ParameterScope();
+
             string fieldPrefix = !string.IsNullOrEmpty(tableAlias) ? $"{tableAlias}." : string.Empty;
             string topText = top != null ? $"TOP {top.Value} " : string.Empty;
 
@@ -116,11 +120,10 @@ namespace Uaaa.Data.Sql
                              : $"\"{tableName}\"";
 
             SqlCommand command = new SqlCommand();
-            int parameterIndex = 1;
             var whereText = new StringBuilder();
             if (primaryKeyCondition.HasValue)
             {
-                string parameterName = Query.GetParameterName(ref parameterIndex);
+                string parameterName = Query.GetParameterName(scope);
                 var parameter = new SqlParameter(parameterName, primaryKeyCondition.Value);
                 whereText.Append($"(\"{schema.PrimaryKey}\" = {parameter.ParameterName})");
                 command.Parameters.Add(parameter);
