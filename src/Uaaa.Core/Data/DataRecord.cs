@@ -33,14 +33,16 @@ namespace Uaaa.Data
         /// <typeparam name="TItem"></typeparam>
         /// <param name="records"></param>
         /// <returns></returns>
-        public static IEnumerable<TItem> As<TItem>(this IEnumerable<DataRecord> records) where TItem : class, new()
+        public static Items<TItem> AsItems<TItem>(this IEnumerable<DataRecord> records) where TItem : class, new()
         {
+            Items<TItem> items = new Items<TItem>();
             foreach (DataRecord record in records)
             {
                 var item = Activator.CreateInstance<TItem>();
                 record.WriteTo(item);
-                yield return item;
+                items.Add(item);
             }
+            return items;
         }
 
         /// <summary>
@@ -49,7 +51,7 @@ namespace Uaaa.Data
         /// <typeparam name="TItem"></typeparam>
         /// <param name="records"></param>
         /// <returns></returns>
-        public static async Task<Items<TItem>> As<TItem>(this Task<IEnumerable<DataRecord>> records) where TItem : class, new()
+        public static async Task<Items<TItem>> AsItems<TItem>(this Task<IEnumerable<DataRecord>> records) where TItem : class, new()
         {
             Items<TItem> items = new Items<TItem>();
             foreach (DataRecord record in await records)

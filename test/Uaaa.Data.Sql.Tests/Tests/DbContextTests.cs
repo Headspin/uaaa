@@ -88,11 +88,11 @@ namespace Uaaa.Data.Sql.Tests
 
             using (DbContext context = CreateDbContext())
             {
-                var people = await context.Query(Select<Person>().From(table)).As<Person>();
+                var people = await context.Query(Select<Person>().From(table)).AsItems<Person>();
                 Assert.Equal(0, people.Count);
                 // Create records
                 await context.Execute(Insert(new[] { person1, person2 }).Into(table));
-                people = await context.Query(Select<Person>().From(table)).As<Person>();
+                people = await context.Query(Select<Person>().From(table)).AsItems<Person>();
                 Assert.Equal(2, people.Count);
                 person1 = people[0];
                 person2 = people[1];
@@ -101,7 +101,7 @@ namespace Uaaa.Data.Sql.Tests
                 person1.Age = 10;
                 person2.Surname = "Surname2.1";
                 await context.Execute(Update(new[] { person1, person2 }).In(table));
-                people = await context.Query(Select<Person>().From(table)).As<Person>();
+                people = await context.Query(Select<Person>().From(table)).AsItems<Person>();
 
                 Assert.Equal(2, people.Count);
                 person1 = people[0];
@@ -113,12 +113,12 @@ namespace Uaaa.Data.Sql.Tests
 
                 // delete records
                 await context.Execute(Delete(person1).From(table));
-                people = await context.Query(Select<Person>().From(table)).As<Person>();
+                people = await context.Query(Select<Person>().From(table)).AsItems<Person>();
                 Assert.Equal(1, people.Count);
                 Assert.Equal(person2.Id, people[0].Id);
 
                 await context.Execute(Delete(person2).From(table));
-                people = await context.Query(Select<Person>().From(table)).As<Person>();
+                people = await context.Query(Select<Person>().From(table)).AsItems<Person>();
                 Assert.Equal(0, people.Count);
             }
         }
@@ -152,7 +152,7 @@ namespace Uaaa.Data.Sql.Tests
                 Assert.NotEqual(person1.Id, person3.Id);
                 Assert.NotEqual(person2.Id, person3.Id);
 
-                var people = await context.Query(Select<Person>().From(table)).As<Person>();
+                var people = await context.Query(Select<Person>().From(table)).AsItems<Person>();
                 Assert.Equal(3, people.Count);
             }
         }
@@ -190,7 +190,7 @@ namespace Uaaa.Data.Sql.Tests
             using (var context = CreateDbContext())
             {
                 await context.Execute(Insert(new[] { person1, person2, person3 }).Into(table));
-                var people = await context.Query(Select<Person>().From(table)).As<Person>();
+                var people = await context.Query(Select<Person>().From(table)).AsItems<Person>();
                 Assert.Equal(3, people.Count);
 
                 person1 = people[0];
@@ -204,7 +204,7 @@ namespace Uaaa.Data.Sql.Tests
 
                 await context.Save(people, table);
                 Assert.Equal(0, people.Count);
-                people = await context.Query(Select<Person>().From(table)).As<Person>();
+                people = await context.Query(Select<Person>().From(table)).AsItems<Person>();
                 Assert.Equal(0, people.Count);
             }
         }
@@ -227,7 +227,7 @@ namespace Uaaa.Data.Sql.Tests
             using (var context = CreateDbContext())
             {
                 await context.Save(people, table);
-                people = await context.Query(Select<Person>().From(table)).As<Person>();
+                people = await context.Query(Select<Person>().From(table)).AsItems<Person>();
                 Assert.Equal(3, people.Count);
 
                 person1 = people.First(item => item.Id == person1.Id);
@@ -236,7 +236,7 @@ namespace Uaaa.Data.Sql.Tests
                 Assert.True(person1.IsChanged);
 
                 await context.Save(people, table);
-                people = await context.Query(Select<Person>().From(table)).As<Person>();
+                people = await context.Query(Select<Person>().From(table)).AsItems<Person>();
                 Assert.Equal(3, people.Count);
 
                 person1 = people.First(item => item.Id == person1.Id);
@@ -254,7 +254,7 @@ namespace Uaaa.Data.Sql.Tests
                 await context.Save(person1, table);
                 Assert.True(person1.Id > 0);
 
-                var people = await context.Query(Select<Person>().From(table)).As<Person>();
+                var people = await context.Query(Select<Person>().From(table)).AsItems<Person>();
                 Assert.Equal(1, people.Count);
 
                 Assert.Equal(person1.Id, people[0].Id);
@@ -270,7 +270,7 @@ namespace Uaaa.Data.Sql.Tests
                 await context.Save(person1, table);
                 Assert.Equal(id, person1.Id);
 
-                people = await context.Query(Select<Person>().From(table)).As<Person>();
+                people = await context.Query(Select<Person>().From(table)).AsItems<Person>();
                 Assert.Equal(1, people.Count);
                 Assert.Equal(id, people[0].Id);
                 Assert.Equal(person1.Name, people[0].Name);
