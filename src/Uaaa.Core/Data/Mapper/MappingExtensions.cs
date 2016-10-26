@@ -28,5 +28,17 @@ namespace Uaaa.Data.Mapper
         /// <param name="source"></param>
         public static void ReadFrom<TSource>(this Dictionary<string, object> data, TSource source)
             => MappingSchema.Get<TSource>().Read(source, (name, value) => data[name] = value);
+        /// <summary>
+        /// Creates TItem from DataRecord.
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static TItem As<TItem>(this Dictionary<string, object> data) where TItem: new()
+        {
+            var item = Activator.CreateInstance<TItem>();
+            data.WriteTo(item);
+            return item;
+        }
     }
 }
