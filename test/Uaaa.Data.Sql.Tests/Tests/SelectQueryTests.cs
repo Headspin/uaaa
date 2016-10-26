@@ -117,5 +117,26 @@ namespace Uaaa.Data.Sql.Tests
             string expectedText = $"SELECT TOP 10 \"PersonId\", \"Name\", \"Surname\" FROM \"{table}\";";
             Assert.Equal(expectedText, command.CommandText);
         }
+        [Fact]
+        public void Query_Select_OrderBy()
+        {
+            const string table = "Table1";
+            SqlCommand command = Select<MySimpleClass>().From(table)
+                                                        .OrderBy(nameof(MySimpleClass.Name))
+                                                        .OrderBy(nameof(MySimpleClass.Surname), SortOrder.Descending);
+            string expectedText = $"SELECT \"PersonId\", \"Name\", \"Surname\" FROM \"{table}\" ORDER BY \"Name\" ASC, \"Surname\" DESC;";
+            Assert.Equal(expectedText, command.CommandText);
+        }
+
+        [Fact]
+        public void Query_Select_Where_OrderBy()
+        {
+            const string table = "Table1";
+            SqlCommand command = Select<MySimpleClass>().From(table)
+                                                        .Where(40)
+                                                        .OrderBy(nameof(MySimpleClass.Name), SortOrder.Unspecified);
+            string expectedText = $"SELECT \"PersonId\", \"Name\", \"Surname\" FROM \"{table}\" WHERE (\"PersonId\" = @p1) ORDER BY \"Name\" ASC;";
+            Assert.Equal(expectedText, command.CommandText);
+        }
     }
 }

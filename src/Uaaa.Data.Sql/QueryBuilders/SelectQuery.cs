@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using Uaaa.Components.Collections;
 using Uaaa.Data.Mapper;
 using Uaaa.Data.Sql.QueryBuilders;
 
@@ -15,6 +16,20 @@ namespace Uaaa.Data.Sql
     /// </summary>
     public sealed class SelectQuery : ISqlCommandGenerator
     {
+        #region -=Support types=-
+
+        private class OrderInfo
+        {
+            public readonly string Field;
+            public readonly SortOrder SortOrder;
+
+            public OrderInfo(string field, SortOrder sortOrder)
+            {
+                this.Field = field;
+                this.SortOrder = sortOrder;
+            }
+        }
+        #endregion
         #region -=Instance members=-
         private readonly MappingSchema schema;
         private int? top;
@@ -22,6 +37,7 @@ namespace Uaaa.Data.Sql
         private string tableAlias;
         private readonly List<string> conditions = new List<string>();
         private int? primaryKeyCondition;
+        private readonly Index<string, OrderInfo> orderByIndex = new Index<string, OrderInfo>(info => info.Field);
         /// <summary>
         /// Creates new instance of select query builder.
         /// </summary>
@@ -92,6 +108,20 @@ namespace Uaaa.Data.Sql
             primaryKeyCondition = key;
             return this;
         }
+
+        public SelectQuery OrderBy(string field, SortOrder sortOrder = SortOrder.Ascending)
+        {
+            if (string.IsNullOrEmpty(field))
+                throw new ArgumentNullException(nameof(field));
+
+            if (sortOrder == SortOrder.Unspecified)
+                sortOrder = SortOrder.Ascending;
+
+            if (orderByIndex.ContainsKey(field))
+                throw new ArgumentException("SortOrder for provided field already set.", nameof(field));
+            orderByIndex.Add(new OrderInfo(field, sortOrder));
+            return this;
+        }
         #region -=ISqlCommandGenerator=-
 
         SqlCommand ISqlCommandGenerator.ToSqlCommand(ParameterScope parameterScope)
@@ -104,7 +134,7 @@ namespace Uaaa.Data.Sql
             string fieldPrefix = !string.IsNullOrEmpty(tableAlias) ? $"{tableAlias}." : string.Empty;
             string topText = top != null ? $"TOP {top.Value} " : string.Empty;
 
-            var fieldsText = FieldsTextBySchema.GetOrAdd(schema, s =>
+            string fieldsText = FieldsTextBySchema.GetOrAdd(schema, s =>
             {
                 var fieldsList = (from field in s.Fields
                                   where field.MappingType != MappingType.Write
@@ -119,8 +149,9 @@ namespace Uaaa.Data.Sql
                              ? $"\"{tableName}\" AS {tableAlias}"
                              : $"\"{tableName}\"";
 
-            SqlCommand command = new SqlCommand();
+            var command = new SqlCommand();
             var whereText = new StringBuilder();
+            var orderByText = new StringBuilder();
             if (primaryKeyCondition.HasValue)
             {
                 string parameterName = Query.GetParameterName(scope);
@@ -136,9 +167,19 @@ namespace Uaaa.Data.Sql
                 whereText.Append($"({condition})");
             }
 
+            foreach (OrderInfo orderInfo in orderByIndex)
+            {
+                if (orderByText.Length > 0)
+                    orderByText.Append(", ");
+                string sort = orderInfo.SortOrder == SortOrder.Ascending ? "ASC" : "DESC";
+                orderByText.Append($"\"{orderInfo.Field}\" {sort}");
+            }
+
             string commandText = $"SELECT {topText}{fieldsText} FROM {tableText}";
             if (whereText.Length > 0)
                 commandText = $"{commandText} WHERE {whereText}";
+            if (orderByText.Length > 0)
+                commandText = $"{commandText} ORDER BY {orderByText}";
 
             command.CommandText = $"{commandText};";
             return command;
