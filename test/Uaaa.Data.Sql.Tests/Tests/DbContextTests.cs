@@ -224,7 +224,7 @@ namespace Uaaa.Data.Sql.Tests
             var people = new Items<Person>();
             people.AddRange(new[] { person1, person2, person3 });
 
-            using (var context = CreateDbContext())
+            using (DbContext context = CreateDbContext())
             {
                 await context.Save(people, table);
                 people = await context.Query(Select<Person>().From(table)).AsItems<Person>();
@@ -249,7 +249,7 @@ namespace Uaaa.Data.Sql.Tests
             const string table = "People";
             var person1 = new Person { Name = "Person1", Surname = "Surname1" };
             Assert.Equal(0, person1.Id);
-            using (var context = CreateDbContext())
+            using (DbContext context = CreateDbContext())
             {
                 await context.Save(person1, table);
                 Assert.True(person1.Id > 0);
@@ -276,6 +276,24 @@ namespace Uaaa.Data.Sql.Tests
                 Assert.Equal(person1.Name, people[0].Name);
                 Assert.Equal(person1.Surname, people[0].Surname);
                 Assert.Equal(person1.Age, people[0].Age);
+            }
+        }
+
+        [Fact]
+        public async Task DbContext_GetItem()
+        {
+            const string table = "People";
+            var person1 = new Person { Name = "Person1", Surname = "Surname1" };
+            var person2 = new Person {Name = "Person2", Surname = "Surname2"};
+
+            using (DbContext context = CreateDbContext())
+            {
+                await context.Save(new [] {person1, person2}, table);
+
+                Person person = await context.Get<Person>(table, person1.Id);
+                Assert.Equal(person1.Id, person.Id);
+                Assert.Equal(person1.Name, person.Name);
+                Assert.Equal(person1.Surname, person.Surname);
             }
         }
         #endregion
