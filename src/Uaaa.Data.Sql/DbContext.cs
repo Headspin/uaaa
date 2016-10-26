@@ -33,7 +33,7 @@ namespace Uaaa.Data.Sql
             await OpenConnection();
             command.Connection = connection;
             command.Transaction = transaction;
-            using (SqlDataReader reader = command.ExecuteReader())
+            using (SqlDataReader reader = await command.ExecuteReaderAsync())
             {
                 return await reader.ReadAll();
             }
@@ -48,7 +48,7 @@ namespace Uaaa.Data.Sql
             await OpenConnection();
             command.Connection = connection;
             command.Transaction = transaction;
-            using (SqlDataReader reader = command.ExecuteReader())
+            using (SqlDataReader reader = await command.ExecuteReaderAsync())
             {
                 return await reader.ReadSingle();
             }
