@@ -82,7 +82,7 @@ namespace Uaaa.Data.Sql
         }
         #endregion
         #region -=ITransactionContext members=-
-        void ITransactionContext.StartTransaction()
+        public void StartTransaction()
         {
             lock (transactionLock)
             {
@@ -95,7 +95,7 @@ namespace Uaaa.Data.Sql
             }
         }
 
-        void ITransactionContext.CommitTransaction()
+        public void CommitTransaction()
         {
             lock (transactionLock)
             {
@@ -105,7 +105,7 @@ namespace Uaaa.Data.Sql
             }
         }
 
-        void ITransactionContext.RollbackTransaction()
+        public void RollbackTransaction()
         {
             lock (transactionLock)
             {

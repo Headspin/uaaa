@@ -1,9 +1,11 @@
-﻿namespace Uaaa.Data
+﻿using System;
+
+namespace Uaaa.Data
 {
     /// <summary>
     /// Defines objects that support transactions
     /// </summary>
-    public interface ITransactionContext
+    public interface ITransactionContext : IDisposable
     {
         /// <summary>
         /// Starts transaction.
