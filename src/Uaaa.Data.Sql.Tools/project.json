@@ -2,7 +2,7 @@
     "version": "1.0.0-beta1",
     "title": "Uaaa SQL database management tool",
     "copyright": "© 2016 Dvabita",
-    "description": "Uaaa SQL database management tool",
+    "description": "Uaaa SQL script runner tool for database versioning.",
     "buildOptions": {
         "debugType": "portable",
         "emitEntryPoint": true,
