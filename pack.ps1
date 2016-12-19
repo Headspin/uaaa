@@ -31,3 +31,15 @@ if (! $?){
 	exit 1 
 }
 copy-item -Path "$solutionDir/src/$project/bin/release/*.nupkg" -Destination "$solutionDir/$releaseDir"
+
+# Build Uaaa.Data.Sql.Tools package
+$project = "Uaaa.Data.Sql.Tools"
+if (Test-Path "$solutionDir/src/$project/bin/release"){
+	gci -Path "$solutionDir/src/$project/bin/release"|ri -Force -Recurse
+}
+dotnet pack "$solutionDir/src/$project/project.json" -c Release
+if (! $?){ 
+	#=-If last error code <> 0 -> return exit code 1
+	exit 1 
+}
+copy-item -Path "$solutionDir/src/$project/bin/release/*.nupkg" -Destination "$solutionDir/$releaseDir"
