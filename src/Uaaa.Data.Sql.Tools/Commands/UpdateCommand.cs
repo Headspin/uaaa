@@ -96,7 +96,7 @@ namespace Uaaa.Sql.Tools
                     throw;
                 } finally
                 {
-                    (context as IDisposable)?.Dispose();
+                    context.Dispose();
                 }
             }
             return 0;
