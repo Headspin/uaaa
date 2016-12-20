@@ -69,8 +69,9 @@ namespace Uaaa.Sql.Tools
                         CommandOptionType.SingleValue
                     );
 
-                    config.OnExecute(() =>
+                    config.OnExecute(async () =>
                     {
+
                         application.ShowRootCommandFullNameAndVersion();
                         using (ILifetimeScope scope = Container.BeginLifetimeScope())
                         {
@@ -78,7 +79,7 @@ namespace Uaaa.Sql.Tools
                             command.ConnectionKey = connectionOption.Value();
                             if (pathOption.HasValue())
                                 command.ScriptsPath = pathOption.Value();
-                            return command.Execute();
+                            return await command.Execute();
                         }
                     });
                 }, false);

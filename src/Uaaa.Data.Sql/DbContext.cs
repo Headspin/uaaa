@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
 using Uaaa.Data.Sql.Extensions;
 
@@ -50,7 +51,7 @@ namespace Uaaa.Data.Sql
             command.Transaction = transaction;
             using (SqlDataReader reader = await command.ExecuteReaderAsync())
             {
-                return await reader.ReadSingle();
+                return (await reader.ReadSingle()).Values.First();
             }
         }
         /// <summary>

@@ -60,7 +60,8 @@ namespace Uaaa.Sql.Tools
             using (var context = CreateContext())
             {
                 var command = new SqlCommand($"SELECT ISNULL(MAX(version), 0) as version FROM {DbVersionTable};");
-                return Convert.ToInt32(await context.QueryValue(command));
+                object value = await context.QueryValue(command);
+                return Convert.ToInt32(value);
             }
         }
 

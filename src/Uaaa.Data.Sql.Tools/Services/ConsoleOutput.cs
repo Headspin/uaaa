@@ -6,7 +6,7 @@ namespace Uaaa.Sql.Tools
     {
         void ITextOutput.ClearLine()
         {
-            Console.Write("\r" + new string(' ', Console.WindowWidth - 1) + "\r");
+            //Console.Write("\r" + new string(' ', Console.WindowWidth - 1) + "\r");
         }
 
         void ITextOutput.Write(string message)

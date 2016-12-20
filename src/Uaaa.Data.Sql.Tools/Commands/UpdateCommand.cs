@@ -1,14 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.IO;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.Extensions.Configuration;
 using Uaaa.Data;
-using Uaaa.Data.Sql;
 
 namespace Uaaa.Sql.Tools
 {
@@ -58,14 +55,14 @@ namespace Uaaa.Sql.Tools
             {
                 provider.UseConnection(ConnectionKey);
                 ITransactionContext context = provider.CreateTransactionContext();
+                text.Write("Checking database version...");
+                await provider.ExecuteScript(Path.Combine(Program.Info.Directory, Script.Folder, Script.InitializeDb), context);
+                int dbVersion = await provider.GetDatabaseVersion();
+                int lastFileVersion = dbVersion;
                 try
                 {
-                    await context.StartTransaction();
-                    text.Write("Checking database version...");
-                    await provider.ExecuteScript(Path.Combine(Program.Info.Directory, Script.InitializeDb), context);
-                    int dbVersion = await provider.GetDatabaseVersion();
-                    int lastFileVersion = dbVersion;
                     text.ClearLine();
+                    await context.StartTransaction();
                     foreach (string file in provider.GetScriptFiles(ScriptsPath))
                     {
                         var fileVersion = 0;
@@ -86,11 +83,13 @@ namespace Uaaa.Sql.Tools
                     text.ClearLine();
                     text.Write("Completed.");
                     context.CommitTransaction();
-                } catch
+                }
+                catch
                 {
                     context.RollbackTransaction();
                     throw;
-                } finally
+                }
+                finally
                 {
                     context.Dispose();
                 }
