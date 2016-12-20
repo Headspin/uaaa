@@ -1,0 +1,1 @@
+insert into uaaa_sql_test_table (value) values('Value1');

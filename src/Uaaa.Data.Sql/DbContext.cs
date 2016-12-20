@@ -82,15 +82,13 @@ namespace Uaaa.Data.Sql
         }
         #endregion
         #region -=ITransactionContext members=-
-        public void StartTransaction()
+        public async Task StartTransaction()
         {
+            await OpenConnection();
             lock (transactionLock)
             {
                 if (transactionsCounter == 0)
-                {
-                    OpenConnection();
                     transaction = connection.BeginTransaction();
-                }
                 transactionsCounter++;
             }
         }

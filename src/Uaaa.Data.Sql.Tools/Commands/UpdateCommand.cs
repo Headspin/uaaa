@@ -16,6 +16,7 @@ namespace Uaaa.Sql.Tools
     {
         public interface IDataProvider
         {
+            void UseConnection(string connectionSettingKey);
             ITransactionContext CreateTransactionContext();
             Task ExecuteScript(string filenameWithPath, ITransactionContext context);
             Task<int> GetDatabaseVersion();
@@ -26,7 +27,6 @@ namespace Uaaa.Sql.Tools
         private static class Script
         {
             public const string Folder = "Scripts";
-            public const string FileExtension = ".sql";
             public const string InitializeDb = "InitializeDb.sql";
         }
 
@@ -34,10 +34,8 @@ namespace Uaaa.Sql.Tools
         private readonly ILifetimeScope scope;
         private readonly IDataProvider provider;
         private readonly IConfigurationRoot configuration;
-
         public string ScriptsPath { get; set; } = string.Empty;
         public string ConnectionKey { get; set; } = string.Empty;
-
         public UpdateCommand(IDataProvider provider, IConfigurationRoot configuration, ITextOutput text, ILifetimeScope scope)
         {
             this.provider = provider;
@@ -51,20 +49,18 @@ namespace Uaaa.Sql.Tools
             #region -=Check parameters=-
             if (string.IsNullOrEmpty(ConnectionKey))
                 throw new InvalidOperationException("Connection setting key not set.");
-            string connectionString = configuration[ConnectionKey];
-            if (string.IsNullOrEmpty(connectionString))
-                throw new InvalidOperationException("Connection string not set.");
             if (string.IsNullOrEmpty(ScriptsPath))
                 ScriptsPath = Path.Combine(Directory.GetCurrentDirectory(), Script.Folder);
             #endregion -=Check parameters=-
-            var versionRegex = new Regex(@"_(?<version>\d*).");
+            var versionRegex = new Regex(@"^(?<version>\d*)");
 
             if (Directory.Exists(ScriptsPath))
             {
+                provider.UseConnection(ConnectionKey);
                 ITransactionContext context = provider.CreateTransactionContext();
                 try
                 {
-                    context.StartTransaction();
+                    await context.StartTransaction();
                     text.Write("Checking database version...");
                     await provider.ExecuteScript(Path.Combine(Program.Info.Directory, Script.InitializeDb), context);
                     int dbVersion = await provider.GetDatabaseVersion();

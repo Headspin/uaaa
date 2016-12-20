@@ -22,6 +22,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Uaaa.Data.Sql.Tests", "test
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Uaaa.Data.Sql.Tests.Perf", "test\Uaaa.Data.Sql.Tests.Perf\Uaaa.Data.Sql.Tests.Perf.xproj", "{B85D5CED-7D8F-4FFA-8C94-35CAE4741CB4}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Uaaa.Data.Sql.Tools", "src\Uaaa.Data.Sql.Tools\Uaaa.Data.Sql.Tools.xproj", "{F5719938-9EAF-4294-869B-505A3AFB51E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +50,10 @@ Global
 		{B85D5CED-7D8F-4FFA-8C94-35CAE4741CB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B85D5CED-7D8F-4FFA-8C94-35CAE4741CB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B85D5CED-7D8F-4FFA-8C94-35CAE4741CB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5719938-9EAF-4294-869B-505A3AFB51E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5719938-9EAF-4294-869B-505A3AFB51E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5719938-9EAF-4294-869B-505A3AFB51E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5719938-9EAF-4294-869B-505A3AFB51E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -58,5 +64,6 @@ Global
 		{B9F62D03-6E86-49BA-84CE-966813D4FF61} = {F547F5BA-FD3E-4408-9F08-9DA4D4E831DD}
 		{8770E5CB-88E2-415C-93AB-86E7D23D82F5} = {9A0AEE78-A42C-46BA-A977-C16C04BFC145}
 		{B85D5CED-7D8F-4FFA-8C94-35CAE4741CB4} = {9A0AEE78-A42C-46BA-A977-C16C04BFC145}
+		{F5719938-9EAF-4294-869B-505A3AFB51E2} = {F547F5BA-FD3E-4408-9F08-9DA4D4E831DD}
 	EndGlobalSection
 EndGlobal

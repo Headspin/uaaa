@@ -78,6 +78,15 @@ namespace Uaaa.Data.Sql.Tests
                 await context.Execute(new SqlCommand { CommandText = "SELECT 1;" });
             }
         }
+        [Fact]
+        public async Task DbContext_Transaction_OpenClose()
+        {
+            using (DbContext context = CreateDbContext())
+            {
+                await context.StartTransaction();
+                context.CommitTransaction();
+            }
+        }
 
         [Fact]
         public async Task DbContext_CRUD()

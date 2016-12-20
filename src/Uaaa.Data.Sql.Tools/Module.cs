@@ -8,14 +8,14 @@ namespace Uaaa.Sql.Tools
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<UpdateCommandDataProvider>().As<UpdateCommand.IDataProvider>();
             builder.RegisterType<ConsoleOutput>().As<ITextOutput>().SingleInstance();
             builder.Register(context =>
             {
-                const string settingsFilename = "settings.json";
-                string currentDirectory = Directory.GetCurrentDirectory();
+                string settingsFilenameWithPath = Path.Combine(Directory.GetCurrentDirectory(), "settings.json");
                 var config = new ConfigurationBuilder();
-                if (File.Exists(Path.Combine(currentDirectory, settingsFilename)))
-                    config.AddJsonFile(settingsFilename);
+                if (File.Exists(settingsFilenameWithPath))
+                    config.AddJsonFile(settingsFilenameWithPath);
                 config.AddUserSecrets();
                 return config.Build();
             }).SingleInstance();

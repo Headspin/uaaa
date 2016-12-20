@@ -1,8 +1,14 @@
 {
     "version": "0.1.0",
-    "command": "dotnet",
+    "command": "powershell",
     "isShellCommand": true,
-    "args": [],
+    "args": [
+        "-ExecutionPolicy",
+        "Unrestricted",
+        "-NoProfile",
+        "-File",
+        "build.ps1"
+    ],
     "tasks": [
         {
             "taskName": "build",

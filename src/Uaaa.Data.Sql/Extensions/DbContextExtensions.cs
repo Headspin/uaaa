@@ -33,7 +33,7 @@ namespace Uaaa.Data.Sql.Extensions
                 throw new ArgumentNullException(nameof(table));
 
             MappingSchema schema = MappingSchema.Get<TItem>();
-            ((ITransactionContext)context).StartTransaction();
+            await context.StartTransaction();
             try
             {
                 var removedItems = new List<TItem>(records.GetRemovedItems());
@@ -67,12 +67,12 @@ namespace Uaaa.Data.Sql.Extensions
             }
             catch
             {
-                ((ITransactionContext)context).RollbackTransaction();
+                context.RollbackTransaction();
                 throw;
             }
             finally
             {
-                ((ITransactionContext)context).CommitTransaction();
+                context.CommitTransaction();
             }
         }
 
@@ -114,7 +114,7 @@ namespace Uaaa.Data.Sql.Extensions
                     changedItems.Add(item);
             }
 
-            ((ITransactionContext)context).StartTransaction();
+            await context.StartTransaction();
             try
             {
 
@@ -141,12 +141,12 @@ namespace Uaaa.Data.Sql.Extensions
             }
             catch
             {
-                ((ITransactionContext)context).RollbackTransaction();
+                context.RollbackTransaction();
                 throw;
             }
             finally
             {
-                ((ITransactionContext)context).CommitTransaction();
+                context.CommitTransaction();
             }
         }
         /// <summary>

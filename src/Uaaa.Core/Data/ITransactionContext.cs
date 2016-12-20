@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Uaaa.Data
 {
@@ -10,7 +11,7 @@ namespace Uaaa.Data
         /// <summary>
         /// Starts transaction.
         /// </summary>
-        void StartTransaction();
+        Task StartTransaction();
         /// <summary>
         /// Commits transaction.
         /// </summary>

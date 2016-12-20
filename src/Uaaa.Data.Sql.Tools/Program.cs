@@ -50,7 +50,7 @@ namespace Uaaa.Sql.Tools
                 };
 
                 application.HelpOption("-?|-h|--help");
-                application.VersionOption("-v|--version", $"V{Info.ShortVersion}");
+                application.VersionOption("-v|--version", $"{Info.ShortVersion}");
 
                 application.Command("update", config =>
                 {

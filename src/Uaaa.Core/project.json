@@ -1,5 +1,5 @@
 ﻿{
-  "version": "2.0.0-beta4",
+  "version": "2.0.0-beta5",
   "title": "Uaaa Framework",
   "copyright": "© 2016 Dvabita",
   "description": "Uaaa LOB framework.",
@@ -12,6 +12,9 @@
     "netstandard1.6": {
       "imports": "dnxcore50"
     }
+  },
+  "buildOptions": {
+    "debugType": "portable"
   },
   "packOptions": {
     "owners": [ "DvaBita " ],

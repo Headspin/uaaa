@@ -1,39 +1,40 @@
 {
-    "version": "1.0.0-beta1",
-    "title": "Uaaa SQL database management tool",
-    "copyright": "© 2016 Dvabita",
-    "description": "Uaaa SQL script runner tool for database versioning.",
-    "buildOptions": {
-        "debugType": "portable",
-        "emitEntryPoint": true,
-        "outputName": "dotnet-uaaa-sql",
-        "copyToOutput": {
-            "includeFiles": [
-                "Scripts/InitializeDb.sql"
-            ]
-        }
-    },
-    "dependencies": {
-        "Microsoft.Extensions.Configuration": "1.0.0",
-        "Microsoft.Extensions.Configuration.Abstractions": "1.0.0",
-        "Microsoft.Extensions.Configuration.Json": "1.0.0",
-        "Microsoft.Extensions.Configuration.UserSecrets": "1.0.0",
-        "Microsoft.Dotnet.ProjectModel": "1.0.0-rc3-1-003177",
-        "Microsoft.Extensions.CommandLineUtils": "1.1.0",
-        "System.Data.SqlClient": "4.1.0",
-        "Uaaa.Core": "2.0.0-*",
-        "Uaaa.Data.Sql": "1.0.0-*",
-        "Autofac": "4.2.*"
-    },
-    "frameworks": {
-        "netcoreapp1.0": {
-            "dependencies": {
-                "Microsoft.NETCore.App": {
-                    "type": "platform",
-                    "version": "1.0.1"
-                }
-            },
-            "imports": "dnxcore50"
-        }
+  "version": "1.0.0-beta2",
+  "title": "Uaaa SQL database management tool",
+  "copyright": "© 2016 Dvabita",
+  "description": "Uaaa SQL script runner tool for database versioning.",
+  "userSecretsId": "Uaaa.Data.Sql.Tools-47a0f8e2-6560-4a01-a378-f7643a99147f",
+  "buildOptions": {
+    "debugType": "portable",
+    "emitEntryPoint": true,
+    "outputName": "dotnet-uaaa-sql",
+    "copyToOutput": {
+      "includeFiles": [
+        "project.json",
+        "Scripts/InitializeDb.sql"
+      ]
     }
+  },
+  "dependencies": {
+    "Microsoft.Extensions.Configuration": "1.0.0",
+    "Microsoft.Extensions.Configuration.Abstractions": "1.0.0",
+    "Microsoft.Extensions.Configuration.Json": "1.0.0",
+    "Microsoft.Extensions.Configuration.UserSecrets": "1.0.0",
+    "Microsoft.Extensions.CommandLineUtils": "1.1.0",
+    "System.Data.SqlClient": "4.1.0",
+    "Uaaa.Core": "2.0.0-*",
+    "Uaaa.Data.Sql": "1.0.0-*",
+    "Autofac": "4.2.*"
+  },
+  "frameworks": {
+    "netcoreapp1.0": {
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.0.1"
+        }
+      },
+      "imports": "dnxcore50"
+    }
+  }
 }

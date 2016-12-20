@@ -1,5 +1,5 @@
 ﻿{
-    "version": "1.0.0-beta4",
+    "version": "1.0.0-beta5",
     "title": "Uaaa Data Sql Extensions",
     "copyright": "© 2016 Dvabita",
     "description": "Uaaa Framework data extensions for SQL",
@@ -19,7 +19,8 @@
     },
 
     "buildOptions": {
-        "warningsAsErrors": true
+      "warningsAsErrors": true,
+      "debugType": "portable"
     },
 
     "packOptions": {
