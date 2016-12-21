@@ -1,7 +1,7 @@
 {
     "version": "0.1.0",
     "command": "powershell",
-    "isShellCommand": true,
+    "isShellCommand": false,
     "args": [
         "-ExecutionPolicy",
         "Unrestricted",
