@@ -5,18 +5,44 @@
     "args": [
         "-ExecutionPolicy",
         "Unrestricted",
-        "-NoProfile",
-        "-File",
-        "build.ps1"
+        "-NoProfile"
     ],
+    "showOutput": "silent",
+    "echoCommand": false,
+    "suppressTaskName": true,
     "tasks": [
         {
             "taskName": "build",
             "args": [
-                ""
+                "-Command",
+                "./build.ps1"
             ],
             "isBuildCommand": true,
             "problemMatcher": "$msCompile"
+        },
+        {
+            "taskName": "rebuild",
+            "args": [
+                "-Command",
+                "./build.ps1",
+                "--no-incremental"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "taskName": "test",
+            "args": [
+                "-Command",
+                "./test.ps1"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "taskName": "pack",
+            "args": [
+                "-Command",
+                "./pack.ps1"
+            ]
         }
     ]
 }
