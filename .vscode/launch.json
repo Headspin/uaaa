@@ -30,6 +30,18 @@
             "externalConsole": false,
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "name": "Uaaa.Data.Sql.Tests.Perf",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceRoot}/test/Uaaa.Data.Sql.Tests.Perf/bin/Debug/netcoreapp1.0/Uaaa.Data.Sql.Tests.Perf.dll",
+            "args": ["update", "--path", "TestScripts", "--connection", "ConnectionStrings:TestDb"],
+            "cwd": "${workspaceRoot}/test/Uaaa.Data.Sql.Tests.Perf",
+            "externalConsole": false,
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
         }
     ]
 }
