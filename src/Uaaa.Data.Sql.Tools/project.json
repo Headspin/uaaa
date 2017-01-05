@@ -1,7 +1,7 @@
 {
-  "version": "1.0.0-beta3",
+  "version": "1.0.0-beta4",
   "title": "Uaaa SQL database management tool",
-  "copyright": "© 2016 Dvabita",
+  "copyright": "© 2017 Dvabita",
   "description": "Uaaa SQL script runner tool for database versioning.",
   "userSecretsId": "Uaaa.Data.Sql.Tools-47a0f8e2-6560-4a01-a378-f7643a99147f",
   "buildOptions": {
@@ -34,6 +34,7 @@
         }
       },
       "imports": "dnxcore50"
-    }
+    },
+    "net46": {}
   }
 }

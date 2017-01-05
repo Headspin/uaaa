@@ -2,11 +2,13 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Uaaa {
+namespace Uaaa
+{
     /// <summary>
     /// Defines common Model intefrace
     /// </summary>
-    public interface IModel : INotifyPropertyChanged {
+    public interface IModel : INotifyPropertyChanged
+    {
         /// <summary>
         /// Raises PropertyChanged event for provided property name.
         /// </summary>
@@ -17,7 +19,8 @@ namespace Uaaa {
     /// <summary>
     /// Model base class that supports property change notification and change tracking.
     /// </summary>
-    public abstract class Model : IModel, INotifyPropertyChanged, INotifyObjectChanged, INotifyDataErrorInfo {
+    public abstract class Model : IModel, INotifyObjectChanged, INotifyDataErrorInfo
+    {
         /// <summary>
         /// Handles property values change tracking and notifications.
         /// Use PropertySetter for setting property values if you need INotifyPropertyChanged features.
@@ -27,19 +30,22 @@ namespace Uaaa {
         /// ChangeManager instance for hierarchical change tracking.
         /// Instance should be set when needed by overriding CreateChangeManager method.
         /// </summary>
-        protected ChangeManager ChangeManager { get; private set; }
+        protected ChangeManager ChangeManager { get; }
         /// <summary>
         /// BusinessRulesChecker that checks model business rules.
         /// </summary>
         /// <value>The rules checker.</value>
-        protected BusinessRulesChecker RulesChecker { get; private set; }
+        protected BusinessRulesChecker RulesChecker { get; }
         /// <summary>
         /// Creates new model instance.
         /// </summary>
-        protected Model() {
-            this.Property = new PropertySetter(this);
-            this.ChangeManager = InitChangeManager();
-            this.RulesChecker = InitRulesChecker();
+        protected Model()
+        {
+            Property = new PropertySetter(this);
+            ChangeManager = InitChangeManager();
+            RulesChecker = InitRulesChecker();
+            if (RulesChecker != null)
+                Property.Use(RulesChecker);
             SetInitialValues();
         }
 
@@ -48,9 +54,9 @@ namespace Uaaa {
         /// Accepts changes made to the model.
         /// Method is applicable to models that have ChangeManager set.
         /// </summary>
-        public virtual void AcceptChanges() {
-            if (this.ChangeManager != null)
-                this.ChangeManager.AcceptChanges();
+        public virtual void AcceptChanges()
+        {
+            ChangeManager?.AcceptChanges();
         }
         /// <summary>
         /// Checks model business rules and returns TRUE if all checked businessRules are valid.
@@ -58,11 +64,8 @@ namespace Uaaa {
         /// rules are checked if propery name not provided.
         /// </summary>
         /// <returns><c>true</c> if this instance is valid; otherwise, <c>false</c>.</returns>
-        public virtual bool IsValid(string propertyName = "") {
-            if (this.RulesChecker != null)
-                return this.RulesChecker.IsValid(this, propertyName);
-            return false;
-        }
+        public virtual bool IsValid(string propertyName = "")
+            => RulesChecker?.IsValid(this, propertyName) == true;
 
         #endregion
 
@@ -72,7 +75,8 @@ namespace Uaaa {
         /// Create change manager if object change notification is required.
         /// </summary>
         /// <returns></returns>
-        protected virtual ChangeManager CreateChangeManager() {
+        protected virtual ChangeManager CreateChangeManager()
+        {
             return null;
         }
 
@@ -80,14 +84,16 @@ namespace Uaaa {
         /// Creates the rules checker that handles business rules checking.
         /// </summary>
         /// <returns>The rules checker.</returns>
-        protected virtual BusinessRulesChecker CreateRulesChecker() {
+        protected virtual BusinessRulesChecker CreateRulesChecker()
+        {
             return null;
         }
 
         /// <summary>
         /// Sets instance initial values for change tracking.
         /// </summary>
-        protected virtual void OnSetInitialValues() {
+        protected virtual void OnSetInitialValues()
+        {
         }
 
         /// <summary>
@@ -95,10 +101,10 @@ namespace Uaaa {
         /// Use this method when implementing initializers.
         /// </summary>
         /// <param name="initializeObject"></param>
-        protected void InitializeCore(Action initializeObject) {
+        protected void InitializeCore(Action initializeObject)
+        {
             initializeObject();
-            if (this.ChangeManager != null)
-                this.ChangeManager.Reset();
+            this.ChangeManager?.Reset();
             SetInitialValues();
             this.Property.AcceptChanges();
         }
@@ -107,38 +113,45 @@ namespace Uaaa {
 
         #region -=Private methods=-
 
-        private ChangeManager InitChangeManager() {
+        private ChangeManager InitChangeManager()
+        {
             ChangeManager manager = CreateChangeManager();
             if (manager != null)
                 manager.ObjectChanged += ChangeManager_ObjectChanged;
             return manager;
         }
 
-        private BusinessRulesChecker InitRulesChecker() {
-			BusinessRulesChecker checker = CreateRulesChecker ();
-            if (checker != null) {
+        private BusinessRulesChecker InitRulesChecker()
+        {
+            BusinessRulesChecker checker = CreateRulesChecker();
+            if (checker != null)
+            {
                 checker.ErrorsChanged += RulesChecker_ErrorsChanged;
                 checker.PropertyChanged += RulesChecker_PropertyChanged;
             }
-			return checker;
-		}
+            return checker;
+        }
 
-        private void SetInitialValues() {
-            if (this.ChangeManager != null)
-                this.ChangeManager.Track(this.Property);
+        private void SetInitialValues()
+        {
+            this.ChangeManager?.Track(this.Property);
             OnSetInitialValues();
         }
 
-        private void ChangeManager_ObjectChanged(object sender, EventArgs args) {
+        private void ChangeManager_ObjectChanged(object sender, EventArgs args)
+        {
             OnObjectChanged();
         }
 
-        private void RulesChecker_ErrorsChanged(object sender, DataErrorsChangedEventArgs args) {
+        private void RulesChecker_ErrorsChanged(object sender, DataErrorsChangedEventArgs args)
+        {
             OnErrorsChanged(args);
         }
 
-        private void RulesChecker_PropertyChanged(object sender, PropertyChangedEventArgs args) {
-            if (string.Compare(args.PropertyName, "HasErrors", StringComparison.Ordinal) == 0) {
+        private void RulesChecker_PropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            if (string.Compare(args.PropertyName, nameof(HasErrors), StringComparison.Ordinal) == 0)
+            {
                 this.RaisePropertyChanged(args.PropertyName);
             }
         }
@@ -152,7 +165,8 @@ namespace Uaaa {
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
-        void IModel.RaisePropertyChanged(string propertyName) {
+        void IModel.RaisePropertyChanged(string propertyName)
+        {
             this.RaisePropertyChanged(propertyName);
         }
 
@@ -160,10 +174,10 @@ namespace Uaaa {
         /// Triggers PropertyChanged event.
         /// </summary>
         /// <param name="propertyName"></param> 
-        protected void RaisePropertyChanged([CallerMemberName] string propertyName = null) {
-            PropertyChangedEventHandler handler = this.PropertyChanged;
-            if (handler != null && !string.IsNullOrEmpty(propertyName))
-                handler(this, new PropertyChangedEventArgs(propertyName));
+        protected void RaisePropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            if (!string.IsNullOrEmpty(propertyName))
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion
@@ -180,16 +194,17 @@ namespace Uaaa {
         /// </summary>
         public bool IsChanged {
             get {
-                if (this.ChangeManager != null)
-                    return this.ChangeManager.IsChanged;
-                return this.Property.IsChanged;
+                if (ChangeManager != null)
+                    return ChangeManager.IsChanged;
+                return Property.IsChanged;
             }
         }
 
         /// <summary>
         /// Raises ObjectChanged event.
         /// </summary>
-        protected virtual void OnObjectChanged() {
+        protected virtual void OnObjectChanged()
+        {
             this.ObjectChanged?.Invoke(this, new EventArgs());
         }
 
@@ -198,26 +213,21 @@ namespace Uaaa {
         /// <see cref="System.ComponentModel.INotifyDataErrorInfo.ErrorsChanged"/>
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
         /// <see cref="System.ComponentModel.INotifyDataErrorInfo.GetErrors"/>
-        public System.Collections.IEnumerable GetErrors(string propertyName) {
+        public System.Collections.IEnumerable GetErrors(string propertyName)
+        {
             if (this.RulesChecker != null)
-                foreach (var error in this.RulesChecker.GetErrors(propertyName))
+                foreach (object error in RulesChecker.GetErrors(propertyName))
                     yield return error;
         }
+
         /// <see cref="System.ComponentModel.INotifyDataErrorInfo.HasErrors"/>
-        public bool HasErrors {
-            get {
-                if (this.RulesChecker != null)
-                    return this.RulesChecker.HasErrors;
-                return false;
-            }
-        }
+        public bool HasErrors => RulesChecker?.HasErrors ?? true;
         /// <summary>
         /// Raises ErrorsChanged event.
         /// </summary>
         /// <param name="args"></param>
-        protected virtual void OnErrorsChanged(DataErrorsChangedEventArgs args) {
-            this.ErrorsChanged?.Invoke(this, args);
-        }
+        protected virtual void OnErrorsChanged(DataErrorsChangedEventArgs args)
+            => ErrorsChanged?.Invoke(this, args);
 
         #endregion
     }

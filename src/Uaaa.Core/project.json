@@ -1,7 +1,7 @@
 ﻿{
-  "version": "2.0.0-beta6",
+  "version": "2.0.0-beta7",
   "title": "Uaaa Framework",
-  "copyright": "© 2016 Dvabita",
+  "copyright": "© 2017 Dvabita",
   "description": "Uaaa LOB framework.",
 
   "dependencies": {
@@ -11,6 +11,12 @@
   "frameworks": {
     "netstandard1.6": {
       "imports": "dnxcore50"
+    },
+    "net46": {
+      "frameworkAssemblies": {
+        "System.Xml": "",
+        "System.Xml.Linq": ""
+      }
     }
   },
   "buildOptions": {
