@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Reflection.PortableExecutable;
 using System.Threading.Tasks;
-using Uaaa.Data;
 using Uaaa.Data.Mapper;
 using Uaaa.Data.Sql.Extensions;
 using static Uaaa.Data.Sql.Query;

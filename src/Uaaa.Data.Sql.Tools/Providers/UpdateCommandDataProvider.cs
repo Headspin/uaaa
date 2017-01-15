@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.Extensions.Configuration;
@@ -70,7 +69,7 @@ namespace Uaaa.Sql.Tools
             DbContext context = transactionContext as DbContext ?? CreateContext();
             try
             {
-                var command = new SqlCommand("INSERT INTO {dbVersionTable} (version) VALUES(@version);");
+                var command = new SqlCommand($"INSERT INTO {DbVersionTable} (version) VALUES(@version);");
                 command.Parameters.AddWithValue("@version", version);
                 return context.Execute(command);
             }

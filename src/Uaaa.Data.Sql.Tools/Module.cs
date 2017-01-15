@@ -6,6 +6,7 @@ namespace Uaaa.Sql.Tools
 {
     internal class Module : Autofac.Module
     {
+        private const string userSecretsId = "Uaaa.Data.Sql.Tools-47a0f8e2-6560-4a01-a378-f7643a99147f";
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<UpdateCommandDataProvider>().As<UpdateCommand.IDataProvider>();
@@ -16,7 +17,7 @@ namespace Uaaa.Sql.Tools
                 var config = new ConfigurationBuilder();
                 if (File.Exists(settingsFilenameWithPath))
                     config.AddJsonFile(settingsFilenameWithPath);
-                config.AddUserSecrets();
+                config.AddUserSecrets(userSecretsId);
                 return config.Build();
             }).SingleInstance();
         }

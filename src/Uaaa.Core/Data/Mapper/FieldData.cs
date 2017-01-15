@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Uaaa.Data.Mapper
+﻿namespace Uaaa.Data.Mapper
 {
     /// <summary>
     /// Field data container.

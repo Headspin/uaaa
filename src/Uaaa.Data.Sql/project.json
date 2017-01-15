@@ -1,5 +1,5 @@
 ﻿{
-  "version": "1.0.0-beta7",
+  "version": "1.0.0",
   "title": "Uaaa Data Sql Extensions",
   "copyright": "© 2017 Dvabita",
   "description": "Uaaa Framework data extensions for SQL",
@@ -8,15 +8,21 @@
     "NETStandard.Library": "1.6.0",
     "System.Collections.Immutable": "1.2.0",
     "System.Data.SqlClient": "4.1.0",
-    "System.Linq": "4.1.0",
     "Uaaa.Core": "2.0.0-*"
   },
 
   "frameworks": {
     "netstandard1.6": {
-      "imports": "dnxcore50"
+      "imports": "dnxcore50",
+      "dependencies": {
+        "System.Linq": "4.1.0"
+      }
     },
-    "net46": {}
+    "net46": {
+      "dependencies": {
+        "System.Linq": "4.0.0.0"
+      }
+    }
   },
 
   "buildOptions": {
