@@ -1,18 +1,17 @@
 {
-  "version": "1.0.1",
+  "version": "1.0.3",
   "title": "Uaaa SQL database management tool",
   "copyright": "© 2017 Dvabita",
   "description": "Uaaa SQL script runner tool for database versioning.",
   "buildOptions": {
     "debugType": "portable",
     "emitEntryPoint": true,
-    "outputName": "dotnet-uaaa-sql",
-    "copyToOutput": {
-      "includeFiles": [
-        //"project.json",
-        "Scripts/InitializeDb.sql"
-      ]
-    }
+    "outputName": "dotnet-uaaa-sql"
+  },
+  "packOptions": {
+    "files":[
+      "Scripts/*.sql"
+    ]
   },
   "dependencies": {
     "Microsoft.Extensions.Configuration": "1.0.0",

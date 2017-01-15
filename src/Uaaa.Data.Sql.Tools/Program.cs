@@ -13,6 +13,7 @@ namespace Uaaa.Sql.Tools
         {
             public readonly string ShortVersion;
             public readonly string Directory;
+            public readonly string PackageDirectory;
 
             public Information()
             {
@@ -31,6 +32,7 @@ namespace Uaaa.Sql.Tools
 
                 ShortVersion = getVersionFromTypeInfo(typeInfo);
                 Directory = Path.GetDirectoryName(typeInfo.Assembly.Location);
+                PackageDirectory = Path.GetDirectoryName($"{Directory}\\..\\..\\");
             }
         }
         public static readonly Information Info = new Information();
