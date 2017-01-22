@@ -107,7 +107,9 @@ namespace Uaaa.Data.Sql
             primaryKeyCondition = key;
             return this;
         }
-
+        ///<summary>
+        /// Adds sort order definition to query builder object.
+        ///</summary>
         public SelectQuery OrderBy(string field, SortOrder sortOrder = SortOrder.Ascending)
         {
             if (string.IsNullOrEmpty(field))

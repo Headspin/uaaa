@@ -1,30 +1,32 @@
 ﻿{
-  "version": "2.0.0",
-  "title": "Uaaa Framework",
-  "copyright": "© 2017 Dvabita",
-  "description": "Uaaa LOB framework.",
+    "version": "2.0.1",
+    "title": "Uaaa Framework",
+    "copyright": "© 2017 Dvabita",
+    "description": "Uaaa LOB framework.",
 
-  "dependencies": {
-    "NETStandard.Library": "1.6.0"
-  },
-
-  "frameworks": {
-    "netstandard1.6": {
-      "imports": "dnxcore50"
+    "dependencies": {
+        "NETStandard.Library": "1.6.0"
     },
-    "net46": {
-      "frameworkAssemblies": {
-        "System.Xml": "",
-        "System.Xml.Linq": ""
-      }
+
+    "frameworks": {
+        "netstandard1.6": {
+            "imports": "dnxcore50"
+        },
+        "net46": {
+            "frameworkAssemblies": {
+                "System.Xml": "",
+                "System.Xml.Linq": ""
+            }
+        }
+    },
+    "buildOptions": {
+        "debugType": "portable",
+        "warningsAsErrors": true,
+        "xmlDoc": true
+    },
+    "packOptions": {
+        "owners": ["DvaBita "],
+        "licenseUrl": "https://raw.githubusercontent.com/Headspin/uaaa/master/LICENSE",
+        "requireLicenseAcceptance": true
     }
-  },
-  "buildOptions": {
-    "debugType": "portable"
-  },
-  "packOptions": {
-    "owners": [ "DvaBita " ],
-    "licenseUrl": "https://raw.githubusercontent.com/Headspin/uaaa/master/LICENSE",
-    "requireLicenseAcceptance": true
-  }
 }

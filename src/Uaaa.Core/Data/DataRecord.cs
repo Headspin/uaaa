@@ -10,6 +10,9 @@ namespace Uaaa.Data
     /// </summary>
     public class DataRecord : Dictionary<string, object>
     {
+        /// <summary>
+        /// Defines object data reader that creates DataRecord from objects data.!--
+        /// </summary>
         public interface IReader
         {
             /// <summary>
@@ -18,6 +21,9 @@ namespace Uaaa.Data
             /// <returns></returns>
             DataRecord Read();
         }
+        /// <summary>
+        /// Creates new DataRecord instance.
+        /// </summary>
         public DataRecord() : base(StringComparer.OrdinalIgnoreCase) { }
     }
 

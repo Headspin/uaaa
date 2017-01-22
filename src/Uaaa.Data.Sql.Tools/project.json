@@ -1,39 +1,40 @@
 {
-  "version": "1.0.1",
-  "title": "Uaaa SQL database management tool",
-  "copyright": "© 2017 Dvabita",
-  "description": "Uaaa SQL script runner tool for database versioning.",
-  "buildOptions": {
-    "debugType": "portable",
-    "emitEntryPoint": true,
-    "outputName": "dotnet-uaaa-sql",
-    "copyToOutput": {
-      "includeFiles": [
-        //"project.json",
-        "Scripts/InitializeDb.sql"
-      ]
-    }
-  },
-  "dependencies": {
-    "Microsoft.Extensions.Configuration": "1.0.0",
-    "Microsoft.Extensions.Configuration.Abstractions": "1.0.0",
-    "Microsoft.Extensions.Configuration.Json": "1.0.0",
-    "Microsoft.Extensions.Configuration.UserSecrets": "1.0.0",
-    "Microsoft.Extensions.CommandLineUtils": "1.1.0",
-    "Uaaa.Core": "2.0.0-*",
-    "Uaaa.Data.Sql": "1.0.0-*",
-    "Autofac": "4.2.*"
-  },
-  "frameworks": {
-    "netcoreapp1.0": {
-      "dependencies": {
-        "Microsoft.NETCore.App": {
-          "type": "platform",
-          "version": "1.0.1"
+    "version": "1.0.2",
+    "title": "Uaaa SQL database management tool",
+    "copyright": "© 2017 Dvabita",
+    "description": "Uaaa SQL script runner tool for database versioning.",
+    "buildOptions": {
+        "debugType": "portable",
+        "warningsAsErrors": true,
+        "emitEntryPoint": true,
+        "outputName": "dotnet-uaaa-sql",
+        "copyToOutput": {
+            "includeFiles": [
+                //"project.json",
+                "Scripts/InitializeDb.sql"
+            ]
         }
-      },
-      "imports": "dnxcore50"
     },
-    "net46": {}
-  }
+    "dependencies": {
+        "Microsoft.Extensions.Configuration": "1.0.0",
+        "Microsoft.Extensions.Configuration.Abstractions": "1.0.0",
+        "Microsoft.Extensions.Configuration.Json": "1.0.0",
+        "Microsoft.Extensions.Configuration.UserSecrets": "1.0.0",
+        "Microsoft.Extensions.CommandLineUtils": "1.1.0",
+        "Uaaa.Core": "2.0.*",
+        "Uaaa.Data.Sql": "1.0.*",
+        "Autofac": "4.2.*"
+    },
+    "frameworks": {
+        "netcoreapp1.0": {
+            "dependencies": {
+                "Microsoft.NETCore.App": {
+                    "type": "platform",
+                    "version": "1.0.1"
+                }
+            },
+            "imports": "dnxcore50"
+        },
+        "net46": {}
+    }
 }
