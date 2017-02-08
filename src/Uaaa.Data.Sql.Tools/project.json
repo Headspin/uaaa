@@ -2,6 +2,9 @@
   "version": "1.0.5",
   "title": "Uaaa SQL database management tool",
   "copyright": "© 2017 Dvabita",
+  "authors": [
+    "DvaBita"
+  ],
   "description": "Uaaa SQL script runner tool for database versioning.",
   "buildOptions": {
     "debugType": "portable",
@@ -11,7 +14,8 @@
   "packOptions": {
     "files":[
       "Scripts/*.sql"
-    ]
+    ],
+    "releaseNotes": "Stability improvements."
   },
   "dependencies": {
     "Microsoft.Extensions.Configuration": "1.0.0",

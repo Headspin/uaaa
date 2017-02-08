@@ -2,8 +2,10 @@
   "version": "1.0.0",
   "title": "Uaaa Data Sql Extensions",
   "copyright": "© 2017 Dvabita",
+  "authors": [
+    "DvaBita"
+  ],
   "description": "Uaaa Framework data extensions for SQL",
-
   "dependencies": {
     "NETStandard.Library": "1.6.0",
     "System.Collections.Immutable": "1.2.0",
