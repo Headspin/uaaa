@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Uaaa.Data.Sql.Tools": {
+      "commandName": "Project",
+      "commandLineArgs": "update -c \"ConnectionStrings:TestDb\""
+    }
+  }
+}
