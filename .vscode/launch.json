@@ -2,22 +2,25 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": ".NET Core Launch (console)",
-            "type": "coreclr",
+            "type": "PowerShell",
             "request": "launch",
-            "preLaunchTask": "build",
-            "program": "${workspaceRoot}/bin/Debug/<target-framework>/<project-name.dll>",
+            "name": "PowerShell Launch (current file)",
+            "script": "${file}",
             "args": [],
-            "cwd": "${workspaceRoot}",
-            "externalConsole": false,
-            "stopAtEntry": false,
-            "internalConsoleOptions": "openOnSessionStart"
+            "cwd": "${file}"
         },
         {
-            "name": ".NET Core Attach",
-            "type": "coreclr",
+            "type": "PowerShell",
             "request": "attach",
-            "processId": "${command.pickProcess}"
+            "name": "PowerShell Attach to Host Process",
+            "processId": "${command.PickPSHostProcess}",
+            "runspaceId": 1
+        },
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "PowerShell Interactive Session",
+            "cwd": "${workspaceRoot}"
         },
         {
             "name": "Uaaa.Data.Sql.Tools",

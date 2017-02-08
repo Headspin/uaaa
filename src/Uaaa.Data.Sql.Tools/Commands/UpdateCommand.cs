@@ -68,7 +68,7 @@ namespace Uaaa.Sql.Tools
                         var fileVersion = 0;
                         if (!int.TryParse(versionRegex.Match(
                             Path.GetFileNameWithoutExtension(file)).Groups["version"]?.Value, out fileVersion)) continue;
-                        if (fileVersion < dbVersion) continue;
+                        if (fileVersion <= dbVersion) continue;
                         text.Write($"Executing script file: {Path.GetFileName(file)}");
                         await provider.ExecuteScript(file, context);
                         lastFileVersion = fileVersion;
