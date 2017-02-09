@@ -1,5 +1,5 @@
 ﻿{
-  "version": "1.0.0",
+  "version": "1.1.0",
   "title": "Uaaa Data Sql Extensions",
   "copyright": "© 2017 Dvabita",
   "authors": [
@@ -35,6 +35,7 @@
   "packOptions": {
     "owners": [ "DvaBita " ],
     "licenseUrl": "https://raw.githubusercontent.com/Headspin/uaaa/master/LICENSE",
-    "requireLicenseAcceptance": true
+    "requireLicenseAcceptance": true,
+    "releaseNotes": "UpdateQuery builder now supports fields filtering."
   }
 }
