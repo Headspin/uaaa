@@ -67,6 +67,18 @@ namespace Uaaa.Data.Sql.Tests
             Assert.Equal(poco.Age, command.Parameters[2].Value);
         }
         [Fact]
+        public void Query_Update_Simple_Filter_Fields()
+        {
+            const string table = "Table1";
+            var poco = new MyPocoClass { Id = 10, Name = "Name1", Surname = "Surname1", Age = 15 };
+            SqlCommand command = Update(poco).Fields("Name", "Age").In(table).All();
+            string expectedText = $"UPDATE \"{table}\" SET \"Name\" = @p1, \"Age\" = @p2;";
+            Assert.Equal(expectedText, command.CommandText);
+            Assert.Equal(2, command.Parameters.Count);
+            Assert.Equal(poco.Name, command.Parameters[0].Value);
+            Assert.Equal(poco.Age, command.Parameters[1].Value);
+        }
+        [Fact]
         public void Query_Update_Many()
         {
             const string table = "Table1";

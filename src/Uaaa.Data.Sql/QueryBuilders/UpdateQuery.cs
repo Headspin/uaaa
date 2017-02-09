@@ -18,11 +18,23 @@ namespace Uaaa.Data.Sql
         private readonly List<object> records = new List<object>();
         private string tableName;
         private readonly List<string> conditions = new List<string>();
+        private HashSet<string> fieldsHashSet = null;
         private bool updateAll = false;
         /// <summary>
         /// Creates new instance of query builder object.
         /// </summary>
         internal UpdateQuery() { }
+
+        /// <summary>
+        /// Modifies query to only update specified fields from mapping schema.
+        /// </summary>
+        public UpdateQuery Fields(params string[] fields){
+            if (fields == null || fields.Length == 0) return this;
+            fieldsHashSet = new HashSet<string>();
+            foreach(string field in fields)
+                fieldsHashSet.Add(field);
+            return this;
+        }
         /// <summary>
         /// Specifies table name for update query.
         /// </summary>
@@ -104,6 +116,8 @@ namespace Uaaa.Data.Sql
                             primaryKeyCondition = key;
                         return; // skip primary key field.
                     }
+                    if (fieldsHashSet != null && !fieldsHashSet.Contains(field))
+                        return; // skip fields that are not in filtered list.
                     string parameterName = Query.GetParameterName(scope);
                     fieldsText.Append($"\"{field}\" = {parameterName}, ");
                     var parameter = new SqlParameter(parameterName, value ?? DBNull.Value);
