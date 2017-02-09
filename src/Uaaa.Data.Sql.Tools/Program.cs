@@ -32,8 +32,7 @@ namespace Uaaa.Sql.Tools
 
                 ShortVersion = getVersionFromTypeInfo(typeInfo);
                 Directory = Path.GetDirectoryName(typeInfo.Assembly.Location);
-                //PackageDirectory = Path.GetDirectoryName($"{Directory}\\..\\..\\");
-                PackageDirectory = Directory;
+                PackageDirectory = Path.GetDirectoryName($"{Directory}\\..\\..\\");
             }
         }
         public static readonly Information Info = new Information();
