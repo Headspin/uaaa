@@ -23,7 +23,7 @@
     "Microsoft.Extensions.Configuration.Json": "1.0.0",
     "Microsoft.Extensions.Configuration.UserSecrets": "1.0.0",
     "Microsoft.Extensions.CommandLineUtils": "1.1.0",
-    "Uaaa.Core": "2.0.0-*",
+    "Uaaa.Core": "2.1.*",
     "Uaaa.Data.Sql": "1.1.*",
     "Autofac": "4.2.*"
   },

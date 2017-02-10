@@ -6,6 +6,7 @@
     "DvaBita"
   ],
   "description": "Uaaa LOB framework.",
+
   "dependencies": {
     "NETStandard.Library": "1.6.0"
   },
@@ -22,7 +23,9 @@
     }
   },
   "buildOptions": {
-    "debugType": "portable"
+    "debugType": "portable",
+    "warningsAsErrors": true,
+    "xmlDoc": true
   },
   "packOptions": {
     "owners": [ "DvaBita " ],

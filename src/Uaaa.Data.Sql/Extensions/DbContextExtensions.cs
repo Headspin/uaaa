@@ -189,6 +189,7 @@ namespace Uaaa.Data.Sql.Extensions
         /// <typeparam name="TItem">Type of object to resolve.</typeparam>
         /// <param name="context"></param>
         /// <param name="table"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
         public static async Task<TItem> Get<TItem>(this DbContext context, string table, int key) where TItem : new()
         {

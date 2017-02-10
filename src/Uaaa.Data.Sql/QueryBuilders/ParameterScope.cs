@@ -6,6 +6,9 @@
     public sealed class ParameterScope
     {
         private int parameterIndex = 0;
+        ///<summary>
+        /// Generates next parameter index value.
+        ///</summary>
         public int GetParameterIndex() => ++parameterIndex;
     }
 }

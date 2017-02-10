@@ -8,6 +8,9 @@ using Uaaa.Data.Sql.Extensions;
 
 namespace Uaaa.Data.Sql
 {
+    ///<summary>
+    /// Database context that provides database read/write capabilities
+    ///</summary>
     public sealed class DbContext : ITransactionContext, IDisposable
     {
         #region -=Instance members=-
@@ -15,8 +18,13 @@ namespace Uaaa.Data.Sql
         private SqlTransaction transaction = null;
         private int transactionsCounter = 0;
         private readonly object transactionLock = new object();
+        ///<summary>
+        /// Connection information used by DbContext instance.
+        ///</summary>
         public ConnectionInfo ConnectionInfo { get; private set; }
-
+        ///<summary>
+        /// Creates new DbContext instance.
+        ///</summary>
         public DbContext(ConnectionInfo connectionInfo)
         {
             ConnectionInfo = connectionInfo;
@@ -83,6 +91,9 @@ namespace Uaaa.Data.Sql
         }
         #endregion
         #region -=ITransactionContext members=-
+        ///<summary>
+        /// Starts database transaction.
+        ///</summary>
         public async Task StartTransaction()
         {
             await OpenConnection();
@@ -93,7 +104,9 @@ namespace Uaaa.Data.Sql
                 transactionsCounter++;
             }
         }
-
+        ///<summary>
+        /// Commits any changes made during transaction.
+        ///</summary>
         public void CommitTransaction()
         {
             lock (transactionLock)
@@ -103,7 +116,9 @@ namespace Uaaa.Data.Sql
                 transactionsCounter--;
             }
         }
-
+        ///<summary>
+        /// Rollbacks any changes made during transaction.
+        ///</summary>
         public void RollbackTransaction()
         {
             lock (transactionLock)

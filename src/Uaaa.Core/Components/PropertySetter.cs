@@ -122,7 +122,9 @@ namespace Uaaa
             changedValues.Clear();
             this.IsChanged = false;
         }
-
+        /// <summary>
+        /// Use provided rules checker for validation checking.!--
+        /// </summary>
         public void Use(BusinessRulesChecker rulesChecker)
         {
             if (rulesChecker == null)

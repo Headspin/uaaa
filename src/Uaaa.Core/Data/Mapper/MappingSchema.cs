@@ -500,6 +500,11 @@ namespace Uaaa.Data.Mapper
         /// </summary>
         public abstract class NameModifier
         {
+            /// <summary>
+            /// Modifies provided name.
+            /// </summary>
+            /// <param name="name"></param>
+            /// <returns></returns>
             public abstract string Modify(string name);
         }
         #endregion

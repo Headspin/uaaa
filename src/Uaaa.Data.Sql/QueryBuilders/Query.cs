@@ -40,6 +40,9 @@ namespace Uaaa.Data.Sql
         public static UpdateQuery Update(object record)
             => new UpdateQuery().From(new[] { record });
 
+        ///<summary>
+        /// Initializes update query builder object for records list.
+        ///</summary>
         public static UpdateQuery Update<TItem>(IEnumerable<TItem> records)
             => new UpdateQuery().From(records.Cast<object>());
         /// <summary>
