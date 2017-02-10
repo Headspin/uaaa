@@ -21,6 +21,7 @@ namespace Uaaa.Data.Mapper
             new Dictionary<FieldAttribute, IFieldAccessor>();
 
         private FieldAttribute primaryKeyAttribute = null;
+        private NameModifier nameModifier = null;
         /// <summary>
         /// Returns name of primary key field (if defined).
         /// </summary>
@@ -82,8 +83,8 @@ namespace Uaaa.Data.Mapper
                         else
                         {
                             // handle special types with default converters
-                            var typeInfo = accessor.Type.GetTypeInfo();
-                            if (typeInfo.IsEnum || Nullable.GetUnderlyingType(accessor.Type).GetTypeInfo().IsEnum)
+                            TypeInfo info = accessor.Type.GetTypeInfo();
+                            if (info.IsEnum || Nullable.GetUnderlyingType(accessor.Type).GetTypeInfo().IsEnum)
                             {
                                 ValueConverter converter = new StringToEnumConverter();
                                 value = converter.Convert(value, accessor.Type);
@@ -171,6 +172,7 @@ namespace Uaaa.Data.Mapper
             {
                 // read base type schema and copy private fields accessors (other protected/public fields are available on current type).
                 MappingSchema baseSchema = Get(typeInfo.BaseType);
+                nameModifier = baseSchema.nameModifier;
                 var privateFieldAccessors = from accessor in baseSchema.fieldAccessors.Values.OfType<FieldAccessor>()
                                             where accessor.Field.IsPrivate
                                             select accessor;
@@ -182,32 +184,47 @@ namespace Uaaa.Data.Mapper
             }
             #endregion
 
+            if (nameModifier == null)
+            {
+                var attribute = typeInfo.GetCustomAttribute<NameAttribute>();
+                if (attribute?.ModifierType != null)
+                    nameModifier = Activator.CreateInstance(attribute.ModifierType) as NameModifier;
+            }
+
             // register field mappings
             foreach (FieldInfo field in type.GetRuntimeFields())
             {
                 if (field.IsStatic || !field.CustomAttributes.Any())
                     continue;
-                FieldAttribute attribute = field.GetCustomAttribute<FieldAttribute>();
+                var attribute = field.GetCustomAttribute<FieldAttribute>();
                 if (attribute == null) continue;
                 if (string.IsNullOrEmpty(attribute.Name))
-                    attribute.Name = field.Name;
+                {
+                    attribute.Name = nameModifier == null 
+                                   ? field.Name 
+                                   : nameModifier.Modify(field.Name);
+                }
                 fieldAccessors[attribute] = new FieldAccessor(field, attribute);
                 // store primaryKey if found.
                 if (primaryKeyAttribute == null && attribute.MappingType == MappingType.PrimaryKey)
                     primaryKeyAttribute = attribute;
             }
 
-            List<PropertyInfo> properties = new List<PropertyInfo>();
+            var properties = new List<PropertyInfo>();
 
             // register property mappings
             foreach (PropertyInfo property in type.GetRuntimeProperties())
             {
                 properties.Add(property);
                 if (!property.CustomAttributes.Any()) continue;
-                FieldAttribute attribute = property.GetCustomAttribute<FieldAttribute>();
+                var attribute = property.GetCustomAttribute<FieldAttribute>();
                 if (attribute == null) continue;
                 if (string.IsNullOrEmpty(attribute.Name))
-                    attribute.Name = property.Name;
+                {
+                    attribute.Name = nameModifier == null
+                                   ? property.Name
+                                   : nameModifier.Modify(property.Name);
+                }
                 fieldAccessors[attribute] = new PropertyAccessor(property, attribute);
                 // store primaryKey if found.
                 if (primaryKeyAttribute == null && attribute.MappingType == MappingType.PrimaryKey)
@@ -225,12 +242,16 @@ namespace Uaaa.Data.Mapper
                     {
                         primaryKeyFound = true;
                         var primaryKey = new FieldAttribute { MappingType = MappingType.PrimaryKey, Name = property.Name };
+                        if (nameModifier != null)
+                            primaryKey.Name = nameModifier.Modify(primaryKey.Name);
                         fieldAccessors[primaryKey] = new PropertyAccessor(property, primaryKey);
                         this.primaryKeyAttribute = primaryKey;
                         continue;
                     }
                     if (property.SetMethod?.IsPublic == false || property.GetMethod == null) continue;
                     var attribute = new FieldAttribute() { MappingType = MappingType.ReadWrite, Name = property.Name };
+                    if (nameModifier != null)
+                        attribute.Name = nameModifier.Modify(attribute.Name);
                     fieldAccessors[attribute] = new PropertyAccessor(property, attribute);
                 }
             }
@@ -460,6 +481,26 @@ namespace Uaaa.Data.Mapper
                 getter = InitGetter();
                 setter = InitSetter();
             }
+        }
+
+        /// <summary>
+        /// Specifies NameModifier to be used when reading mapping schema from type.
+        /// </summary>
+        [AttributeUsage(AttributeTargets.Class)]
+        public class NameAttribute : Attribute
+        {
+            /// <summary>
+            /// NameModifier type to be used to modify field names when reading mapping schema.
+            /// </summary>
+            public Type ModifierType { get; set; }
+        }
+
+        /// <summary>
+        /// Modifies field names when reading mapping schema
+        /// </summary>
+        public abstract class NameModifier
+        {
+            public abstract string Modify(string name);
         }
         #endregion
     }

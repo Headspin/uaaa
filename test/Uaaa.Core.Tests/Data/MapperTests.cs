@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 using Uaaa.Data;
 using Uaaa.Data.Mapper;
+using Uaaa.Data.Mapper.Modifiers;
 using Xunit;
 
 namespace Uaaa.Core.Data.Tests
@@ -11,7 +13,7 @@ namespace Uaaa.Core.Data.Tests
         [Fact]
         public void Mappper_Dictionary_Write_To_SimpleProperties()
         {
-            Dictionary<string, object> values = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
+            var values = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
             {
                 {"Label", "Example Label"},
                 {"ValueInt", "100"},
@@ -33,7 +35,7 @@ namespace Uaaa.Core.Data.Tests
         [Fact]
         public void Mappper_Dictionary_ReadFrom_SimpleProperties()
         {
-            Dictionary<string, object> values = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            var values = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
             var source = new MapperExamples.SimplePropertyMappings { Status = MapperExamples.Status.Special };
             values.ReadFrom(source);
 
@@ -47,7 +49,7 @@ namespace Uaaa.Core.Data.Tests
         [Fact]
         public void Mappper_Dictionary_Write_To_SimpleFields()
         {
-            Dictionary<string, object> values = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
+            var values = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
             {
                 {"Label", "Example Label"},
                 {"ValueInt", "100"},
@@ -68,7 +70,7 @@ namespace Uaaa.Core.Data.Tests
         [Fact]
         public void Mappper_Dictionary_ReadFrom_SimpleFields()
         {
-            Dictionary<string, object> values = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            var values = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
             var source = new MapperExamples.SimpleFieldMappings();
             values.ReadFrom(source);
@@ -82,7 +84,7 @@ namespace Uaaa.Core.Data.Tests
         [Fact]
         public void Mapper_Dictionary_WriteTo_EnumFields()
         {
-            Dictionary<string, object> values =
+            var values =
                 new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
                 {
                     {"StatusByte", (byte) MapperExamples.Status.Normal},
@@ -100,7 +102,7 @@ namespace Uaaa.Core.Data.Tests
         [Fact]
         public void Mapper_Dictionary_DataRecordReader()
         {
-            Dictionary<string, object> values = new Dictionary<string, object>();
+            var values = new Dictionary<string, object>();
             var source = new MapperExamples.RecordReaderClass(5) { Label = "Label1" }; // id = 5
             values.ReadFrom(source);
 
@@ -109,6 +111,55 @@ namespace Uaaa.Core.Data.Tests
 
             Assert.True(values.ContainsKey("Label"));
             Assert.Equal(source.Label, values["Label"]);
+        }
+
+        [Fact]
+        public void Mapper_NameModifier_SnakeCase()
+        {
+            var source = new MapperExamples.MappingsWithNameModifier
+            {
+                Id = 10,
+                FirstName = "Name",
+                LastName = "Surname",
+                AddressLine1 = "Address line 1",
+                AddressLine2 = "Address line 2",
+                CreatedAt = DateTime.UtcNow.AddDays(-5)
+            };
+
+            var values = new Dictionary<string, object>();
+            values.ReadFrom(source);
+
+            Assert.Equal(source.Id, values["id"]);
+            Assert.Equal(source.FirstName, values["first_name"]);
+            Assert.Equal(source.LastName, values["last_name"]);
+            Assert.Equal(source.AddressLine1, values["address_line_1"]);
+            Assert.Equal(source.AddressLine2, values["address_line_2"]);
+            Assert.Equal(source.CreatedAt, values["created_at"]);
+        }
+
+        [Fact]
+        public void Mapper_NameModifier_SnakeCase_WriteTo()
+        {
+            var values = new Dictionary<string, object>
+            {
+                { "id" , 10},
+                { "first_name", "Name"},
+                { "last_name", "Surname"},
+                { "address_line_1", "Address line 1"},
+                { "address_line_2", "Address line 2"},
+                { "created_at", DateTime.UtcNow.AddDays(-5)}
+            };
+
+            var source = new MapperExamples.MappingsWithNameModifier();
+            
+            values.WriteTo(source);
+
+            Assert.Equal(source.Id, values["id"]);
+            Assert.Equal(source.FirstName, values["first_name"]);
+            Assert.Equal(source.LastName, values["last_name"]);
+            Assert.Equal(source.AddressLine1, values["address_line_1"]);
+            Assert.Equal(source.AddressLine2, values["address_line_2"]);
+            Assert.Equal(source.CreatedAt, values["created_at"]);
         }
     }
 
@@ -169,6 +220,21 @@ namespace Uaaa.Core.Data.Tests
             public Status StatusByte => statusByte;
             public Status StatusString => statusString;
             public Status? StatusStringNumber => statusStringNumber;
+        }
+
+        [MappingSchema.Name(ModifierType = typeof(SnakeCase))]
+        public class MappingsWithNameModifier
+        {
+            public int Id { get; set; }
+            public string FirstName { get; set; }
+
+            public string LastName { get; set; }
+
+
+            public DateTime CreatedAt { get; set; }
+
+            public string AddressLine1 { get; set; }
+            public string AddressLine2 { get; set; }
         }
 
         /// <summary>
