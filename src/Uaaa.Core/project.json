@@ -31,6 +31,6 @@
     "owners": [ "DvaBita " ],
     "licenseUrl": "https://raw.githubusercontent.com/Headspin/uaaa/master/LICENSE",
     "requireLicenseAcceptance": true,
-    "releaseNotes": "Added support for mappind schema field name modifiers."
+    "releaseNotes": "Added support for mapping schema field name modifiers."
   }
 }
