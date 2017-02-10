@@ -11,7 +11,7 @@
     "NETStandard.Library": "1.6.0",
     "System.Collections.Immutable": "1.2.0",
     "System.Data.SqlClient": "4.1.0",
-    "Uaaa.Core": "2.0.*"
+    "Uaaa.Core": "2.1.*"
   },
 
   "frameworks": {
