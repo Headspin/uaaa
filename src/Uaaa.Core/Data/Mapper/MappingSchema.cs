@@ -200,8 +200,8 @@ namespace Uaaa.Data.Mapper
                 if (attribute == null) continue;
                 if (string.IsNullOrEmpty(attribute.Name))
                 {
-                    attribute.Name = nameModifier == null 
-                                   ? field.Name 
+                    attribute.Name = nameModifier == null
+                                   ? field.Name
                                    : nameModifier.Modify(field.Name);
                 }
                 fieldAccessors[attribute] = new FieldAccessor(field, attribute);
@@ -231,13 +231,15 @@ namespace Uaaa.Data.Mapper
                     primaryKeyAttribute = attribute;
             }
 
+            var possiblePrimaryKeyFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "id", $"{type.Name}id", $"{type.Name}_id" };
+
             if (!fieldAccessors.Keys.Any())
             {
-                string[] possiblePrimaryKeyFields = { "Id", "ID", $"{type.Name}Id", $"{type.Name}ID" };
                 var primaryKeyFound = false;
                 // register mappings for public getter/setter properties
                 foreach (PropertyInfo property in properties)
                 {
+                    if (property.GetMethod == null) continue;
                     if (!primaryKeyFound && possiblePrimaryKeyFields.Contains(property.Name))
                     {
                         primaryKeyFound = true;
@@ -248,12 +250,16 @@ namespace Uaaa.Data.Mapper
                         this.primaryKeyAttribute = primaryKey;
                         continue;
                     }
-                    if (property.SetMethod?.IsPublic == false || property.GetMethod == null) continue;
                     var attribute = new FieldAttribute() { MappingType = MappingType.ReadWrite, Name = property.Name };
                     if (nameModifier != null)
                         attribute.Name = nameModifier.Modify(attribute.Name);
                     fieldAccessors[attribute] = new PropertyAccessor(property, attribute);
                 }
+            }
+            else if (primaryKeyAttribute == null)
+            {
+                primaryKeyAttribute =
+                    fieldAccessors.Keys.FirstOrDefault(field => possiblePrimaryKeyFields.Contains(field.Name));
             }
 
         }
@@ -433,7 +439,7 @@ namespace Uaaa.Data.Mapper
             /// </summary>
             /// <param name="instance"></param>
             /// <param name="value"></param>
-            void IFieldAccessor.SetValue(object instance, object value) => setter.Invoke(instance, value);
+            void IFieldAccessor.SetValue(object instance, object value) => setter?.Invoke(instance, value);
 
             /// <summary>
             /// Gets property value.
@@ -453,6 +459,7 @@ namespace Uaaa.Data.Mapper
             private Action<object, object> InitSetter()
             {
                 Type properType = property.PropertyType;
+                if (property.SetMethod?.IsPublic != true) return null;
                 ParameterExpression instanceParameter = Expression.Parameter(typeof(object), "instance");
                 ParameterExpression valueParameter = Expression.Parameter(typeof(object), "value");
                 var lambda = Expression.Lambda<Action<object, object>>(
