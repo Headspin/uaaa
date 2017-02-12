@@ -11,7 +11,7 @@
     "NETStandard.Library": "1.6.0",
     "System.Collections.Immutable": "1.2.0",
     "System.Data.SqlClient": "4.1.0",
-    "Uaaa.Core": "2.2.*"
+    "Uaaa.Core": "3.0.*"
   },
 
   "frameworks": {
@@ -38,6 +38,6 @@
     "owners": [ "DvaBita " ],
     "licenseUrl": "https://raw.githubusercontent.com/Headspin/uaaa/master/LICENSE",
     "requireLicenseAcceptance": true,
-    "releaseNotes": "[Breaking] Changed NameModifierTypeAttribute name. [Fix] Fields filtering when building update query from schema with NameModifierType. [Feature] UpdateQuery builder now supports building queries for changed properties only. "
+    "releaseNotes": "[Breaking]UpdateQuery Fields(string[]) -> Only(string[]). [Fix] Fields filtering when building update query from schema with NameModifierType. [Feature] UpdateQuery builder now supports building queries for changed properties only. "
   }
 }
