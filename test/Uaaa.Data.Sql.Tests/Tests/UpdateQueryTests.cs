@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
 using Uaaa.Data.Mapper;
+using Uaaa.Data.Mapper.Modifiers;
 using Xunit;
 using static Uaaa.Data.Sql.Query;
 
@@ -17,6 +18,14 @@ namespace Uaaa.Data.Sql.Tests
             public int Id { get; set; }
             public string Name { get; set; }
             public string Surname { get; set; }
+            public int Age { get; set; }
+        }
+        [MappingSchema.NameModifierType(typeof(SnakeCase))]
+        public class MyPocoClass_SnakeCase
+        {
+            public int Id { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
             public int Age { get; set; }
         }
 
@@ -76,6 +85,19 @@ namespace Uaaa.Data.Sql.Tests
             Assert.Equal(expectedText, command.CommandText);
             Assert.Equal(2, command.Parameters.Count);
             Assert.Equal(poco.Name, command.Parameters[0].Value);
+            Assert.Equal(poco.Age, command.Parameters[1].Value);
+        }
+
+        [Fact]
+        public void Query_Update_Simple_Filter_Fields_SnakeCase_Modifier()
+        {
+            const string table = "Table1";
+            var poco = new MyPocoClass_SnakeCase() { Id = 10, FirstName = "Name1", LastName = "Surname1", Age = 15 };
+            SqlCommand command = Update(poco).Fields(nameof(MyPocoClass_SnakeCase.FirstName), nameof(MyPocoClass_SnakeCase.Age)).In(table).All();
+            string expectedText = $"UPDATE \"{table}\" SET \"first_name\" = @p1, \"age\" = @p2;";
+            Assert.Equal(expectedText, command.CommandText);
+            Assert.Equal(2, command.Parameters.Count);
+            Assert.Equal(poco.FirstName, command.Parameters[0].Value);
             Assert.Equal(poco.Age, command.Parameters[1].Value);
         }
         [Fact]

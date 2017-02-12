@@ -103,6 +103,19 @@ namespace Uaaa.Data.Sql
             string tableText = $"\"{tableName}\"";
             string primaryKey = schema.PrimaryKey ?? string.Empty;
 
+            MappingSchema.NameModifier nameModifier = schema.GetNameModifier();
+            if (nameModifier != null && fieldsHashSet.Count != 0)
+            {
+                #region -=Modify field names=-
+                var modifiedFields = new HashSet<string>();
+                foreach (string fieldName in fieldsHashSet)
+                {
+                    modifiedFields.Add(nameModifier.Modify(fieldName));
+                }
+                fieldsHashSet = modifiedFields; 
+                #endregion
+            }
+
             foreach (object record in records)
             {
                 var fieldsText = new StringBuilder();

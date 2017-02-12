@@ -222,7 +222,7 @@ namespace Uaaa.Core.Data.Tests
             public Status? StatusStringNumber => statusStringNumber;
         }
 
-        [MappingSchema.Name(ModifierType = typeof(SnakeCase))]
+        [MappingSchema.NameModifierType(typeof(SnakeCase))]
         public class MappingsWithNameModifier
         {
             public int Id { get; set; }

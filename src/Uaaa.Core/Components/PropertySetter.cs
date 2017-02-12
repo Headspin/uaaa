@@ -76,8 +76,7 @@ namespace Uaaa
                 IsValid(propertyName);
             }
             return true;
-        }
-        //NOTE: Should use [CallerMemberName] for propertyName in future WP8.1+ profiles.
+        }        
         /// <summary>
         /// Set initial property value for change tracked property.
         /// </summary>

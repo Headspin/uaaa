@@ -163,7 +163,11 @@ namespace Uaaa.Data.Mapper
                 throw new InvalidOperationException("Schema does not define primaryKey field.");
             return GetFieldValue(primaryKeyAttribute, instance);
         }
-
+        /// <summary>
+        /// Returns NameModifier instance used to modify field names.
+        /// </summary>
+        /// <returns></returns>
+        public NameModifier GetNameModifier() => nameModifier;
         private void ReadSchema()
         {
 
@@ -186,9 +190,9 @@ namespace Uaaa.Data.Mapper
 
             if (nameModifier == null)
             {
-                var attribute = typeInfo.GetCustomAttribute<NameAttribute>();
-                if (attribute?.ModifierType != null)
-                    nameModifier = Activator.CreateInstance(attribute.ModifierType) as NameModifier;
+                var attribute = typeInfo.GetCustomAttribute<NameModifierTypeAttribute>();
+                if (attribute?.Type != null)
+                    nameModifier = Activator.CreateInstance(attribute.Type) as NameModifier;
             }
 
             // register field mappings
@@ -494,12 +498,20 @@ namespace Uaaa.Data.Mapper
         /// Specifies NameModifier to be used when reading mapping schema from type.
         /// </summary>
         [AttributeUsage(AttributeTargets.Class)]
-        public class NameAttribute : Attribute
+        public class NameModifierTypeAttribute : Attribute
         {
             /// <summary>
             /// NameModifier type to be used to modify field names when reading mapping schema.
             /// </summary>
-            public Type ModifierType { get; set; }
+            public Type Type { get; }
+            /// <summary>
+            /// Specifies NameModifier to be used when reading mapping schema from type.
+            /// </summary>
+            /// <param name="type"></param>
+            public NameModifierTypeAttribute(Type type)
+            {
+                Type = type;
+            }
         }
 
         /// <summary>
