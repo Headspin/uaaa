@@ -21,6 +21,12 @@ namespace Uaaa.Data.Mapper
         /// Value converter used for converting values.
         /// </summary>
         public Type ValueConverter { get; set; }
+
+        /// <summary>
+        /// Name of property that exposes the field value.
+        /// Specify only when attribute marks the field with different (case insensitive) name than property that exposes its value.
+        /// </summary>
+        public string Property { get; set; }
         /// <summary>
         /// Compares objects.
         /// </summary>

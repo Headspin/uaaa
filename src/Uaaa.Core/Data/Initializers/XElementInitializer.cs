@@ -38,7 +38,7 @@ namespace Uaaa.Data.Initializers
         /// <param name="model"></param>
         protected XInitializerBase(TModel model)
         {
-            this.Model = model;
+            Model = model;
         }
 
         #region -=IXElementInitializer members=-

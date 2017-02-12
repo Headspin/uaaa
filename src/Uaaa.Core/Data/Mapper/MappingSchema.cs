@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Uaaa.Core;
 using Uaaa.Data.Mapper.Converters;
 
 namespace Uaaa.Data.Mapper
@@ -109,17 +111,25 @@ namespace Uaaa.Data.Mapper
                 }
             }
         }
+
         /// <summary>
         /// Reads objects data.
         /// </summary>
         /// <param name="source"></param>
         /// <param name="processFieldValue"></param>
-        public void Read(object source, Action<string, object> processFieldValue)
+        /// <param name="changesOnly">Read only changes when true. Source object must be Model with Property change tracking enabled.</param>
+        public void Read(object source, Action<string, object> processFieldValue, bool changesOnly = false)
         {
             if (source == null || processFieldValue == null) return;
+
+            var inspector = new Model.Inspector(source as Model);
+
             foreach (KeyValuePair<FieldAttribute, IFieldAccessor> valuePair in fieldAccessors)
             {
                 IFieldAccessor accessor = valuePair.Value;
+                if (changesOnly && !inspector.IsChanged(accessor.PropertyName) && !valuePair.Key.Equals(primaryKeyAttribute))
+                    continue;
+
                 object value = accessor.GetValue(source);
 
                 if (accessor.Attribute.ValueConverter != null)
@@ -330,6 +340,14 @@ namespace Uaaa.Data.Mapper
             /// </summary>
             FieldAttribute Attribute { get; }
             /// <summary>
+            /// Name of field/property that holds value.
+            /// </summary>
+            string Name { get; }
+            /// <summary>
+            /// Name of property that exposes field value.
+            /// </summary>
+            string PropertyName { get; }
+            /// <summary>
             /// Sets field value on object instance.
             /// </summary>
             /// <param name="instance"></param>
@@ -349,6 +367,7 @@ namespace Uaaa.Data.Mapper
         {
             private readonly FieldInfo field;
             private readonly FieldAttribute attribute;
+            private readonly string propertyName;
 
             private Action<object, object> setter;
             private Func<object, object> getter;
@@ -360,6 +379,9 @@ namespace Uaaa.Data.Mapper
             {
                 this.field = field;
                 this.attribute = attribute;
+                propertyName = string.IsNullOrEmpty(attribute.Property)
+                             ? field.Name.ToTitleCase()
+                             : attribute.Property;
                 Initialize();
             }
 
@@ -367,6 +389,8 @@ namespace Uaaa.Data.Mapper
             Type IFieldAccessor.Type => this.field.FieldType;
             Type IFieldAccessor.DeclaringType => this.field.DeclaringType;
             FieldAttribute IFieldAccessor.Attribute => this.attribute;
+            string IFieldAccessor.Name => field.Name;
+            string IFieldAccessor.PropertyName => propertyName;
             /// <summary>
             /// Sets field value.
             /// </summary>
@@ -384,7 +408,7 @@ namespace Uaaa.Data.Mapper
             public override bool Equals(object obj) => field.Equals(obj);
             public override int GetHashCode() => field.GetHashCode();
             public override string ToString()
-                => $"Property: {field.Name}; {attribute.MappingType}";
+                => $"Field: {field.Name}; {attribute.MappingType}";
 
             private Action<object, object> InitSetter()
             {
@@ -435,9 +459,11 @@ namespace Uaaa.Data.Mapper
                 Initialize();
             }
             #region -=IFieldAccessor members=-
-            Type IFieldAccessor.Type => this.property.PropertyType;
-            Type IFieldAccessor.DeclaringType => this.property.DeclaringType;
-            FieldAttribute IFieldAccessor.Attribute => this.attribute;
+            Type IFieldAccessor.Type => property.PropertyType;
+            Type IFieldAccessor.DeclaringType => property.DeclaringType;
+            FieldAttribute IFieldAccessor.Attribute => attribute;
+            string IFieldAccessor.Name => property.Name;
+            string IFieldAccessor.PropertyName => property.Name;
             /// <summary>
             /// Sets property value.
             /// </summary>

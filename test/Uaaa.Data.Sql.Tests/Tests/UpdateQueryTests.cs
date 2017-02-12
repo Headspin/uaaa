@@ -42,6 +42,93 @@ namespace Uaaa.Data.Sql.Tests
             [Field(MappingType = MappingType.Read)]
             public DateTime BirthDay { get; set; }
         }
+
+        public class Person:Model
+        {
+            [Field]
+            private int id = 10;
+            [Field]
+            private string firstName = string.Empty;
+            [Field]
+            private string lastName = string.Empty;
+            [Field]
+            private string addressLine1 = string.Empty;
+            [Field]
+            private string addressLine2 = string.Empty;
+
+            public int Id => id;
+            public string FirstName
+            {
+                get { return firstName; }
+                set { Property.Set(ref firstName, value); }
+            }
+            public string LastName
+            {
+                get { return lastName; }
+                set { Property.Set(ref lastName, value); }
+            }
+            public string AddressLine1
+            {
+                get { return addressLine1;}
+                set { Property.Set(ref addressLine1, value); }
+            }
+            public string AddressLine2
+            {
+                get { return AddressLine1;}
+                set { Property.Set(ref addressLine2, value); }
+            }
+
+            protected override ChangeManager CreateChangeManager() => new ChangeManager();
+            protected override void OnSetInitialValues()
+            {
+                Property.Init(ref firstName, firstName, nameof(FirstName));
+                Property.Init(ref lastName, lastName, nameof(LastName));
+                Property.Init(ref addressLine1, addressLine1, nameof(AddressLine1));
+                Property.Init(ref addressLine2, addressLine2, nameof(AddressLine2));
+            }
+        }
+
+        [MappingSchema.NameModifierType(typeof(SnakeCase))]
+        public class Person_SnakeCase : Model
+        {
+            [Field]
+            private int id = 10;
+            [Field]
+            private string firstName = string.Empty;
+            [Field]
+            private string lastName = string.Empty;
+            [Field]
+            private string addressLine1 = string.Empty;
+            [Field]
+            private string addressLine2 = string.Empty;
+
+            public int Id => id;
+            public string FirstName {
+                get { return firstName; }
+                set { Property.Set(ref firstName, value); }
+            }
+            public string LastName {
+                get { return lastName; }
+                set { Property.Set(ref lastName, value); }
+            }
+            public string AddressLine1 {
+                get { return addressLine1; }
+                set { Property.Set(ref addressLine1, value); }
+            }
+            public string AddressLine2 {
+                get { return AddressLine1; }
+                set { Property.Set(ref addressLine2, value); }
+            }
+
+            protected override ChangeManager CreateChangeManager() => new ChangeManager();
+            protected override void OnSetInitialValues()
+            {
+                Property.Init(ref firstName, firstName, nameof(FirstName));
+                Property.Init(ref lastName, lastName, nameof(LastName));
+                Property.Init(ref addressLine1, addressLine1, nameof(AddressLine1));
+                Property.Init(ref addressLine2, addressLine2, nameof(AddressLine2));
+            }
+        }
         #endregion
 
         [Fact]
@@ -80,7 +167,7 @@ namespace Uaaa.Data.Sql.Tests
         {
             const string table = "Table1";
             var poco = new MyPocoClass { Id = 10, Name = "Name1", Surname = "Surname1", Age = 15 };
-            SqlCommand command = Update(poco).Fields("Name", "Age").In(table).All();
+            SqlCommand command = Update(poco).Only("Name", "Age").In(table).All();
             string expectedText = $"UPDATE \"{table}\" SET \"Name\" = @p1, \"Age\" = @p2;";
             Assert.Equal(expectedText, command.CommandText);
             Assert.Equal(2, command.Parameters.Count);
@@ -93,7 +180,7 @@ namespace Uaaa.Data.Sql.Tests
         {
             const string table = "Table1";
             var poco = new MyPocoClass_SnakeCase() { Id = 10, FirstName = "Name1", LastName = "Surname1", Age = 15 };
-            SqlCommand command = Update(poco).Fields(nameof(MyPocoClass_SnakeCase.FirstName), nameof(MyPocoClass_SnakeCase.Age)).In(table).All();
+            SqlCommand command = Update(poco).Only(nameof(MyPocoClass_SnakeCase.FirstName), nameof(MyPocoClass_SnakeCase.Age)).In(table).All();
             string expectedText = $"UPDATE \"{table}\" SET \"first_name\" = @p1, \"age\" = @p2;";
             Assert.Equal(expectedText, command.CommandText);
             Assert.Equal(2, command.Parameters.Count);
@@ -187,6 +274,37 @@ namespace Uaaa.Data.Sql.Tests
             var poco = new MyPocoClass { Id = 10, Surname = null };
             SqlCommand command = Update(poco).In(table);
             Assert.Equal(DBNull.Value, command.Parameters[0].Value);
+        }
+        [Fact]
+        public void Query_Update_Changes_Only()
+        {
+            const string table = "Table1";
+            var person = new Person();
+            person.FirstName = "John";
+            person.AddressLine1 = "Cooper's address 1";
+
+            SqlCommand command = Update(person).OnlyChangedFields().In(table);
+            string expectedText = $"UPDATE \"{table}\" SET \"firstName\" = @p1, \"addressLine1\" = @p2 WHERE (\"id\" = @p3);";
+            Assert.Equal(expectedText, command.CommandText);
+            Assert.Equal(person.FirstName, command.Parameters["@p1"].Value);
+            Assert.Equal(person.AddressLine1, command.Parameters["@p2"].Value);
+            Assert.Equal(person.Id, command.Parameters["@p3"].Value);
+        }
+
+        [Fact]
+        public void Query_Update_Changes_Only_SnakeCase()
+        {
+            const string table = "Table1";
+            var person = new Person_SnakeCase();
+            person.FirstName = "John";
+            person.AddressLine1 = "Cooper's address 1";
+
+            SqlCommand command = Update(person).OnlyChangedFields().In(table);
+            string expectedText = $"UPDATE \"{table}\" SET \"first_name\" = @p1, \"address_line_1\" = @p2 WHERE (\"id\" = @p3);";
+            Assert.Equal(expectedText, command.CommandText);
+            Assert.Equal(person.FirstName, command.Parameters["@p1"].Value);
+            Assert.Equal(person.AddressLine1, command.Parameters["@p2"].Value);
+            Assert.Equal(person.Id, command.Parameters["@p3"].Value);
         }
 
     }

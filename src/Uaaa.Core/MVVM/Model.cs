@@ -68,7 +68,6 @@ namespace Uaaa
             => RulesChecker?.IsValid(this, propertyName) == true;
 
         #endregion
-
         #region -=Protected methods=-
 
         /// <summary>
@@ -229,6 +228,21 @@ namespace Uaaa
         protected virtual void OnErrorsChanged(DataErrorsChangedEventArgs args)
             => ErrorsChanged?.Invoke(this, args);
 
+        #endregion
+
+        #region -=Nested classes=-
+        /// <summary>
+        /// Exposes internal infrastructure objects of a model to other components in the library.
+        /// </summary>
+        internal sealed class Inspector
+        {
+            private readonly Model model;
+            public bool IsChanged(string propertyName) => model?.Property.IsPropertyChanged(propertyName) == true;
+            public Inspector(Model model)
+            {
+                this.model = model;
+            }
+        }
         #endregion
     }
 }

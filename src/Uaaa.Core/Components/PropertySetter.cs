@@ -18,7 +18,8 @@ namespace Uaaa
         /// <summary>
         /// TRUE when change tracking is enabled by setting inital value of at least one property.
         /// </summary>
-        public bool IsTrackingChanges { get { return isTrackingChanges; } }
+        public bool IsTrackingChanges => isTrackingChanges;
+
         #endregion
         #region -=Constructors=-
         /// <summary>
@@ -106,6 +107,12 @@ namespace Uaaa
         /// <returns></returns>
         public bool IsValid([CallerMemberName] string propertyName = "")
             => (checker?.IsValid(model, propertyName) == true) || checker == null;
+        /// <summary>
+        /// Returns true if property value was changed.
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
+        internal bool IsPropertyChanged(string propertyName) => isTrackingChanges && changedValues.ContainsKey(propertyName);
 
         /// <summary>
         /// Accept changes by seting changed property values to initial property values.

@@ -19,6 +19,7 @@ namespace Uaaa.Data.Sql
         private string tableName;
         private readonly List<string> conditions = new List<string>();
         private HashSet<string> fieldsHashSet = null;
+        private bool changedOnly = false;
         private bool updateAll = false;
         /// <summary>
         /// Creates new instance of query builder object.
@@ -28,11 +29,22 @@ namespace Uaaa.Data.Sql
         /// <summary>
         /// Modifies query to only update specified fields from mapping schema.
         /// </summary>
-        public UpdateQuery Fields(params string[] fields){
+        public UpdateQuery Only(params string[] fields)
+        {
             if (fields == null || fields.Length == 0) return this;
             fieldsHashSet = new HashSet<string>();
-            foreach(string field in fields)
+            foreach (string field in fields)
                 fieldsHashSet.Add(field);
+            return this;
+        }
+
+        /// <summary>
+        /// Modifies query to only include changed fields.
+        /// </summary>
+        /// <returns></returns>
+        public UpdateQuery OnlyChangedFields()
+        {
+            changedOnly = true;
             return this;
         }
         /// <summary>
@@ -98,13 +110,13 @@ namespace Uaaa.Data.Sql
             if (string.IsNullOrEmpty(tableName))
                 throw new InvalidOperationException("Unable to generate SqlCommand. Query does not define table name.");
             ParameterScope scope = parameterScope ?? new ParameterScope();
-            SqlCommand command = new SqlCommand();
+            var command = new SqlCommand();
             var commands = new StringBuilder();
             string tableText = $"\"{tableName}\"";
             string primaryKey = schema.PrimaryKey ?? string.Empty;
 
             MappingSchema.NameModifier nameModifier = schema.GetNameModifier();
-            if (nameModifier != null && fieldsHashSet.Count != 0)
+            if (nameModifier != null && fieldsHashSet != null && fieldsHashSet.Count != 0)
             {
                 #region -=Modify field names=-
                 var modifiedFields = new HashSet<string>();
@@ -112,7 +124,7 @@ namespace Uaaa.Data.Sql
                 {
                     modifiedFields.Add(nameModifier.Modify(fieldName));
                 }
-                fieldsHashSet = modifiedFields; 
+                fieldsHashSet = modifiedFields;
                 #endregion
             }
 
@@ -135,7 +147,7 @@ namespace Uaaa.Data.Sql
                     fieldsText.Append($"\"{field}\" = {parameterName}, ");
                     var parameter = new SqlParameter(parameterName, value ?? DBNull.Value);
                     command.Parameters.Add(parameter);
-                });
+                }, changedOnly);
                 if (fieldsText.Length == 0) continue;
                 fieldsText.Remove(fieldsText.Length - 2, 2); // remove last ", "
 
