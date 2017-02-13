@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SqlClient;
 using Uaaa.Data.Mapper;
+using Uaaa.Data.Mapper.Modifiers;
 using Xunit;
 using static Uaaa.Data.Sql.Query;
 
@@ -32,6 +33,21 @@ namespace Uaaa.Data.Sql.Tests
             public DateTime BirthDay { get; set; }
             [Field(MappingType = MappingType.ReadUpdate)]
             public DateTime? ChangedDateTime { get; set; }
+        }
+
+        [MappingSchema.NameModifierType(typeof(SnakeCase))]
+        public class Person
+        {
+            [Field]
+            private int id = 0;
+            [Field]
+            private string firstName;
+            [Field]
+            private string lastName;
+
+            public int Id => id;
+            public string FirstName { get { return firstName; } set { firstName = value; } }
+            public string LastName { get { return lastName; } set { lastName = value; } }
         }
         #endregion
 
@@ -69,6 +85,22 @@ namespace Uaaa.Data.Sql.Tests
             Assert.Equal("@p2", command.Parameters[1].ParameterName);
             Assert.Equal(value.Age, command.Parameters[2].Value);
             Assert.Equal("@p3", command.Parameters[2].ParameterName);
+        }
+
+        [Fact]
+        public void Query_Insert_Simple_Field_Mappings()
+        {
+            const string table = "Table1";
+            var value = new Person { FirstName = "Name1", LastName = "Surname1" };
+
+            SqlCommand command = Insert(value).Into(table);
+            string expectedText = $"INSERT INTO \"{table}\" (\"first_name\", \"last_name\") VALUES(@p1, @p2);";
+            Assert.Equal(expectedText, command.CommandText);
+            Assert.Equal(2, command.Parameters.Count);
+            Assert.Equal(value.FirstName, command.Parameters[0].Value);
+            Assert.Equal("@p1", command.Parameters[0].ParameterName);
+            Assert.Equal(value.LastName, command.Parameters[1].Value);
+            Assert.Equal("@p2", command.Parameters[1].ParameterName);
         }
 
         [Fact]

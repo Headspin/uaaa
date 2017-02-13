@@ -1,5 +1,5 @@
 ﻿{
-  "version": "2.0.0",
+  "version": "2.0.1",
   "title": "Uaaa Data Sql Extensions",
   "copyright": "© 2017 Dvabita",
   "authors": [
@@ -38,6 +38,6 @@
     "owners": [ "DvaBita " ],
     "licenseUrl": "https://raw.githubusercontent.com/Headspin/uaaa/master/LICENSE",
     "requireLicenseAcceptance": true,
-    "releaseNotes": "[Breaking]UpdateQuery Fields(string[]) -> Only(string[]). [Fix] Fields filtering when building update query from schema with NameModifierType. [Feature] UpdateQuery builder now supports building queries for changed properties only. "
+    "releaseNotes": "[Fix] InsertQuery builder skips primary keys when defined with field."
   }
 }

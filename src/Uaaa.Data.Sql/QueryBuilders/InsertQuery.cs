@@ -91,7 +91,7 @@ namespace Uaaa.Data.Sql
             if (!writableFields.Any())
                 throw new InvalidOperationException("Cannot generate insert command. No writable fields in schema.");
 
-            SqlCommand command = new SqlCommand();
+            var command = new SqlCommand();
             string tableText = $"\"{tableName}\"";
             var commandText = new StringBuilder();
 
@@ -103,6 +103,8 @@ namespace Uaaa.Data.Sql
                 var valuesText = new StringBuilder();
                 schema.Read(record, (field, value) =>
                 {
+                    if (schema.DefinesPrimaryKey && schema.PrimaryKey == field)
+                        return;
                     if (writableFields.Contains(field))
                     {
                         var parameter = new SqlParameter
