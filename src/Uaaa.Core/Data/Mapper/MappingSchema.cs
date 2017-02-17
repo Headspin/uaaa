@@ -22,6 +22,11 @@ namespace Uaaa.Data.Mapper
         private readonly Dictionary<FieldAttribute, IFieldAccessor> fieldAccessors =
             new Dictionary<FieldAttribute, IFieldAccessor>();
 
+        /// <summary>
+        /// Index of property accessors of all properties in type (regardless of field attribute mappings).
+        /// </summary>
+        private readonly List<IFieldAccessor> propertyAccessors = new List<IFieldAccessor>();
+
         private FieldAttribute primaryKeyAttribute = null;
         private NameModifier nameModifier = null;
         /// <summary>
@@ -151,6 +156,19 @@ namespace Uaaa.Data.Mapper
             }
         }
         /// <summary>
+        /// Reads raw property values from source object.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="processValue"></param>
+        public void ReadPropertiesRaw(object source, Action<string, object> processValue)
+        {
+            if (source == null || processValue == null) return;
+            foreach (IFieldAccessor accessor in propertyAccessors)
+            {
+                processValue(accessor.PropertyName, accessor.GetValue(source));
+            }
+        }
+        /// <summary>
         /// Returns field value for provided object instance.
         /// </summary>
         /// <param name="field"></param>
@@ -276,6 +294,10 @@ namespace Uaaa.Data.Mapper
                     fieldAccessors.Keys.FirstOrDefault(field => possiblePrimaryKeyFields.Contains(field.Name));
             }
 
+            // list property accessors for raw property access.
+            propertyAccessors.AddRange(from property in properties
+                                       where property.GetMethod != null
+                                       select new PropertyAccessor(property, new FieldAttribute { Name = property.Name }));
         }
         #endregion
         #region -=Static members=-

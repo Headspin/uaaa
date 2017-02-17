@@ -77,15 +77,26 @@ namespace Uaaa
                 IsValid(propertyName);
             }
             return true;
-        }        
+        }
+
+        /// <summary>
+        /// Resets property value to its initial value.
+        /// </summary>
+        /// <param name="store"></param>
+        /// <param name="propertyName"></param>
+        /// <typeparam name="T"></typeparam>
+        public void Reset<T>(ref T store, [CallerMemberName] string propertyName = null)
+        {
+            if (string.IsNullOrEmpty(propertyName)) return;
+            if (initialValues.ContainsKey(propertyName))
+                Set(ref store, (T)initialValues[propertyName], propertyName);
+        }
         /// <summary>
         /// Set initial property value for change tracked property.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="store"></param>
         /// <param name="value"></param>
         /// <param name="propertyName"></param>
-        public void Init<T>(ref T store, T value, string propertyName)
+        public void Init(object value, string propertyName)
         {
             if (string.IsNullOrEmpty(propertyName)) return;
             if (!isTrackingChanges)
@@ -98,6 +109,18 @@ namespace Uaaa
                 initialValues.Add(propertyName, value);
             else
                 initialValues[propertyName] = value;
+        }
+        /// <summary>
+        /// Set initial property value for change tracked property.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="store"></param>
+        /// <param name="value"></param>
+        /// <param name="propertyName"></param>
+        public void Init<T>(ref T store, T value, string propertyName)
+        {
+            if (string.IsNullOrEmpty(propertyName)) return;
+            Init(value, propertyName);
             store = value;
         }
         /// <summary>

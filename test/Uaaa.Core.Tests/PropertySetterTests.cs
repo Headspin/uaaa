@@ -270,5 +270,24 @@ namespace Uaaa.Core.Tests
             Assert.True(setter.IsTrackingChanges);
             Assert.False(setter.IsChanged);
         }
+        [Fact]
+        public void PropertySetter_Set_Reset()
+        {
+            const string property = "property1";
+            PropertySetter setter = new MyModel().GetPropertySetter();
+            
+            int store1 = 5;
+            setter.Init(ref store1, store1, property);
+
+            setter.Set(ref store1, 10, property);
+            Assert.Equal(10, store1);
+
+            setter.Set(ref store1, 20, property);
+            Assert.Equal(20, store1);
+
+            setter.Reset(ref store1, property);
+            Assert.Equal(5, store1);
+
+        }
     }
 }
