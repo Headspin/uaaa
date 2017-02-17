@@ -1,5 +1,5 @@
 ﻿{
-  "version": "3.1.0",
+  "version": "3.1.1",
   "title": "Uaaa Framework",
   "copyright": "© 2017 Dvabita",
   "authors": [
@@ -31,6 +31,6 @@
     "owners": [ "DvaBita " ],
     "licenseUrl": "https://raw.githubusercontent.com/Headspin/uaaa/master/LICENSE",
     "requireLicenseAcceptance": true,
-    "releaseNotes": "[Breaking] Changed MappingSchema.NameModifierTypeAttribute name. [Feature] MappingSchema supports reading field values for changed properties only."
+    "releaseNotes": "[Fix] MappingSchema.ReadPropertiesRaw excludes Model type properties."
   }
 }

@@ -58,6 +58,7 @@ namespace Uaaa.Core.Tests
         public void Model_InitPropertySetters_Automatic()
         {
             var person = new PersonAutoPropertyInit();
+
             Assert.False(person.IsChanged);
             person.FirstName = "Name";
             Assert.True(person.IsChanged);

@@ -198,9 +198,9 @@ namespace Uaaa.Data.Mapper
         public NameModifier GetNameModifier() => nameModifier;
         private void ReadSchema()
         {
-
+            Type modelType = typeof(Model);
             #region -=Read base type schema=-
-            if (typeInfo.BaseType != null && typeInfo.BaseType != typeof(object) && typeInfo.BaseType != typeof(Model))
+            if (typeInfo.BaseType != null && typeInfo.BaseType != typeof(object) && typeInfo.BaseType != modelType)
             {
                 // read base type schema and copy private fields accessors (other protected/public fields are available on current type).
                 MappingSchema baseSchema = Get(typeInfo.BaseType);
@@ -247,6 +247,7 @@ namespace Uaaa.Data.Mapper
             // register property mappings
             foreach (PropertyInfo property in type.GetRuntimeProperties())
             {
+                if (property.DeclaringType == modelType) continue;
                 properties.Add(property);
                 if (!property.CustomAttributes.Any()) continue;
                 var attribute = property.GetCustomAttribute<FieldAttribute>();
