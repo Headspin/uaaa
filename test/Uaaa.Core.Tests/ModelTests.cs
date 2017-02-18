@@ -72,5 +72,11 @@ namespace Uaaa.Core.Tests
             person.LastName = string.Empty;
             Assert.False(person.IsChanged);
         }
+        [Fact]
+        public void Model_Validation_NoRules()
+        {
+            var person = new PersonAutoPropertyInit();
+            Assert.True(person.IsValid());
+        }
     }
 }

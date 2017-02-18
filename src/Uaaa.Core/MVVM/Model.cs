@@ -65,7 +65,7 @@ namespace Uaaa
         /// </summary>
         /// <returns><c>true</c> if this instance is valid; otherwise, <c>false</c>.</returns>
         public virtual bool IsValid(string propertyName = "")
-            => RulesChecker?.IsValid(this, propertyName) == true;
+            => RulesChecker == null || RulesChecker.IsValid(this, propertyName);
 
         #endregion
         #region -=Protected methods=-

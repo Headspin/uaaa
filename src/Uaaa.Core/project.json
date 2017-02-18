@@ -1,5 +1,5 @@
 ﻿{
-  "version": "3.1.1",
+  "version": "3.1.2",
   "title": "Uaaa Framework",
   "copyright": "© 2017 Dvabita",
   "authors": [
@@ -31,6 +31,6 @@
     "owners": [ "DvaBita " ],
     "licenseUrl": "https://raw.githubusercontent.com/Headspin/uaaa/master/LICENSE",
     "requireLicenseAcceptance": true,
-    "releaseNotes": "[Fix] MappingSchema.ReadPropertiesRaw excludes Model type properties."
+    "releaseNotes": "[Fix] Validation when no rules defined."
   }
 }
