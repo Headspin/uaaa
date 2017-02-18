@@ -11,11 +11,11 @@ namespace Uaaa.Core.Tests
     {
         private class PersonAutoPropertyInit : Model
         {
-            private int id;
+            private int id = 0;
             private string firstName = string.Empty;
             private string lastName = string.Empty;
             private int? age;
-            private DateTime? changedAt;
+            private DateTime? changedAt = null;
 
             public int Id => id;
 
