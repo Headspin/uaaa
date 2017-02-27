@@ -60,7 +60,6 @@ namespace Uaaa.Core.Tests
             [Field] private int id = 0;
             [Field] private string firstName = string.Empty;
             [Field] private string lastName = string.Empty;
-            [Field] private DateTime? changedAt = null;
 
             public int Id => id;
             public string FirstName { get { return firstName;} set { firstName = value; } }
