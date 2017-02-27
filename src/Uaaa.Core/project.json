@@ -1,11 +1,11 @@
 ﻿{
   "version": "3.2.0",
-  "title": "Uaaa Framework",
+  "title": "Uaaa Core",
   "copyright": "© 2017 Dvabita",
   "authors": [
     "DvaBita"
   ],
-  "description": "Uaaa LOB framework.",
+  "description": "Uaaa core framework.",
 
   "dependencies": {
     "NETStandard.Library": "1.6.0"
