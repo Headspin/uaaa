@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using Uaaa.Data.Mapper;
@@ -11,6 +12,32 @@ namespace Uaaa.Data.Sql
     /// </summary>
     public static class Query
     {
+        #region -=Definitions=-
+
+        /// <summary>
+        /// Specifies fields to be ignored while building query.
+        /// </summary>
+        [AttributeUsage(AttributeTargets.Class)]
+        public class IgnoreFieldAttribute : Attribute
+        {
+            private readonly HashSet<string> fields;
+            /// <summary>
+            /// Specifies fields to be ignored while building query.
+            /// </summary>
+            /// <param name="fields"></param>
+            public IgnoreFieldAttribute(params string[] fields)
+            {
+                this.fields = new HashSet<string>(fields, StringComparer.OrdinalIgnoreCase);
+            }
+
+            /// <summary>
+            /// Returns true if field should be ignored.
+            /// </summary>
+            /// <param name="field"></param>
+            /// <returns></returns>
+            public bool Contains(string field) => fields.Contains(field);
+        }
+        #endregion
         /// <summary>
         /// Initializes insert query builder object.
         /// </summary>

@@ -168,6 +168,20 @@ namespace Uaaa.Data.Mapper
                 processValue(accessor.PropertyName, accessor.GetValue(source));
             }
         }
+
+        /// <summary>
+        /// Writes raw property values to target object
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="retrievePropertyValue"></param>
+        public void WritePropertiesRaw(object target, Func<string, object> retrievePropertyValue)
+        {
+            if (target == null || retrievePropertyValue == null) return;
+            foreach (IFieldAccessor accessor in propertyAccessors)
+            {
+                accessor.SetValue(target, retrievePropertyValue.Invoke(accessor.PropertyName));
+            }
+        }
         /// <summary>
         /// Returns field value for provided object instance.
         /// </summary>

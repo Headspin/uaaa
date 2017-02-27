@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Uaaa.Data.Mapper;
+using Uaaa.Data.Mapper.Modifiers;
 using Xunit;
 
 namespace Uaaa.Core.Tests
@@ -53,6 +54,29 @@ namespace Uaaa.Core.Tests
             }
         }
 
+        [MappingSchema.NameModifierType(typeof(SnakeCase))]
+        private class PersonWithFieldMappings
+        {
+            [Field] private int id = 0;
+            [Field] private string firstName = string.Empty;
+            [Field] private string lastName = string.Empty;
+            [Field] private DateTime? changedAt = null;
+
+            public int Id => id;
+            public string FirstName { get { return firstName;} set { firstName = value; } }
+            public string LastName { get { return lastName;} set { lastName = value; } }
+
+            public PersonWithFieldMappings()
+            {
+                
+            }
+
+            public PersonWithFieldMappings(int id)
+            {
+                this.id = id;
+            }
+        }
+
 
         [Fact]
         public void Model_InitPropertySetters_Automatic()
@@ -77,6 +101,23 @@ namespace Uaaa.Core.Tests
         {
             var person = new PersonAutoPropertyInit();
             Assert.True(person.IsValid());
+        }
+        [Fact]
+        public void Model_Update_Source_To_Target()
+        {
+            var source = new PersonWithFieldMappings(100)
+            {
+                FirstName = "John",
+                LastName = "Cooper"
+            };
+
+            var target = new PersonWithFieldMappings();
+            source.Update(target);
+
+            Assert.NotEqual(source.Id, target.Id);
+            Assert.Equal(source.FirstName, target.FirstName);
+            Assert.Equal(source.LastName, target.LastName);
+
         }
     }
 }

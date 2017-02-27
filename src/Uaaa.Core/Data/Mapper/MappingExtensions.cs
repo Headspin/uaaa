@@ -31,11 +31,25 @@ namespace Uaaa.Data.Mapper
         /// <typeparam name="TItem"></typeparam>
         /// <param name="data"></param>
         /// <returns></returns>
-        public static TItem As<TItem>(this Dictionary<string, object> data) where TItem: new()
+        public static TItem As<TItem>(this Dictionary<string, object> data) where TItem : new()
         {
             var item = Activator.CreateInstance<TItem>();
             data.WriteTo(item);
             return item;
+        }
+
+        /// <summary>
+        /// Updates target model properties with values from source model properties.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="target"></param>
+        /// <typeparam name="TModel"></typeparam>
+        public static void Update<TModel>(this TModel model, TModel target)
+        {
+            MappingSchema schema = MappingSchema.Get<TModel>();
+            var record = new DataRecord();
+            schema.ReadPropertiesRaw(model, (property, value) => record[property] = value);
+            schema.WritePropertiesRaw(target, propertyName => record[propertyName]);
         }
     }
 }
