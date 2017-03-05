@@ -86,6 +86,30 @@ namespace Uaaa.Sql.Tools
                     });
                 }, false);
 
+                application.Command("create", config =>
+                {
+                    config.Description = "Creates new database.";
+                    config.HelpOption("-?|-h|--help");
+
+                    CommandOption connectionOption = config.Option(
+                        "-c|--connection <connection>",
+                        "Specifies setting key where database connection string is stored.",
+                        CommandOptionType.SingleValue
+                    );
+
+                    config.OnExecute(async () =>
+                    {
+
+                        application.ShowRootCommandFullNameAndVersion();
+                        using (ILifetimeScope scope = Container.BeginLifetimeScope())
+                        {
+                            var command = scope.Resolve<UpdateCommand>();
+                            command.ConnectionKey = connectionOption.Value();
+                            return await command.Execute();
+                        }
+                    });
+                }, false);
+
                 application.OnExecute(() =>
                 {
                     application.ShowHelp();
