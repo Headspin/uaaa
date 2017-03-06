@@ -1,5 +1,5 @@
 {
-  "version": "1.2.0",
+  "version": "1.2.1",
   "title": "Uaaa SQL database management tool",
   "copyright": "© 2017 Dvabita",
   "authors": [
@@ -15,7 +15,7 @@
     "files":[
       "Scripts/*.sql"
     ],
-    "releaseNotes": "[Feature] Added create command."
+    "releaseNotes": "[Fix] Stability improvements."
   },
   "dependencies": {
     "Microsoft.Extensions.Configuration": "1.0.0",

@@ -97,7 +97,7 @@ namespace Uaaa.Sql.Tools
                         CommandOptionType.SingleValue
                     );
 
-                    config.OnExecute(async () =>
+                    config.OnExecute(() =>
                     {
 
                         application.ShowRootCommandFullNameAndVersion();
@@ -105,7 +105,7 @@ namespace Uaaa.Sql.Tools
                         {
                             var command = scope.Resolve<CreateCommand>();
                             command.ConnectionKey = connectionOption.Value();
-                            return await command.Execute();
+                            return command.Execute().GetAwaiter().GetResult();
                         }
                     });
                 }, false);

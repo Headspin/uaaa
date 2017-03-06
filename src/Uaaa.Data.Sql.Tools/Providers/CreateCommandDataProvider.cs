@@ -20,12 +20,17 @@ namespace Uaaa.Sql.Tools
             this.configuration = configuration;
         }
 
-        public Task ExecuteScript(string script)
+        public async Task ExecuteScript(string script)
         {
-            using (DbContext context = CreateContext())
+            DbContext context = CreateContext();
+            try
             {
                 var command = new SqlCommand(script);
-                return context.Execute(command);
+                await context.Execute(command);
+            }
+            finally
+            {
+                context.Dispose();
             }
         }
 
