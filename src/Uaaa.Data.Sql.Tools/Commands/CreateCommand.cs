@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.Extensions.Configuration;
-using Uaaa.Data;
 
 namespace Uaaa.Sql.Tools
 {
@@ -37,18 +34,14 @@ namespace Uaaa.Sql.Tools
             if (string.IsNullOrEmpty(ConnectionKey))
                 throw new InvalidOperationException("Connection setting key not set.");
             #endregion -=Check parameters=-
-            var versionRegex = new Regex(@"^(?<version>\d*)");
-
             provider.UseConnection(ConnectionKey);
 
             text.ClearLine();
             string database = provider.GetDatabaseName();
             text.Write($"Creating new database: {database}");
-            await provider.ExecuteScript($"if exists(select * from sys.databases where name='{database}') drop database {database}; create database {database}");
+            await provider.ExecuteScript($"if exists(select * from sys.databases where name='{database}') drop database \"{database}\"; create database \"{database}\";");
             text.ClearLine();
             text.Write("Completed.");
-
-
             return 0;
         }
     }

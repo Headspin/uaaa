@@ -103,7 +103,7 @@ namespace Uaaa.Sql.Tools
                         application.ShowRootCommandFullNameAndVersion();
                         using (ILifetimeScope scope = Container.BeginLifetimeScope())
                         {
-                            var command = scope.Resolve<UpdateCommand>();
+                            var command = scope.Resolve<CreateCommand>();
                             command.ConnectionKey = connectionOption.Value();
                             return await command.Execute();
                         }

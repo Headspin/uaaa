@@ -1,4 +1,5 @@
 using System;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.Extensions.Configuration;
@@ -21,13 +22,14 @@ namespace Uaaa.Sql.Tools
 
         public Task ExecuteScript(string script)
         {
-            throw new NotImplementedException();
+            using (DbContext context = CreateContext())
+            {
+                var command = new SqlCommand(script);
+                return context.Execute(command);
+            }
         }
 
-        public string GetDatabaseName()
-        {
-            throw new NotImplementedException();
-        }
+        public string GetDatabaseName() => connectionInfo.Database;
 
         public void UseConnection(string connectionSettingKey)
         {
@@ -38,6 +40,17 @@ namespace Uaaa.Sql.Tools
                     throw new InvalidOperationException("Connection string not set.");
                 connectionInfo = ConnectionInfo.Create(connectionString);
             }
+        }
+
+        private DbContext CreateContext()
+        {
+            lock (connectionSync)
+            {
+                if (connectionInfo == null)
+                    throw new InvalidOperationException("Connection setting key not set. Call UseConnection method first.");
+                var info = ConnectionInfo.Create(connectionInfo.ConnectionString.Replace(connectionInfo.Database, "master"));
+                return scope.Resolve<DbContext>(new TypedParameter(typeof(ConnectionInfo), info));
+            };
         }
     }
 }

@@ -10,6 +10,7 @@ namespace Uaaa.Sql.Tools
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<UpdateCommandDataProvider>().As<UpdateCommand.IDataProvider>();
+            builder.RegisterType<CreateCommandDataProvider>().As<CreateCommand.IDataProvider>();
             builder.RegisterType<ConsoleOutput>().As<ITextOutput>().SingleInstance();
             builder.Register(context =>
             {

@@ -1,5 +1,5 @@
 ﻿{
-  "version": "2.0.2",
+  "version": "2.1.0",
   "title": "Uaaa Data Sql Extensions",
   "copyright": "© 2017 Dvabita",
   "authors": [
@@ -38,6 +38,6 @@
     "owners": [ "DvaBita " ],
     "licenseUrl": "https://raw.githubusercontent.com/Headspin/uaaa/master/LICENSE",
     "requireLicenseAcceptance": true,
-    "releaseNotes": "Uaaa.Core version."
+    "releaseNotes": "[Feature] Parsing Server/Database from connection string."
   }
 }
