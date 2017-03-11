@@ -34,7 +34,15 @@ namespace Uaaa.Data.Sql
 
             match = Regex.Match(connectionString, "database=(?<database>[^;]*);", RegexOptions.IgnoreCase);
             if (match.Success)
+            {
                 info.Database = match.Groups["database"].Value;
+                return info;
+            }
+
+            match = Regex.Match(connectionString, "initial catalog=(?<database>[^;]*);", RegexOptions.IgnoreCase);
+            if (match.Success)
+                info.Database = match.Groups["database"].Value;
+
             return info;
         }
     }

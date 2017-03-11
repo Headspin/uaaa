@@ -35,8 +35,6 @@ namespace Uaaa.Sql.Tools
                 throw new InvalidOperationException("Connection setting key not set.");
             #endregion -=Check parameters=-
             provider.UseConnection(ConnectionKey);
-
-            text.ClearLine();
             string database = provider.GetDatabaseName();
             text.Write($"Creating new database: {database}");
             await provider.ExecuteScript($"if exists(select * from sys.databases where name='{database}') drop database \"{database}\"; create database \"{database}\";");
