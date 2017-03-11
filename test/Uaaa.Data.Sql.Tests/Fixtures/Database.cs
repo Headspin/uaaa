@@ -15,6 +15,7 @@ namespace Uaaa.Data.Sql.Tests
             public const string ClearData = @"Scripts/ClearData.sql";
         }
         private const string SettingsFilename = "testSettings.json";
+        private const string UserSecretsId = "Uaaa.Data.Sql.Tests-8f728313-53fc-49d7-b781-ea1580aa0abc";
 
         #region -=Instance members=-
 
@@ -26,7 +27,7 @@ namespace Uaaa.Data.Sql.Tests
                 {
                     IConfigurationRoot config = new ConfigurationBuilder()
                                                 .AddJsonFile(SettingsFilename)
-                                                .AddUserSecrets()
+                                                .AddUserSecrets(UserSecretsId)
                                                 .Build();
                     connectionString = config["ConnectionStrings:TestDb"];
                 }

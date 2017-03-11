@@ -13,7 +13,7 @@ $project = "Uaaa.Core"
 if (Test-Path "$solutionDir/src/$project/bin/release"){
 	gci -Path "$solutionDir/src/$project/bin/release"|ri -Force -Recurse
 }
-dotnet pack "$solutionDir/src/$project/project.json" -c Release
+dotnet pack "$solutionDir/src/$project/$project.csproj" -c Release
 if (! $?){ 
 	#=-If last error code <> 0 -> return exit code 1
 	exit 1 
@@ -25,7 +25,7 @@ $project = "Uaaa.Data.Sql"
 if (Test-Path "$solutionDir/src/$project/bin/release"){
 	gci -Path "$solutionDir/src/$project/bin/release"|ri -Force -Recurse
 }
-dotnet pack "$solutionDir/src/$project/project.json" -c Release
+dotnet pack "$solutionDir/src/$project/$project.csproj" -c Release
 if (! $?){ 
 	#=-If last error code <> 0 -> return exit code 1
 	exit 1 
@@ -37,7 +37,7 @@ $project = "Uaaa.Data.Sql.Tools"
 if (Test-Path "$solutionDir/src/$project/bin/release"){
 	gci -Path "$solutionDir/src/$project/bin/release"|ri -Force -Recurse
 }
-dotnet pack "$solutionDir/src/$project/project.json" -c Release
+dotnet pack "$solutionDir/src/$project/$project.csproj" -c Release
 if (! $?){ 
 	#=-If last error code <> 0 -> return exit code 1
 	exit 1 

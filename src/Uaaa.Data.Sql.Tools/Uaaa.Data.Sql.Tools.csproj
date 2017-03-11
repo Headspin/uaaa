@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>Uaaa SQL script runner tool for database versioning.</Description>
+    <Copyright>© 2017 Dvabita</Copyright>
+    <AssemblyTitle>Uaaa SQL database management tool</AssemblyTitle>
+    <VersionPrefix>2.0.0</VersionPrefix>
+    <Authors>DvaBita</Authors>
+    <TargetFrameworks>netcoreapp1.0</TargetFrameworks>
+    <DebugType>portable</DebugType>
+    <AssemblyName>dotnet-uaaa-sql</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <PackageId>Uaaa.Data.Sql.Tools</PackageId>
+    <PackageReleaseNotes>[Breaking] Uaaa.Core 4.0.0 required.</PackageReleaseNotes>
+    <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
+    <RuntimeFrameworkVersion Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">1.0.4</RuntimeFrameworkVersion>
+    <UserSecretsId>Uaaa.Data.Sql.Tools-f78c38c1-16ab-45fd-8683-4bbfb904ad87</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="Scripts\*.sql">
+      <Pack>true</Pack>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Uaaa.Core/Uaaa.Core.csproj" />
+    <ProjectReference Include="../Uaaa.Data.Sql/Uaaa.Data.Sql.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="1.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="1.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="1.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="1.0.2" />
+    <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.0" />
+    <PackageReference Include="Autofac" Version="4.2.*" />
+  </ItemGroup>
+
+</Project>

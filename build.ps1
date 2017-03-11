@@ -3,10 +3,10 @@ Param(
 )
 if ($option){
     Write-Host "Rebuilding projects..." -ForegroundColor Cyan
-    dotnet build ./**/project.json $option
+    dotnet build $option
 }
 else{
     Write-Host "Building projects..." -ForegroundColor Cyan
-    dotnet build ./**/project.json
+    dotnet build
 }
 Write-Host "Finished."

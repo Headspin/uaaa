@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.0</TargetFramework>
+    <DebugType>portable</DebugType>
+    <AssemblyName>Uaaa.Data.Sql.Tests.Perf</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <PackageId>Uaaa.Data.Sql.Tests.Perf</PackageId>
+    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
+    <RuntimeFrameworkVersion>1.0.4</RuntimeFrameworkVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/Uaaa.Core/Uaaa.Core.csproj" />
+    <ProjectReference Include="../../src/Uaaa.Data.Sql/Uaaa.Data.Sql.csproj" />
+  </ItemGroup>
+
+</Project>

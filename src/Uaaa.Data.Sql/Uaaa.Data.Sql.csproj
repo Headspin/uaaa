@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Uaaa Framework data extensions for SQL</Description>
+    <Copyright>© 2017 Dvabita</Copyright>
+    <AssemblyTitle>Uaaa Data Sql Extensions</AssemblyTitle>
+    <VersionPrefix>3.0.0</VersionPrefix>
+    <Authors>DvaBita</Authors>
+    <TargetFrameworks>netstandard1.6</TargetFrameworks>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>portable</DebugType>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>Uaaa.Data.Sql</AssemblyName>
+    <PackageId>Uaaa.Data.Sql</PackageId>
+    <PackageReleaseNotes>[Breaking] Uaaa.Core 4.0.0 required.</PackageReleaseNotes>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/Headspin/uaaa/master/LICENSE</PackageLicenseUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
+    <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netstandard1.6' ">$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Uaaa.Core/Uaaa.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Collections.Immutable" Version="1.2.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.1.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
+    <PackageReference Include="System.Linq" Version="4.1.0" />
+  </ItemGroup>
+
+</Project>
