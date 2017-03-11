@@ -38,7 +38,7 @@
     <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.0" />
     <PackageReference Include="Autofac" Version="4.4.0" />
     <PackageReference Include="Uaaa.Core" Version="5.0.0" />
-    <PackageReference Include="Uaaa.Data.Sql" Version="4.0.0" />
+    <PackageReference Include="Uaaa.Data.Sql" Version="4.1.0" />
   </ItemGroup>
 
 </Project>
