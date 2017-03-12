@@ -39,7 +39,7 @@ namespace Uaaa.Sql.Tools
             text.Write($"Creating new database: {database}");
             await provider.ExecuteScript($"if exists(select * from sys.databases where name='{database}') drop database \"{database}\"; create database \"{database}\";");
             text.ClearLine();
-            text.Write("Completed.");
+            text.WriteLine("Completed.");
             return 0;
         }
     }

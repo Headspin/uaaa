@@ -23,11 +23,7 @@ namespace Uaaa.Sql.Tools
 
         private static class Script
         {
-#if DEBUG
             public const string Folder = "Scripts";
-#else
-            public const string Folder = "content/Scripts";
-#endif
             public const string InitializeDb = "InitializeDb.sql";
         }
 
@@ -62,7 +58,7 @@ namespace Uaaa.Sql.Tools
                 provider.UseConnection(ConnectionKey);
                 ITransactionContext context = provider.CreateTransactionContext();
                 text.Write("Checking database version...");
-                await provider.ExecuteScript(Path.Combine(Program.Info.PackageDirectory, Script.Folder, Script.InitializeDb), context);
+                await provider.ExecuteScript(Path.Combine(Program.Info.PackageDirectory, "content", Script.Folder, Script.InitializeDb), context);
                 int dbVersion = await provider.GetDatabaseVersion();
                 int lastFileVersion = dbVersion;
                 try
@@ -99,6 +95,11 @@ namespace Uaaa.Sql.Tools
                 {
                     context.Dispose();
                 }
+            }
+            else
+            {
+                text.ClearLine();
+                text.WriteLine($"Failed to locate scripts folder ({ScriptsPath})");
             }
             return 0;
         }
