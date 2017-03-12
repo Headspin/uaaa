@@ -5,7 +5,7 @@
     <Description>Uaaa SQL script runner tool for database versioning.</Description>
     <Copyright>© 2017 Dvabita</Copyright>
     <AssemblyTitle>Uaaa SQL database management tool</AssemblyTitle>
-    <VersionPrefix>3.0.4</VersionPrefix>
+    <VersionPrefix>3.0.5</VersionPrefix>
     <Authors>DvaBita</Authors>
     <DebugType>portable</DebugType>
     <AssemblyName>dotnet-uaaa-sql</AssemblyName>
