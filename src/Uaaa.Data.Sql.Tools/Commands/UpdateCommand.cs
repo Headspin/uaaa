@@ -23,7 +23,11 @@ namespace Uaaa.Sql.Tools
 
         private static class Script
         {
+#if DEBUG
             public const string Folder = "Scripts";
+#else
+            public const string Folder = "content/Scripts";
+#endif
             public const string InitializeDb = "InitializeDb.sql";
         }
 
@@ -47,7 +51,9 @@ namespace Uaaa.Sql.Tools
             if (string.IsNullOrEmpty(ConnectionKey))
                 throw new InvalidOperationException("Connection setting key not set.");
             if (string.IsNullOrEmpty(ScriptsPath))
+            {
                 ScriptsPath = Path.Combine(Directory.GetCurrentDirectory(), Script.Folder);
+            }
             #endregion -=Check parameters=-
             var versionRegex = new Regex(@"^(?<version>\d*)");
 

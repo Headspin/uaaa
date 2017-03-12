@@ -1,15 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    
-  </PropertyGroup>
-
-  <PropertyGroup>
     <TargetFramework>netcoreapp1.0</TargetFramework>
     <Description>Uaaa SQL script runner tool for database versioning.</Description>
     <Copyright>© 2017 Dvabita</Copyright>
     <AssemblyTitle>Uaaa SQL database management tool</AssemblyTitle>
-    <VersionPrefix>3.0.2</VersionPrefix>
+    <VersionPrefix>3.0.3</VersionPrefix>
     <Authors>DvaBita</Authors>
     <DebugType>portable</DebugType>
     <AssemblyName>dotnet-uaaa-sql</AssemblyName>
