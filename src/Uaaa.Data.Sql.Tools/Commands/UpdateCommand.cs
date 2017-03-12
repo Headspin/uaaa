@@ -55,45 +55,61 @@ namespace Uaaa.Sql.Tools
 
             if (Directory.Exists(ScriptsPath))
             {
+
                 provider.UseConnection(ConnectionKey);
                 ITransactionContext context = provider.CreateTransactionContext();
-                text.Write("Checking database version...");
-#if DEBUG
-                string scriptFile = Path.Combine(Program.Info.Directory, Script.Folder, Script.InitializeDb);
-#else
-                string scriptFile = Path.Combine(Program.Info.PackageDirectory, "content", Script.Folder, Script.InitializeDb);
-#endif
-                await provider.ExecuteScript(scriptFile, context);
-                int dbVersion = await provider.GetDatabaseVersion();
-                int lastFileVersion = dbVersion;
+                int dbVersion;
+                int lastFileVersion;
                 try
                 {
-                    text.ClearLine();
+                    text.WriteLine("Starting...");
+#if DEBUG
+                    string scriptFile = Path.Combine(Program.Info.Directory, Script.Folder, Script.InitializeDb);
+#else
+                    string scriptFile = Path.Combine(Program.Info.PackageDirectory, "content", Script.Folder, Script.InitializeDb);
+#endif
+                    text.WriteLine("Initializing database...");
+                    await provider.ExecuteScript(scriptFile, context);
+                    text.WriteLine("Checking database version...");
+                    dbVersion = await provider.GetDatabaseVersion();
+                    lastFileVersion = dbVersion;
+                }
+                catch (Exception ex)
+                {
+                    text.WriteLine("Failed!");
+                    text.WriteLine(ex.Message);
+                    throw;
+                }
+                try
+                {
                     await context.StartTransaction();
+                    text.WriteLine($"Reading scripts from {ScriptsPath}.");
+
                     foreach (string file in provider.GetScriptFiles(ScriptsPath))
                     {
                         var fileVersion = 0;
+                        text.WriteLine($"Checking script file version: {file}");
                         if (!int.TryParse(versionRegex.Match(
                             Path.GetFileNameWithoutExtension(file)).Groups["version"]?.Value, out fileVersion)) continue;
                         if (fileVersion <= dbVersion) continue;
-                        text.Write($"Executing script file: {Path.GetFileName(file)}");
+                        text.WriteLine($"Executing script file: {Path.GetFileName(file)}");
                         await provider.ExecuteScript(file, context);
                         lastFileVersion = fileVersion;
                     }
 
                     if (lastFileVersion > dbVersion)
                     {
-                        text.ClearLine();
-                        text.Write("Saving database version information.");
+                        text.WriteLine("Saving database version information.");
                         await provider.SetDatabaseVersion(lastFileVersion, context);
                     }
-                    text.ClearLine();
-                    text.Write("Completed.");
+                    text.WriteLine("Completed.");
                     context.CommitTransaction();
                 }
-                catch
+                catch (Exception ex)
                 {
                     context.RollbackTransaction();
+                    text.WriteLine("Failed!");
+                    text.WriteLine(ex.Message);
                     throw;
                 }
                 finally
@@ -103,7 +119,6 @@ namespace Uaaa.Sql.Tools
             }
             else
             {
-                text.ClearLine();
                 text.WriteLine($"Failed to locate scripts folder ({ScriptsPath})");
             }
             return 0;
