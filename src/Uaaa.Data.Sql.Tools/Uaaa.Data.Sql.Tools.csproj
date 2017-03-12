@@ -37,4 +37,10 @@
     <PackageReference Include="Uaaa.Data.Sql" Version="4.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Scripts\InitializeDb.sql;">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

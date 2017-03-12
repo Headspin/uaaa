@@ -58,7 +58,12 @@ namespace Uaaa.Sql.Tools
                 provider.UseConnection(ConnectionKey);
                 ITransactionContext context = provider.CreateTransactionContext();
                 text.Write("Checking database version...");
-                await provider.ExecuteScript(Path.Combine(Program.Info.PackageDirectory, "content", Script.Folder, Script.InitializeDb), context);
+#if DEBUG
+                string scriptFile = Path.Combine(Program.Info.Directory, Script.Folder, Script.InitializeDb);
+#else
+                string scriptFile = Path.Combine(Program.Info.PackageDirectory, "content", Script.Folder, Script.InitializeDb);
+#endif
+                await provider.ExecuteScript(scriptFile, context);
                 int dbVersion = await provider.GetDatabaseVersion();
                 int lastFileVersion = dbVersion;
                 try

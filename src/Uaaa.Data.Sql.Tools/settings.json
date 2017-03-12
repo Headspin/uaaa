@@ -1,5 +1,6 @@
 {
   "ConnectionStrings": {
-    "TestDb": "Server=(localdb)\\mssqllocaldb;Database=testdb;Trusted_Connection=True"
+    //"TestDb": "Server=(localdb)\\mssqllocaldb;Database=testdb;Trusted_Connection=True"
+    "TestDb": "server=192.168.1.200\\SQLEXPRESS;initial catalog=nourabela_dev;persist security info=false;user id=localdev;password=sqld3v!;multipleactiveresultsets=false;connection timeout=30;"
   }
 }
