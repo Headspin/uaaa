@@ -62,15 +62,13 @@ namespace Uaaa.Sql.Tools
                 int lastFileVersion;
                 try
                 {
-                    text.WriteLine("Starting...");
+                    text.WriteLine("Checking database version...");
 #if DEBUG
                     string scriptFile = Path.Combine(Program.Info.Directory, Script.Folder, Script.InitializeDb);
 #else
                     string scriptFile = Path.Combine(Program.Info.PackageDirectory, "content", Script.Folder, Script.InitializeDb);
-#endif
-                    text.WriteLine("Initializing database...");
+#endif                 
                     await provider.ExecuteScript(scriptFile, context);
-                    text.WriteLine("Checking database version...");
                     dbVersion = await provider.GetDatabaseVersion();
                     lastFileVersion = dbVersion;
                 }
@@ -82,13 +80,11 @@ namespace Uaaa.Sql.Tools
                 }
                 try
                 {
+                    text.WriteLine("Processing update scripts...");
                     await context.StartTransaction();
-                    text.WriteLine($"Reading scripts from {ScriptsPath}.");
-
                     foreach (string file in provider.GetScriptFiles(ScriptsPath))
                     {
                         var fileVersion = 0;
-                        text.WriteLine($"Checking script file version: {file}");
                         if (!int.TryParse(versionRegex.Match(
                             Path.GetFileNameWithoutExtension(file)).Groups["version"]?.Value, out fileVersion)) continue;
                         if (fileVersion <= dbVersion) continue;
