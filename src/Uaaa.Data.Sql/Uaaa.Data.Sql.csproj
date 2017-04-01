@@ -4,15 +4,15 @@
     <Description>Uaaa Framework data extensions for SQL</Description>
     <Copyright>© 2017 Dvabita</Copyright>
     <AssemblyTitle>Uaaa Data Sql Extensions</AssemblyTitle>
-    <VersionPrefix>4.1.0</VersionPrefix>
+    <VersionPrefix>4.1.1</VersionPrefix>
     <Authors>DvaBita</Authors>
-    <TargetFramework>netstandard1.6</TargetFramework>
+    <TargetFramework>netstandard1.5</TargetFramework>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DebugType>portable</DebugType>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Uaaa.Data.Sql</AssemblyName>
     <PackageId>Uaaa.Data.Sql</PackageId>
-    <PackageReleaseNotes>[Feature] ConnectionInfo parses database from initial catalog.</PackageReleaseNotes>
+    <PackageReleaseNotes>.NET Standard 1.5</PackageReleaseNotes>
     <PackageLicenseUrl>https://raw.githubusercontent.com/Headspin/uaaa/master/LICENSE</PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
