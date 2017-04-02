@@ -234,6 +234,12 @@ namespace Uaaa.Data.Mapper
                 var attribute = typeInfo.GetCustomAttribute<NameModifierTypeAttribute>();
                 if (attribute?.Type != null)
                     nameModifier = Activator.CreateInstance(attribute.Type) as NameModifier;
+                else
+                {
+                    var nameModifierType = DefaultNameModifierType;
+                    if (nameModifierType != null)
+                        nameModifier = Activator.CreateInstance(nameModifierType) as NameModifier;
+                }
             }
 
             // register field mappings
@@ -338,6 +344,11 @@ namespace Uaaa.Data.Mapper
 
         private static readonly ConcurrentDictionary<Type, MappingSchema> Schemas =
             new ConcurrentDictionary<Type, MappingSchema>();
+
+        /// <summary>
+        /// Default name modifier type to be used if not defined by NameModifierTypeAttribute.
+        /// </summary>
+        public static Type DefaultNameModifierType { get; set; } = null;
         /// <summary>
         /// Returns mapping schema for specified type.
         /// </summary>
@@ -359,6 +370,7 @@ namespace Uaaa.Data.Mapper
         {
             return typeInfo.IsGenericType && typeInfo.GetGenericTypeDefinition() == typeof(Nullable<>);
         }
+
         #endregion
         #region -=Support types=-
         private interface IFieldAccessor
