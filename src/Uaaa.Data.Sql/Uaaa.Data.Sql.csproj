@@ -4,7 +4,7 @@
     <Description>Uaaa Framework data extensions for SQL</Description>
     <Copyright>© 2017 Dvabita</Copyright>
     <AssemblyTitle>Uaaa Data Sql Extensions</AssemblyTitle>
-    <VersionPrefix>4.1.1</VersionPrefix>
+    <VersionPrefix>4.2.0</VersionPrefix>
     <Authors>DvaBita</Authors>
     <TargetFramework>netstandard1.5</TargetFramework>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -12,7 +12,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Uaaa.Data.Sql</AssemblyName>
     <PackageId>Uaaa.Data.Sql</PackageId>
-    <PackageReleaseNotes>.NET Standard 1.5</PackageReleaseNotes>
+    <PackageReleaseNotes>Turned on strong name signing.</PackageReleaseNotes>
     <PackageLicenseUrl>https://raw.githubusercontent.com/Headspin/uaaa/master/LICENSE</PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
