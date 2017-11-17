@@ -24,5 +24,21 @@ namespace Uaaa.Core
             }
             return text.ToString();
         }
+        /// <summary>
+        /// Changes string to snake_case.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string ToSnakeCase(this string value)
+        {
+            if (string.IsNullOrEmpty(value)) return value;
+            string result = string.Concat(
+                value.Select(
+                    (character, index) => index > 0 && char.IsUpper(character) || (char.IsDigit(character) && !char.IsDigit(value[index - 1]))
+                        ? "_" + character.ToString()
+                        : character.ToString())
+            );
+            return result.ToLower();
+        }
     }
 }

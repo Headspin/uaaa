@@ -4,7 +4,7 @@
     <Description>Uaaa core framework.</Description>
     <Copyright>© 2017 Dvabita</Copyright>
     <AssemblyTitle>Uaaa Core</AssemblyTitle>
-    <VersionPrefix>5.1.0</VersionPrefix>
+    <VersionPrefix>5.2.0</VersionPrefix>
     <Authors>DvaBita</Authors>
     <TargetFramework>netstandard1.5</TargetFramework>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -12,13 +12,15 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Uaaa.Core</AssemblyName>
     <PackageId>Uaaa.Core</PackageId>
-    <PackageReleaseNotes>MappingSchema supports setting default name modifier.</PackageReleaseNotes>
+    <PackageReleaseNotes>Added string extension ToSnakeCase().</PackageReleaseNotes>
     <PackageLicenseUrl>https://raw.githubusercontent.com/Headspin/uaaa/master/LICENSE</PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>uaaa.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
 </Project>
